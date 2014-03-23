@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:df1-ioslib/df1-ioslib.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:df1-iosdemo/df1-iosdemo.xcodeproj">
+   </FileRef>
+</Workspace>
