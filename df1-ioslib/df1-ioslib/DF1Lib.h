@@ -13,7 +13,7 @@
 @protocol DF1Delegate;  // forward declaration
 
 
-@interface DF1Lib : NSObject <CBCentralManagerDelegate,CBPeripheralDelegate>
+@interface DF1 : NSObject <CBCentralManagerDelegate,CBPeripheralDelegate>
 
 // Delegate properties should always be weak references
 // See http://stackoverflow.com/a/4796131/263871 for the rationale

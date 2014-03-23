@@ -14,7 +14,7 @@
 
 
 // Private stuff
-@interface DF1Lib ()
+@interface DF1 ()
 {
     NSTimer *scanTimer;
     NSUInteger deviceCountMax;
@@ -25,10 +25,10 @@
 @end
 
 
-@implementation DF1Lib
+@implementation DF1
 
 
--(id) initWithDelegate:(id<DF1LibDelegate>) userDelegate
+-(id) initWithDelegate:(id<DF1Delegate>) userDelegate
 {
     self = [self init];
     if(self)
