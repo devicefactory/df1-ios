@@ -18,6 +18,7 @@
 {
     NSTimer *scanTimer;
     NSUInteger deviceCountMax;
+    UInt8 regEnable;
 }
 
 -(NSUInteger) _hasPeripheral:(CBPeripheral*) p;

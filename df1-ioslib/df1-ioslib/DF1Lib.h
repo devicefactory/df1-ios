@@ -46,6 +46,37 @@
 -(void) connect:(CBPeripheral*) peripheral;
 -(void) disconnect:(CBPeripheral*) peripheral;
 
+-(void) subscribe:(CBPeripheral*) peripheral UUID:(UInt16) uuid;
+-(void) subscribeXYZ8:(CBPeripheral*) peripheral;
+-(void) subscribeXYZ14:(CBPeripheral*) peripheral;
+-(void) subscribeTap:(CBPeripheral*) peripheral;
+-(void) subscribeFreefall:(CBPeripheral*) peripheral;
+-(void) subscribeMotion:(CBPeripheral*) peripheral;
+-(void) subscribeShake:(CBPeripheral*) peripheral;
+
+-(void) modifyRange:(CBPeripheral*) peripheral withRange:(UInt8) value;
+
+-(void) modifyTap:(CBPeripheral*) peripheral UUID:(UInt16) uuid withValue:(UInt8) value;
+-(void) modifyTapThsz:(CBPeripheral*) withG:(double) g; // 0.064g increment
+-(void) modifyTapThsx:(CBPeripheral*) withG:(double) g;
+-(void) modifyTapThsy:(CBPeripheral*) withG:(double) g;
+-(void) modifyTapTmlt:(CBPeripheral*) withMsec:(double) msec; // multiples of 10msec
+-(void) modifyTapLtcy:(CBPeripheral*) withMsec:(double) msec;
+-(void) modifyTapWind:(CBPeripheral*) withMsec:(double) msec;
+
+-(void) modifyFreefall:(CBPeripheral*) peripheral UUID:(UInt16) uuid withValue:(UInt8) value;
+-(void) modifyFreefallThs:(CBPeripheral*) withG:(double) g; // 0.064g increment
+-(void) modifyFreefallDeb:(CBPeripheral*) withMsec:(double) msec; // 10msec increment
+
+-(void) modifyMotion:(CBPeripheral*) peripheral UUID:(UInt16) uuid withValue:(UInt8) value;
+-(void) modifyMotionThs:(CBPeripheral*) withG:(double) g; // 0.064g increment
+-(void) modifyMotionDeb:(CBPeripheral*) withMsec:(double) msec; // 10msec increment
+
+-(void) modifyShake:(CBPeripheral*) peripheral UUID:(UInt16) uuid withValue:(UInt8) value;
+-(void) modifyShakeThs:(CBPeripheral*) peripheral withG:(double) g;
+-(void) modifyShakeDeb:(CBPeripheral*) peripheral withMsec:(double) msec;
+-(void) modifyShakeHpf:(CBPeripheral*) peripheral withHz:(double) hz; // 0.063==1, 0.125=2, 0.25=4, 0.5=8, 1=16, 2=32, 4=64
+
 @end
 
 
@@ -58,6 +89,8 @@
 
 -(bool) didScan:(NSArray*) devices;
 -(bool) didConnectPeripheral:(CBPeripheral*) peripheral;
+-(bool) receivedXYZ8:(double*) data;
+-(bool) receivedXYZ14:(double*) data;
 
 @optional
 

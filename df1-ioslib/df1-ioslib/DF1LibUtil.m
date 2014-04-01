@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 JB Kim. All rights reserved.
 //
 #import "DF1LibUtil.h"
+#import "DF1LibDefs.h"
 
 @implementation DF1LibUtil
 

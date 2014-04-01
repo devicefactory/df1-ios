@@ -41,7 +41,7 @@
     [self.df1 scan:5];
 }
 
-#pragma mark - CBCentralManager delegate
+#pragma mark - DF1 delegate
 
 - (bool) didScan:(NSArray*) devices
 {
