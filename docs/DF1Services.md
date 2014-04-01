@@ -131,73 +131,72 @@ Control UUID registers
 
 The ACC_GEN_CFG_UUID (0xAA11) is used to control the supported modes in the accelerometer.
 
-    * noise & power modes (normal mode recommended)
-    * internal sampling modes
-    * acceleration measurement range : 2,4,8g
-    * 8bit vs 14bit (controlled by other UUIDs)
+* noise & power modes (normal mode recommended)
+* internal sampling modes
+* acceleration measurement range : 2,4,8g
+* 8bit vs 14bit (controlled by other UUIDs)
 
 Below shows the register at ACC_GEN_CFG_UUID and what each pair of bits mean.
 
-> MMA8451Q base config
-> 
-> ACC_GEN_CFG bits: MRRR (Mode, Rate, Range, Resolution)
-> ======================================================
+>   ACC_GEN_CFG bits: MRRR (Mode, Rate, Range, Resolution)
+>   ======================================================
+>
 >      MODE      RATE     RANGE   RESOLUTION
 >     7    6    5    4    3    2    1    0
 >     M1  M0  RT1  RT0  RA1  RA0  RS1  RS0
 > 
->  M1:M0    0 0   normal mode
->           0 1   low noise low power
->           1 0   low power sleep
->           1 1   low power
->  RT1:RT0  0 0   mid rate  (50Hz, 50Hz)
->           0 1   high rate (100Hz, 50Hz)
->           1 0   low rate  (12.5Hz, 12.5Hz)
->           1 1   unused
->  RA1:RA0  0 0   2G
->           0 1   4G
->           1 0   8G
->           1 1   unused
->  RS1:RS0  0 0   8 bit
->           0 1   14 bit
->           1 0   unused
->           1 1   unused
-> 
-> GEN_CFG_M1_MASK    0x80
-> GEN_CFG_M0_MASK    0x40
-> GEN_CFG_RT1_MASK   0x20
-> GEN_CFG_RT0_MASK   0x10
-> GEN_CFG_RA1_MASK   0x08
-> GEN_CFG_RA0_MASK   0x04
-> GEN_CFG_RS1_MASK   0x02
-> GEN_CFG_RS0_MASK   0x01
+>     M1:M0    0 0   normal mode
+>              0 1   low noise low power
+>              1 0   low power sleep
+>              1 1   low power
+>     RT1:RT0  0 0   mid rate  (50Hz, 50Hz)
+>              0 1   high rate (100Hz, 50Hz)
+>              1 0   low rate  (12.5Hz, 12.5Hz)
+>              1 1   unused
+>     RA1:RA0  0 0   2G
+>              0 1   4G
+>              1 0   8G
+>              1 1   unused
+>     RS1:RS0  0 0   8 bit
+>              0 1   14 bit
+>              1 0   unused
+>              1 1   unused
+>    
+>    GEN_CFG_M1_MASK    0x80
+>    GEN_CFG_M0_MASK    0x40
+>    GEN_CFG_RT1_MASK   0x20
+>    GEN_CFG_RT0_MASK   0x10
+>    GEN_CFG_RA1_MASK   0x08
+>    GEN_CFG_RA0_MASK   0x04
+>    GEN_CFG_RS1_MASK   0x02
+>    GEN_CFG_RS0_MASK   0x01
 
 In order to receive data from notification UUID''s, desired features first need
 to be enabled on the ACC_ENABLE_UUID register (0xAA12).
 For example, in order to receive 8bit XYZ data, you need to:
 
-    * write "0x01" to ACC_ENABLE_UUID 0xAA12 to enable 8bit xyz data
-    * enable notification by writing "0x0100" to ACC_XYZ_DATA8_UUID 0xAA13
+* write "0x01" to ACC_ENABLE_UUID 0xAA12 to enable 8bit xyz data
+* enable notification by writing "0x0100" to ACC_XYZ_DATA8_UUID 0xAA13
 
 Here are the rest of the bits in the ACC_ENABLE_UUID register and their corresponding features.
 
-> ACC_ENABLE bits
-> ===============
+>   ACC_ENABLE bits
+>   ===============
 >
->     7     6     5     4     3     2     1     0
->  USR2  USR1  TRAN    MO    FF   TAP XYZ14  XYZ8
+>       7     6     5     4     3     2     1     0
+>    USR2  USR1  TRAN    MO    FF   TAP XYZ14  XYZ8
 >
->  Setting any of these bits will put accelerometer in
->  active state and start populating static vars on App layer
+>    Setting any of these bits will put accelerometer in
+>    active state and start populating static vars on App layer
 >
-> ENABLE_XYZ8_MASK   0x01
-> ENABLE_XYZ14_MASK  0x02
-> ENABLE_TAP_MASK    0x04
-> ENABLE_FF_MASK     0x08
-> ENABLE_MO_MASK     0x10
-> ENABLE_TRAN_MASK   0x20
-> ENABLE_USR1_MASK   0x40
-> ENABLE_USR2_MASK   0x80
+>   ENABLE_XYZ8_MASK   0x01
+>   ENABLE_XYZ14_MASK  0x02
+>   ENABLE_TAP_MASK    0x04
+>   ENABLE_FF_MASK     0x08
+>   ENABLE_MO_MASK     0x10
+>   ENABLE_TRAN_MASK   0x20
+>   ENABLE_USR1_MASK   0x40
+>   ENABLE_USR2_MASK   0x80
 
 
 Accelerometer DSP Configuration UUID Registers
