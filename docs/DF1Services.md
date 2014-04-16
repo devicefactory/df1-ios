@@ -119,7 +119,7 @@ Here are the supported accelerometer config UUIDs and their purpose.
   This effectively removes the gravitational content from the accelerometer readings. This feature is very useful
   when you want to detect jolts or shakes in any axis regardless of the orientation of the device.
 
-  More in-dept documentation is available [here](http://cache.freescale.com/files/sensors/doc/app_note/AN4071.pdf?fasp=1&WT_TYPE=Application%20Notes&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=pdf&WT_ASSET=Documentation&Parent_nodeId=1280942466187701001159&Parent_pageType=product).
+  More in-depth documentation is available [here](http://cache.freescale.com/files/sensors/doc/app_note/AN4071.pdf?fasp=1&WT_TYPE=Application%20Notes&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=pdf&WT_ASSET=Documentation&Parent_nodeId=1280942466187701001159&Parent_pageType=product).
 
  
 ```{sh}
