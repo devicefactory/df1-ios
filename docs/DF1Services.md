@@ -256,9 +256,10 @@ Here are the supported accelerometer config UUIDs and their purpose.
 | ACC_TRAN_DEB_UUID     | 0xAA23  | 1=10ms  | Increment of 10msec. Noise-reduce by not allowing event if subsequent jolt detected.   |
 | ACC_TRAN_HPF_UUID     | 0xAA24  | 8=0.5Hz | Highpass filter removes constant gravity reading. Filter cutoff listed below.          |
 
-* `ACC_TRAN_HPF_UUID` allowed values map to:
+* `ACC_TRAN_HPF_UUID` allowed values are:
 
-  We only allow few values: 1: 0.063Hz, 2: 0.125Hz, 4: 0.25Hz, 8: 0.5Hz, 16: 1Hz, 32: 2Hz, 64: 4Hz.
+  `1: 0.063Hz, 2: 0.125Hz, 4: 0.25Hz, 8: 0.5Hz, 16: 1Hz, 32: 2Hz, 64: 4Hz`.
+
   Thus, setting `ACC_TRAN_HPF_UUID` to `8` will only allow signals with frequency higher than 0.5Hz to pass through.
   This effectively removes the gravitational content from the accelerometer readings. This feature is very useful
   when you want to detect jolts or shakes in any axis regardless of the orientation of the device.
@@ -266,29 +267,29 @@ Here are the supported accelerometer config UUIDs and their purpose.
   More in-dept documentation is available [here](http://cache.freescale.com/files/sensors/doc/app_note/AN4071.pdf?fasp=1&WT_TYPE=Application%20Notes&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=pdf&WT_ASSET=Documentation&Parent_nodeId=1280942466187701001159&Parent_pageType=product).
 
 
-ACC_XYZ_DATA8_UUID Notification Data
-------------------------------------
+0xAA13: ACC_XYZ_DATA8_UUID Notification Data
+--------------------------------------------
 
 * 3 bytes are returned
 * x: bytes[0],  y: bytes[1],  z: bytes[2]
-* for in 2g : `float x = ((float)bytes[0])/64.0;`
-* for in 4g : `float x = ((float)bytes[0])/32.0;`
-* for in 8g : `float x = ((float)bytes[0])/16.0;`
+* for 2g : `float x = ((float)bytes[0])/64.0;`
+* for 4g : `float x = ((float)bytes[0])/32.0;`
+* for 8g : `float x = ((float)bytes[0])/16.0;`
 
-ACC_XYZ_DATA14_UUID Notification Data
--------------------------------------
+0xAA14: ACC_XYZ_DATA14_UUID Notification Data
+---------------------------------------------
 
 * 6 bytes are returned, 2 bytes per axis.
 * x16 = (bytes[0]<<8) | bytes[1];
 * y16 = (bytes[2]<<8) | bytes[3];
 * z16 = (bytes[4]<<8) | bytes[5];
-* for in 2g : `float x = ((float)x16)/4096.0;`
-* for in 4g : `float x = ((float)x16)/2048.0;`
-* for in 8g : `float x = ((float)x16)/1024.0;`
+* for 2g : `float x = ((float)x16)/4096.0;`
+* for 4g : `float x = ((float)x16)/2048.0;`
+* for 8g : `float x = ((float)x16)/1024.0;`
 
 
-ACC_TAP_DATA_UUID Notification Data
------------------------------------
+0xAA15: ACC_TAP_DATA_UUID Notification Data
+-------------------------------------------
 
 * single byte is returned
 * bit placement
@@ -307,8 +308,8 @@ ACC_TAP_DATA_UUID Notification Data
 | Bit 0    | PolX        | X event 0=positive g 1=negative g           |
 
 
-ACC_FF_DATA_UUID Notification Data
-----------------------------------
+0xAA1C: ACC_FF_DATA_UUID Notification Data
+------------------------------------------
 
 * single byte is returned
 * bit placement
@@ -327,8 +328,8 @@ ACC_FF_DATA_UUID Notification Data
 | Bit 0    | XHP         | x event 0=positive g 1=negative g           |
  
 
-ACC_MO_DATA_UUID Notification Data
-----------------------------------
+0xAA1E: ACC_MO_DATA_UUID Notification Data
+------------------------------------------
 
 * single byte is returned
 * bit placement
@@ -347,8 +348,8 @@ ACC_MO_DATA_UUID Notification Data
 | Bit 0    | XHP         | x event 0=positive g 1=negative g           |
 
 
-ACC_TRAN_DATA_UUID Notification Data
-------------------------------------
+0xAA21: ACC_TRAN_DATA_UUID Notification Data
+--------------------------------------------
 
 * single byte is returned
 * bit placement
@@ -377,6 +378,5 @@ the red LED to suggest battery swap.
 
 | CharacteristicName    | UUID    | Mode   | Description                                                    |  
 |:--------------------- |:-------:|:------:| -------------------------------------------------------------- |
-| BATT_LEVEL_UUID       | 0x1A19  | r/n    | battery level derived from ADC internal voltage level.         |
-
+| BATT_LEVEL_UUID       | 0x2A19  | r/n    | battery level derived from ADC internal voltage level.         |
 
