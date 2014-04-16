@@ -51,6 +51,8 @@ Here is the primary list of services DF1 supports.
 > You can use `gatttool` from bluez package to inspect the BLE services.
 
 ```{sh}
+$ sudo hcitool lescan # look for df1 
+$ sudo gatttool -i hci0 -b <bdr_mac_addr> -I
 gatttool> primary
 attr handle: 0x0001, end grp handle: 0x000b uuid: 00001800-0000-1000-8000-00805f9b34fb
 attr handle: 0x000c, end grp handle: 0x000f uuid: 00001801-0000-1000-8000-00805f9b34fb
