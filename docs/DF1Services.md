@@ -65,7 +65,6 @@ attr handle: 0x0072, end grp handle: 0xffff uuid: f000ffc0-0451-4000-b000-000000
 0xAA10 : Accelerometer Service
 ==============================
 
-
 Characterisitics that are exposed under `0xAA10` Accelerometer Service.
 These services can be modified by future OAD updates of the ImgB firmware.
 
@@ -73,31 +72,49 @@ These services can be modified by future OAD updates of the ImgB firmware.
 * _w_ : write access
 * _n_ : notification access
 
+
 Supported Characteristics
 -------------------------
 
-| CharacteristicName    | UUID    | Mode   | Description                                                    |  
-|:--------------------- |:-------:|:------:| -------------------------------------------------------------- |
-| ACC_GEN_CFG_UUID      | 0xAA11  | r/w    | general cfg: 2g/4g/8g range,possible ODR rates                 |
-| ACC_ENABLE_UUID       | 0xAA12  | r/w    | enable cfg: each bit will toggle features on and off           |
-| ACC_XYZ_DATA8_UUID    | 0xAA13  | r/n    | _DATA_: 8 bit resolution data per axis                         |
-| ACC_XYZ_DATA14_UUID   | 0xAA14  | r/n    | _DATA_: 14 bit resolution data per axis                        |
-| ACC_TAP_DATA_UUID     | 0xAA15  | r/n    | _DATA_: DSP Tap detection                                      |
-| ACC_TAP_THSZ_UUID     | 0xAA16  | r/w    | tap threshhold on z axis (0.063g increment)                    |
-| ACC_TAP_THSX_UUID     | 0xAA17  | r/w    | tap threshhold on x axis                                       |
-| ACC_TAP_THSY_UUID     | 0xAA18  | r/w    | tap threshhold on y axis                                       |
-| ACC_TAP_TMLT_UUID     | 0xAA19  | r/w    | tap time limit (how "fast" is the tap)                         |
-| ACC_TAP_LTCY_UUID     | 0xAA1A  | r/w    | tap latency (how long of wait after tap timelimit)             |
-| ACC_TAP_WIND_UUID     | 0xAA1B  | r/w    | tap window for subsequent double tap                           |
-| ACC_FF_DATA_UUID      | 0xAA1C  | r/n    | _DATA_: DSP Freefall detection                                 |
-| ACC_FF_THS_UUID       | 0xAA1D  | r/w    | freefall threshhold (0.063g increment)                         |
-| ACC_MO_DATA_UUID      | 0xAA1E  | r/n    | _DATA_: DSP Motion detection (mutually exclusive with Freefall)|
-| ACC_MO_THS_UUID       | 0xAA1F  | r/w    | motion threshhold (0.063g increment)                           |
-| ACC_FFMO_DEB_UUID     | 0xAA20  | r/w    | freefall,motion debounce counter                               |
-| ACC_TRAN_DATA_UUID    | 0xAA21  | r/n    | _DATA_: DSP Shake (transient) detection                        |
-| ACC_TRAN_THS_UUID     | 0xAA22  | r/w    | transient threshhold (0.063g increment)                        |
-| ACC_TRAN_DEB_UUID     | 0xAA23  | r/w    | transient debounce counter                                     |
-| ACC_TRAN_HPF_UUID     | 0xAA24  | r/w    | highpass filter for removing gravity, small accelerations      |
+The DF1 sets sensible defaults to accelerometer parameters and various configuration registers.
+The configuration registers can drastically change the way in which user can interact with the onboard accelerometer.
+The accelerometer IC is top-of-the-line low G sensors from Freescale,
+[mma8451Q](http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=MMA8451Q).
+
+Here are the supported accelerometer config UUIDs and their purpose.
+
+| CharacteristicName    | UUID    | Mode | Default | Description                                                                            |  
+|:--------------------- |:-------:|:----:|:--------| -------------------------------------------------------------------------------------- |
+| ACC_GEN_CFG_UUID      | 0xAA11  | r/w  | 0x00    | general cfg: 2g/4g/8g range,possible ODR rates                                         |
+| ACC_ENABLE_UUID       | 0xAA12  | r/w  | 0x00    | enable cfg: each bit will toggle features on and off. (default: all off)               |
+| ACC_XYZ_DATA8_UUID    | 0xAA13  | r/n  | 0x00    | *NOTIFICATION* handle for 8bit xyz data                                                |
+| ACC_XYZ_DATA14_UUID   | 0xAA14  | r/n  | 0x0000  | *NOTIFICATION* handle for 14bit xyz data                                               |
+| ACC_TAP_DATA_UUID     | 0xAA15  | r/n  | 0x00    | *NOTIFICATION* handle tap detection data (1 byte)                                      |
+| ACC_TAP_THSZ_UUID     | 0xAA16  | r/w  | 20=1.2g | Tap event is triggered when z-acceleration exceeds this threshhold. Mult of 0.063g.    |
+| ACC_TAP_THSX_UUID     | 0xAA17  | r/w  | 20      | Same as above, but for x-axis. Setting to zero suppresses x-axis event.                |
+| ACC_TAP_THSY_UUID     | 0xAA18  | r/w  | 20      | Same as above, but for y-axis.                                                         |
+| ACC_TAP_TMLT_UUID     | 0xAA19  | r/w  | 6=60ms  | Increment of 10msec. Defines how short tap has to last, not exceeding this number.     |
+| ACC_TAP_LTCY_UUID     | 0xAA1A  | r/w  | 20=200ms| Increment of 10msec. Defines how long to wait after pulse detection.                   |
+| ACC_TAP_WIND_UUID     | 0xAA1B  | r/w  | 30=300ms| Increment of 10msec. Defines minimum period between 2 pulses, for double tap.          |
+| ACC_FF_DATA_UUID      | 0xAA1C  | r/n  | 0x00    | *NOTIFICATION* handle for freefall detection data (1 byte)                             |
+| ACC_FF_THS_UUID       | 0xAA1D  | r/w  | 4=0.25g | Multiple of 0.063g. Freefall is detected if all three axis reading below this.         |
+| ACC_MO_DATA_UUID      | 0xAA1E  | r/n  | 0x00    | *NOTIFICATION* handle for motion detection data (1 byte). Mutually exclusive /w FF.    |
+| ACC_MO_THS_UUID       | 0xAA1F  | r/w  | 20=1.2g | Multiple of 0.063g. Motion is detected if axis reading goes above this.                |
+| ACC_FFMO_DEB_UUID     | 0xAA20  | r/w  | 10=100ms| Increment of 10msec. No subsequent event cannot appear during this time for an event.  |
+| ACC_TRAN_DATA_UUID    | 0xAA21  | r/n  | 0x00    | *NOTIFICATION* handle for shock detection data (1 byte).                               |
+| ACC_TRAN_THS_UUID     | 0xAA22  | r/w  | 16=1g   | Increment of 0.063g. Shakes exceeding this threshhold triggers Transient event.        |
+| ACC_TRAN_DEB_UUID     | 0xAA23  | r/w  | 1=10ms  | Increment of 10msec. Noise-reduce by not allowing event if subsequent jolt detected.   |
+| ACC_TRAN_HPF_UUID     | 0xAA24  | r/w  | 8=0.5Hz | Highpass filter removes constant gravity reading. Filter cutoff listed below.          |
+
+* `ACC_TRAN_HPF_UUID` allowed values are:
+
+  `1: 0.063Hz, 2: 0.125Hz, 4: 0.25Hz, 8: 0.5Hz, 16: 1Hz, 32: 2Hz, 64: 4Hz`.
+
+  Thus, setting `ACC_TRAN_HPF_UUID` to `8` will only allow signals with frequency higher than 0.5Hz to pass through.
+  This effectively removes the gravitational content from the accelerometer readings. This feature is very useful
+  when you want to detect jolts or shakes in any axis regardless of the orientation of the device.
+
+  More in-dept documentation is available [here](http://cache.freescale.com/files/sensors/doc/app_note/AN4071.pdf?fasp=1&WT_TYPE=Application%20Notes&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=pdf&WT_ASSET=Documentation&Parent_nodeId=1280942466187701001159&Parent_pageType=product).
 
  
 ```{sh}
@@ -126,8 +143,8 @@ handle: 0x0068, char properties: 0x0a, char value handle: 0x0069, uuid: 0000aa24
 ... trimmed ...
 ```
 
-Control UUID : ACC_GEN_CFG_UUID
--------------------------------
+0xAA11: ACC_GEN_CFG_UUID Control Register
+-----------------------------------------
 
 The `ACC_GEN_CFG_UUID (0xAA11)` is used to control the supported modes in the accelerometer.
 
@@ -192,8 +209,8 @@ In order to change the range from 2g to 4g without affecting other parameters, y
 >  write 0x04 into UUID 0xAA11
 
 
-Enable UUID : ACC_ENABLE_UUID
------------------------------
+0xAA12: ACC_ENABLE_UUID Feature Enable Register
+-----------------------------------------------
 
 In order to receive data from notification UUID''s, desired features first need
 to be enabled on the `ACC_ENABLE_UUID register (0xAA12)`.
@@ -225,46 +242,6 @@ when events are triggered. For example, in order to enable both TAP and XYZ8, yo
 > into UUID 0xAA12
 
 
-Accelerometer DSP Configuration UUID Registers
-----------------------------------------------
-
-The DF1 sets sensible defaults to accelerometer parameters and various configuration registers.
-The configuration registers can drastically change the way in which user can interact with the onboard accelerometer.
-The accelerometer IC is top-of-the-line low G sensors from Freescale,
-[mma8451Q](http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=MMA8451Q).
-
-Here are the supported accelerometer config UUIDs and their purpose.
-
-| CharacteristicName    | UUID    | Default | Description                                                                            |  
-|:--------------------- |:-------:|:--------| -------------------------------------------------------------------------------------- |
-| ACC_XYZ_DATA8_UUID    | 0xAA13  | 0x00    | *NOTIFICATION* handle for 8bit xyz data                                                |
-| ACC_XYZ_DATA14_UUID   | 0xAA14  | 0x0000  | *NOTIFICATION* handle for 14bit xyz data                                               |
-| ACC_TAP_DATA_UUID     | 0xAA15  | 0x00    | *NOTIFICATION* handle tap detection data (1 byte)                                      |
-| ACC_TAP_THSZ_UUID     | 0xAA16  | 20=1.2g | Tap event is triggered when z-acceleration exceeds this threshhold. Mult of 0.063g.    |
-| ACC_TAP_THSX_UUID     | 0xAA17  | 20      | Same as above, but for x-axis. Setting to zero suppresses x-axis event.                |
-| ACC_TAP_THSY_UUID     | 0xAA18  | 20      | Same as above, but for y-axis.                                                         |
-| ACC_TAP_TMLT_UUID     | 0xAA19  | 6=60ms  | Increment of 10msec. Defines how short tap has to last, not exceeding this number.     |
-| ACC_TAP_LTCY_UUID     | 0xAA1A  | 20=200ms| Increment of 10msec. Defines how long to wait after pulse detection.                   |
-| ACC_TAP_WIND_UUID     | 0xAA1B  | 30=300ms| Increment of 10msec. Defines minimum period between 2 pulses, for double tap.          |
-| ACC_FF_DATA_UUID      | 0xAA1C  | 0x00    | *NOTIFICATION* handle for freefall detection data (1 byte)                             |
-| ACC_FF_THS_UUID       | 0xAA1D  | 4=0.25g | Multiple of 0.063g. Freefall is detected if all three axis reading below this.         |
-| ACC_MO_DATA_UUID      | 0xAA1E  | 0x00    | *NOTIFICATION* handle for motion detection data (1 byte). Mutually exclusive /w FF.    |
-| ACC_MO_THS_UUID       | 0xAA1F  | 20=1.2g | Multiple of 0.063g. Motion is detected if axis reading goes above this.                |
-| ACC_FFMO_DEB_UUID     | 0xAA20  | 10=100ms| Increment of 10msec. No subsequent event cannot appear during this time for an event.  |
-| ACC_TRAN_DATA_UUID    | 0xAA21  | 0x00    | *NOTIFICATION* handle for shock detection data (1 byte).                               |
-| ACC_TRAN_THS_UUID     | 0xAA22  | 16=1g   | Increment of 0.063g. Shakes exceeding this threshhold triggers Transient event.        |
-| ACC_TRAN_DEB_UUID     | 0xAA23  | 1=10ms  | Increment of 10msec. Noise-reduce by not allowing event if subsequent jolt detected.   |
-| ACC_TRAN_HPF_UUID     | 0xAA24  | 8=0.5Hz | Highpass filter removes constant gravity reading. Filter cutoff listed below.          |
-
-* `ACC_TRAN_HPF_UUID` allowed values are:
-
-  `1: 0.063Hz, 2: 0.125Hz, 4: 0.25Hz, 8: 0.5Hz, 16: 1Hz, 32: 2Hz, 64: 4Hz`.
-
-  Thus, setting `ACC_TRAN_HPF_UUID` to `8` will only allow signals with frequency higher than 0.5Hz to pass through.
-  This effectively removes the gravitational content from the accelerometer readings. This feature is very useful
-  when you want to detect jolts or shakes in any axis regardless of the orientation of the device.
-
-  More in-dept documentation is available [here](http://cache.freescale.com/files/sensors/doc/app_note/AN4071.pdf?fasp=1&WT_TYPE=Application%20Notes&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=pdf&WT_ASSET=Documentation&Parent_nodeId=1280942466187701001159&Parent_pageType=product).
 
 
 0xAA13: ACC_XYZ_DATA8_UUID Notification Data
