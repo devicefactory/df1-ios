@@ -38,7 +38,7 @@ Concepts / Glossary
 Services
 ========
 
-Here are the primary list of services DF1 supports.
+Here is the primary list of services DF1 supports.
 
 | ServiceName    | UUID    | Description                                         |  
 |:-------------- |:-------:| --------------------------------------------------- |
