@@ -3,7 +3,7 @@ DF1 BLE Services
 
 The following document describes supported GATT services in DF1 device.
 
-![DF1 black and white](pics/df1_shot1.jpg)
+![DF1 black and white](pics/df1_shot2.jpg)
 
 
 Concepts / Glossary
