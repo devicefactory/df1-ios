@@ -247,7 +247,7 @@ when events are triggered. For example, in order to enable both TAP and XYZ8, yo
 0xAA13: ACC_XYZ_DATA8_UUID Notification Data
 --------------------------------------------
 
-* 3 bytes are returned
+* 3 bytes are streamed 5 times a second
 * x: bytes[0],  y: bytes[1],  z: bytes[2]
 * for 2g : `float x = ((float)bytes[0])/64.0;`
 * for 4g : `float x = ((float)bytes[0])/32.0;`
@@ -256,7 +256,7 @@ when events are triggered. For example, in order to enable both TAP and XYZ8, yo
 0xAA14: ACC_XYZ_DATA14_UUID Notification Data
 ---------------------------------------------
 
-* 6 bytes are returned, 2 bytes per axis.
+* 6 bytes are streamed 5 times a second, 2 bytes per axis.
 * x16 = (bytes[0]<<8) | bytes[1];
 * y16 = (bytes[2]<<8) | bytes[3];
 * z16 = (bytes[4]<<8) | bytes[5];
@@ -268,7 +268,7 @@ when events are triggered. For example, in order to enable both TAP and XYZ8, yo
 0xAA15: ACC_TAP_DATA_UUID Notification Data
 -------------------------------------------
 
-* single byte is returned
+* single byte is returned when either tap or double tap is detected
 * bit placement
 
   >  Tap data bits: 7   6   5   4   3   2   1   0 
@@ -288,7 +288,7 @@ when events are triggered. For example, in order to enable both TAP and XYZ8, yo
 0xAA1C: ACC_FF_DATA_UUID Notification Data
 ------------------------------------------
 
-* single byte is returned
+* single byte is returned when freefall is detected
 * bit placement
 
   >  Freefall data bits: 7   6   5   4   3   2   1   0 
@@ -308,7 +308,7 @@ when events are triggered. For example, in order to enable both TAP and XYZ8, yo
 0xAA1E: ACC_MO_DATA_UUID Notification Data
 ------------------------------------------
 
-* single byte is returned
+* single byte is returned when motion is detected
 * bit placement
 
   >  Motion data bits: 7   6   5   4   3   2   1   0 
@@ -328,7 +328,7 @@ when events are triggered. For example, in order to enable both TAP and XYZ8, yo
 0xAA21: ACC_TRAN_DATA_UUID Notification Data
 --------------------------------------------
 
-* single byte is returned
+* single byte is returned when shake is detected
 * bit placement
 
   >  Transient (Shake) data bits: 7   6   5   4   3   2   1   0 
