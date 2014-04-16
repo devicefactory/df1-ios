@@ -91,8 +91,8 @@ Here are the supported accelerometer config UUIDs and their purpose.
 | ACC_XYZ_DATA14_UUID   | 0xAA14  | r/n  | 0x0000  | *NOTIFICATION* handle for 14bit xyz data                                               |
 | ACC_TAP_DATA_UUID     | 0xAA15  | r/n  | 0x00    | *NOTIFICATION* handle tap detection data (1 byte)                                      |
 | ACC_TAP_THSZ_UUID     | 0xAA16  | r/w  | 20=1.2g | Tap event is triggered when z-acceleration exceeds this threshhold. Mult of 0.063g.    |
-| ACC_TAP_THSX_UUID     | 0xAA17  | r/w  | 20      | Same as above, but for x-axis. Setting to zero suppresses x-axis event.                |
-| ACC_TAP_THSY_UUID     | 0xAA18  | r/w  | 20      | Same as above, but for y-axis.                                                         |
+| ACC_TAP_THSX_UUID     | 0xAA17  | r/w  | 20=1.2g | Same as above, but for x-axis. Setting to zero suppresses x-axis event.                |
+| ACC_TAP_THSY_UUID     | 0xAA18  | r/w  | 20=1.2g | Same as above, but for y-axis.                                                         |
 | ACC_TAP_TMLT_UUID     | 0xAA19  | r/w  | 6=60ms  | Increment of 10msec. Defines how short tap has to last, not exceeding this number.     |
 | ACC_TAP_LTCY_UUID     | 0xAA1A  | r/w  | 20=200ms| Increment of 10msec. Defines how long to wait after pulse detection.                   |
 | ACC_TAP_WIND_UUID     | 0xAA1B  | r/w  | 30=300ms| Increment of 10msec. Defines minimum period between 2 pulses, for double tap.          |
@@ -146,7 +146,7 @@ handle: 0x0068, char properties: 0x0a, char value handle: 0x0069, uuid: 0000aa24
 0xAA11: ACC_GEN_CFG_UUID Control Register
 -----------------------------------------
 
-The `ACC_GEN_CFG_UUID (0xAA11)` is used to control the supported modes in the accelerometer.
+The `ACC_GEN_CFG_UUID (0xAA11)` is used to control various modes in the accelerometer.
 
 * noise & power modes (normal mode recommended)
 * internal sampling modes
