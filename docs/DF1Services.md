@@ -126,10 +126,10 @@ handle: 0x0068, char properties: 0x0a, char value handle: 0x0069, uuid: 0000aa24
 ... trimmed ...
 ```
 
-Control UUID registers
-----------------------
+Control UUID : ACC_GEN_CFG_UUID
+-------------------------------
 
-The ACC_GEN_CFG_UUID (0xAA11) is used to control the supported modes in the accelerometer.
+The `ACC_GEN_CFG_UUID (0xAA11)` is used to control the supported modes in the accelerometer.
 
 * noise & power modes (normal mode recommended)
 * internal sampling modes
@@ -138,30 +138,12 @@ The ACC_GEN_CFG_UUID (0xAA11) is used to control the supported modes in the acce
 
 Below shows the register at ACC_GEN_CFG_UUID and what each pair of bits mean.
 
->   ACC_GEN_CFG bits: MRRR (Mode, Rate, Range, Resolution)
->   ======================================================
+>   ACC_GEN_CFG bit placement: MRRR (Mode, Rate, Range, Resolution)
 >
 >      MODE      RATE     RANGE   RESOLUTION
 >     7    6    5    4    3    2    1    0
 >     M1  M0  RT1  RT0  RA1  RA0  RS1  RS0
-> 
->     M1:M0    0 0   normal mode
->              0 1   low noise low power
->              1 0   low power sleep
->              1 1   low power
->     RT1:RT0  0 0   mid rate  (50Hz, 50Hz)
->              0 1   high rate (100Hz, 50Hz)
->              1 0   low rate  (12.5Hz, 12.5Hz)
->              1 1   unused
->     RA1:RA0  0 0   2G
->              0 1   4G
->              1 0   8G
->              1 1   unused
->     RS1:RS0  0 0   8 bit
->              0 1   14 bit
->              1 0   unused
->              1 1   unused
->    
+>
 >     GEN_CFG_M1_MASK    0x80
 >     GEN_CFG_M0_MASK    0x40
 >     GEN_CFG_RT1_MASK   0x20
@@ -171,23 +153,53 @@ Below shows the register at ACC_GEN_CFG_UUID and what each pair of bits mean.
 >     GEN_CFG_RS1_MASK   0x02
 >     GEN_CFG_RS0_MASK   0x01
 
+
+| Bit Name    | bit0 | bit1 | Description                     |
+|:----------- |:----:|:----:|:------------------------------- |
+|   M1:M0     | 0    | 0    | normal mode                     |
+|             | 0    | 1    | low noise low power             |
+|             | 1    | 0    | low power sleep                 |
+|             | 1    | 1    | low power                       |
+|------------ |------|------|---------------------------------|
+|   RT1:RT0   | 0    | 0    | mid rate  (50Hz, 50Hz)          |
+|             | 0    | 1    | high rate (100Hz, 50Hz)         |
+|             | 1    | 0    | low rate  (12.5Hz, 12.5Hz)      |
+|             | 1    | 1    | unused                          |
+|------------ |------|------|---------------------------------|
+|   RA1:RA0   | 0    | 0    | 2G                              |
+|             | 0    | 1    | 4G                              |
+|             | 1    | 0    | 8G                              |
+|             | 1    | 1    | unused                          |
+|------------ |------|------|---------------------------------|
+|   RS1:RS0   | 0    | 0    | 8 bit                           |
+|             | 0    | 1    | 14 bit                          |
+|             | 1    | 0    | unused                          |
+|             | 1    | 1    | unused                          |
+   
+By default, `ACC_GEN_CFG` is initialized to `0x00`, which gives:
+
+* MODE: normal mode
+* RATE: mid rate for accelerometer sampling (50Hz, 50Hz)
+* RANGE: 2G
+* RESOLUTION: 8bit
+
+
+Enable UUID : ACC_ENABLE_UUID
+-----------------------------
+
 In order to receive data from notification UUID''s, desired features first need
-to be enabled on the ACC_ENABLE_UUID register (0xAA12).
+to be enabled on the `ACC_ENABLE_UUID register (0xAA12)`.
 For example, in order to receive 8bit XYZ data, you need to:
 
-* write "0x01" to ACC_ENABLE_UUID 0xAA12 to enable 8bit xyz data
-* enable notification by writing "0x0100" to ACC_XYZ_DATA8_UUID 0xAA13
+* write "0x01" to `ACC_ENABLE_UUID 0xAA12` to enable 8bit xyz data
+* enable notification by writing "0x0100" to `ACC_XYZ_DATA8_UUID 0xAA13`
 
 Here are the rest of the bits in the ACC_ENABLE_UUID register and their corresponding features.
 
->   ACC_ENABLE bits
->   ===============
+>   ACC_ENABLE bit placement
 >
 >        7     6     5     4     3     2     1     0
 >     USR2  USR1  TRAN    MO    FF   TAP XYZ14  XYZ8
->
->     Setting any of these bits will put accelerometer in
->     active state and start populating static vars on App layer
 >
 >     ENABLE_XYZ8_MASK   0x01
 >     ENABLE_XYZ14_MASK  0x02
@@ -197,6 +209,9 @@ Here are the rest of the bits in the ACC_ENABLE_UUID register and their correspo
 >     ENABLE_TRAN_MASK   0x20
 >     ENABLE_USR1_MASK   0x40
 >     ENABLE_USR2_MASK   0x80
+
+Setting any of these bits will put accelerometer in active state and start pushing BLE notifications 
+when events are triggered.
 
 
 Accelerometer DSP Configuration UUID Registers
@@ -209,46 +224,61 @@ The accelerometer IC is top-of-the-line low G sensors from Freescale,
 
 Here are the supported accelerometer config UUIDs and their purpose.
 
-| CharacteristicName    | UUID    | Description                                                             |  
-|:--------------------- |:-------:|:----------------------------------------------------------------------- |
-| ACC_XYZ_DATA8_UUID    | 0xAA13  | NOTIFICATION handle for 8bit xyz data                                   |
-| ACC_XYZ_DATA14_UUID   | 0xAA14  | NOTIFICATION handle for 14bit xyz data                                  |
-| ACC_TAP_DATA_UUID     | 0xAA15  | NOTIFICATION handle tap detection data                                  |
-| ACC_TAP_THSZ_UUID     | 0xAA16  | tap event is triggered when z-acceleration exceeds this threshhold      |
-| ACC_TAP_THSX_UUID     | 0xAA17  |                                                                         |
-| ACC_TAP_THSY_UUID     | 0xAA18  |                                                                         |
-| ACC_TAP_TMLT_UUID     | 0xAA19  |                                                                         |
-| ACC_TAP_LTCY_UUID     | 0xAA1A  |                                                                         |
-| ACC_TAP_WIND_UUID     | 0xAA1B  |                                                                         |
-| ACC_FF_DATA_UUID      | 0xAA1C  |                                                                         |
-| ACC_FF_THS_UUID       | 0xAA1D  |                                                                         |
-| ACC_MO_DATA_UUID      | 0xAA1E  |                                                                         |
-| ACC_MO_THS_UUID       | 0xAA1F  |                                                                         |
-| ACC_FFMO_DEB_UUID     | 0xAA20  |                                                                         |
-| ACC_TRAN_DATA_UUID    | 0xAA21  |                                                                         |
-| ACC_TRAN_THS_UUID     | 0xAA22  |                                                                         |
-| ACC_TRAN_DEB_UUID     | 0xAA23  |                                                                         |
-| ACC_TRAN_HPF_UUID     | 0xAA24  |                                                                         |
+| CharacteristicName    | UUID    | Default | Description                                                                            |  
+|:--------------------- |:-------:|:--------| -------------------------------------------------------------------------------------- |
+| ACC_XYZ_DATA8_UUID    | 0xAA13  | 0x00    | *NOTIFICATION* handle for 8bit xyz data                                                |
+| ACC_XYZ_DATA14_UUID   | 0xAA14  | 0x0000  | *NOTIFICATION* handle for 14bit xyz data                                               |
+| ACC_TAP_DATA_UUID     | 0xAA15  | 0x00    | *NOTIFICATION* handle tap detection data (1 byte)                                      |
+| ACC_TAP_THSZ_UUID     | 0xAA16  | 20=1.2g | Tap event is triggered when z-acceleration exceeds this threshhold. Mult of 0.063g.    |
+| ACC_TAP_THSX_UUID     | 0xAA17  | 20      | Same as above, but for x-axis. Setting to zero suppresses x-axis event.                |
+| ACC_TAP_THSY_UUID     | 0xAA18  | 20      | Same as above, but for y-axis.                                                         |
+| ACC_TAP_TMLT_UUID     | 0xAA19  | 6=60ms  | Increment of 10msec. Defines how short tap has to last, not exceeding this number.     |
+| ACC_TAP_LTCY_UUID     | 0xAA1A  | 20=200ms| Increment of 10msec. Defines how long to wait after pulse detection.                   |
+| ACC_TAP_WIND_UUID     | 0xAA1B  | 30=300ms| Increment of 10msec. Defines minimum period between 2 pulses, for double tap.          |
+| ACC_FF_DATA_UUID      | 0xAA1C  | 0x00    | *NOTIFICATION* handle for freefall detection data (1 byte)                             |
+| ACC_FF_THS_UUID       | 0xAA1D  | 4=0.25g | Multiple of 0.063g. Freefall is detected if all three axis reading below this.         |
+| ACC_MO_DATA_UUID      | 0xAA1E  | 0x00    | *NOTIFICATION* handle for motion detection data (1 byte). Mutually exclusive /w FF.    |
+| ACC_MO_THS_UUID       | 0xAA1F  | 20=1.2g | Multiple of 0.063g. Motion is detected if axis reading goes above this.                |
+| ACC_FFMO_DEB_UUID     | 0xAA20  | 10=100ms| Increment of 10msec. No subsequent event cannot appear during this time for an event.  |
+| ACC_TRAN_DATA_UUID    | 0xAA21  | 0x00    | *NOTIFICATION* handle for shock detection data (1 byte).                               |
+| ACC_TRAN_THS_UUID     | 0xAA22  | 16=1g   | Increment of 0.063g. Shakes exceeding this threshhold triggers Transient event.        |
+| ACC_TRAN_DEB_UUID     | 0xAA23  | 1=10ms  | Increment of 10msec. Noise-reduce by not allowing event if subsequent jolt detected.   |
+| ACC_TRAN_HPF_UUID     | 0xAA24  | 8=0.5Hz | Highpass filter removes constant gravity reading. Filter cutoff listed below.          |
 
-```{c}
-// DEFAULT VALUES
-#define MMA_DEFAULT_TAP_THSZ     20
-#define MMA_DEFAULT_TAP_THSX     20
-#define MMA_DEFAULT_TAP_THSY     20
-#define MMA_DEFAULT_TAP_TMLT     6
-#define MMA_DEFAULT_TAP_LTCY     20
-#define MMA_DEFAULT_TAP_WIND     30
-// 20*0.063g = 1.26g, 4*0.063g = 0.252g
-#define MMA_DEFAULT_FF_THS       4
-#define MMA_DEFAULT_FF_DEB      10
-#define MMA_DEFAULT_MO_THS      20
-#define MMA_DEFAULT_MO_DEB      10
-// 16*0.063g = 1.008g
-#define MMA_DEFAULT_TRAN_THS    16
-#define MMA_DEFAULT_TRAN_DEB    1
-// 8*0.063Hz = 0.5Hz
-#define MMA_DEFAULT_TRAN_HPF    8
-```
+* `ACC_TRAN_HPF_UUID` allowed values map to:
+
+  We only allow few values: 1: 0.063Hz, 2: 0.125Hz, 4: 0.25Hz, 8: 0.5Hz, 16: 1Hz, 32: 2Hz, 64: 4Hz.
+  Thus, setting `ACC_TRAN_HPF_UUID` to `8` will only allow signals with frequency higher than 0.5Hz to pass through.
+  This effectively removes the gravitational content from the accelerometer readings. This feature is very useful
+  when you want to detect jolts or shakes in any axis regardless of the orientation of the device.
+
+  More in-dept documentation is available [here](http://cache.freescale.com/files/sensors/doc/app_note/AN4071.pdf?fasp=1&WT_TYPE=Application%20Notes&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=pdf&WT_ASSET=Documentation&Parent_nodeId=1280942466187701001159&Parent_pageType=product).
+
+
+ACC_XYZ_DATA8_UUID Notification Data
+------------------------------------
+
+
+ACC_XYZ_DATA14_UUID Notification Data
+-------------------------------------
+
+
+ACC_TAP_DATA_UUID Notification Data
+-----------------------------------
+
+
+ACC_FF_DATA_UUID Notification Data
+----------------------------------
+
+
+ACC_MO_DATA_UUID Notification Data
+----------------------------------
+
+
+ACC_TRAN_DATA_UUID Notification Data
+------------------------------------
+
+
 
 0x180F : Battery Characteristics
 ================================
