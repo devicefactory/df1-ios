@@ -66,7 +66,7 @@ attr handle: 0x0072, end grp handle: 0xffff uuid: f000ffc0-0451-4000-b000-000000
 ==============================
 
 Characterisitics that are exposed under `0xAA10` Accelerometer Service.
-These services can be modified by future OAD updates of the ImgB firmware.
+These services can be modified/enhanced by OAD updates of the ImgB firmware in the future.
 
 * _r_ : read access
 * _w_ : write access
