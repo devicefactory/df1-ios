@@ -154,7 +154,7 @@ Below shows the register at ACC_GEN_CFG_UUID and what each pair of bits mean.
 >     GEN_CFG_RS0_MASK   0x01
 
 
-| Bit Name    | bit0 | bit1 | Description                     |
+| Bit Name    | bit1 | bit0 | Description                     |
 |:----------- |:----:|:----:|:------------------------------- |
 |   M1:M0     | 0    | 0    | normal mode                     |
 |             | 0    | 1    | low noise low power             |
@@ -182,6 +182,14 @@ By default, `ACC_GEN_CFG` is initialized to `0x00`, which gives:
 * RATE: mid rate for accelerometer sampling (50Hz, 50Hz)
 * RANGE: 2G
 * RESOLUTION: 8bit
+
+In order to change the range from 2g to 4g without affecting other parameters, you can do:
+
+>  currentConfigReg |= GEN_CFG_RA0_MASK;
+>  write to  0xAA11
+>  
+>  or 
+>  write 0x04 into UUID 0xAA11
 
 
 Enable UUID : ACC_ENABLE_UUID
@@ -211,7 +219,10 @@ Here are the rest of the bits in the ACC_ENABLE_UUID register and their correspo
 >     ENABLE_USR2_MASK   0x80
 
 Setting any of these bits will put accelerometer in active state and start pushing BLE notifications 
-when events are triggered.
+when events are triggered. For example, in order to enable both TAP and XYZ8, you need to first:
+
+> Write ENABLE_XYZ8_MASK + ENABLE_TAP_MASK == 0x05 
+> into UUID 0xAA12
 
 
 Accelerometer DSP Configuration UUID Registers
@@ -258,26 +269,103 @@ Here are the supported accelerometer config UUIDs and their purpose.
 ACC_XYZ_DATA8_UUID Notification Data
 ------------------------------------
 
+* 3 bytes are returned
+* x: bytes[0],  y: bytes[1],  z: bytes[2]
+* for in 2g : `float x = ((float)bytes[0])/64.0;`
+* for in 4g : `float x = ((float)bytes[0])/32.0;`
+* for in 8g : `float x = ((float)bytes[0])/16.0;`
 
 ACC_XYZ_DATA14_UUID Notification Data
 -------------------------------------
+
+* 6 bytes are returned, 2 bytes per axis.
+* x16 = (bytes[0]<<8) | bytes[1];
+* y16 = (bytes[2]<<8) | bytes[3];
+* z16 = (bytes[4]<<8) | bytes[5];
+* for in 2g : `float x = ((float)x16)/4096.0;`
+* for in 4g : `float x = ((float)x16)/2048.0;`
+* for in 8g : `float x = ((float)x16)/1024.0;`
 
 
 ACC_TAP_DATA_UUID Notification Data
 -----------------------------------
 
+* single byte is returned
+* bit placement
+
+  >  Tap data bits: 7   6   5   4   3   2   1   0 
+
+| Position | Name        | Description                                 |
+|:---------|:------------|:--------------------------------------------|
+| Bit 7    | EA          | one or more event flag has been asserted    |
+| Bit 6    | AxZ         | Z-event triggered                           |
+| Bit 5    | AxY         | Y-event triggered                           |
+| Bit 4    | AxX         | X-event triggered                           |
+| Bit 3    | DPE         | 0 = single pulse, 1 = double pulse          |
+| Bit 2    | PolZ        | Z event 0=positive g 1=negative g           |
+| Bit 1    | PolY        | Y event 0=positive g 1=negative g           |
+| Bit 0    | PolX        | X event 0=positive g 1=negative g           |
+
 
 ACC_FF_DATA_UUID Notification Data
 ----------------------------------
 
+* single byte is returned
+* bit placement
+
+  >  Freefall data bits: 7   6   5   4   3   2   1   0 
+
+| Position | Name        | Description                                 |
+|:---------|:------------|:--------------------------------------------| 
+| Bit 7    | EA          | one or more event flag has been asserted    |
+| Bit 6    | --          |                                             | 
+| Bit 5    | ZHE         | z motion/freefall has been detected         |
+| Bit 4    | ZHP         | z event 0=positive g 1=negative g           |
+| Bit 3    | YHE         | y motion/freefall has been detected         |
+| Bit 2    | YHP         | y event 0=positive g 1=negative g           |
+| Bit 1    | XHE         | x motion/freefall has been detected         |
+| Bit 0    | XHP         | x event 0=positive g 1=negative g           |
+ 
 
 ACC_MO_DATA_UUID Notification Data
 ----------------------------------
+
+* single byte is returned
+* bit placement
+
+  >  Motion data bits: 7   6   5   4   3   2   1   0 
+
+| Position | Name        | Description                                 |
+|:---------|:------------|:--------------------------------------------| 
+| Bit 7    | EA          | one or more event flag has been asserted    |
+| Bit 6    | --          |                                             | 
+| Bit 5    | ZHE         | z motion/freefall has been detected         |
+| Bit 4    | ZHP         | z event 0=positive g 1=negative g           |
+| Bit 3    | YHE         | y motion/freefall has been detected         |
+| Bit 2    | YHP         | y event 0=positive g 1=negative g           |
+| Bit 1    | XHE         | x motion/freefall has been detected         |
+| Bit 0    | XHP         | x event 0=positive g 1=negative g           |
 
 
 ACC_TRAN_DATA_UUID Notification Data
 ------------------------------------
 
+* single byte is returned
+* bit placement
+
+  >  Transient (Shake) data bits: 7   6   5   4   3   2   1   0 
+
+| Position | Name        | Description                                           |
+|:---------|:------------|:------------------------------------------------------| 
+| Bit 7    | --          |                                                       |
+| Bit 6    | EA          | one or more event flag has been asserted              |
+| Bit 5    | ZTRANSE     | z transient acceleration greater than the threshhold  |
+| Bit 4    | Z_Trans_Pol | z event 0=positive g 1=negative g                     |
+| Bit 3    | YTRANSE     | y transient acceleration greater than the threshhold  |
+| Bit 2    | Y_Trans_Pol | y event 0=positive g 1=negative g                     |
+| Bit 1    | XTRANSE     | x transient acceleration greater than the threshhold  |
+| Bit 0    | X_Trans_Pol | x event 0=positive g 1=negative g                     |
+ 
 
 
 0x180F : Battery Characteristics
