@@ -12,7 +12,6 @@
 
 @protocol DF1Delegate;  // forward declaration
 
-
 @interface DF1 : NSObject <CBCentralManagerDelegate,CBPeripheralDelegate>
 
 // Delegate properties should always be weak references
@@ -24,6 +23,7 @@
 // MEMBERS
 //-----------------------------------------------------------------------------
 @property (strong,nonatomic) NSMutableArray *devices;
+// @property (strong,nonatomic) NSMutableDictionary *registers;
 @property (strong,nonatomic) CBCentralManager *m;
 @property (strong,nonatomic) CBPeripheral *p;
 @property (retain) CBPeripheral *ptemp;
@@ -46,36 +46,34 @@
 -(void) connect:(CBPeripheral*) peripheral;
 -(void) disconnect:(CBPeripheral*) peripheral;
 
--(void) subscribe:(CBPeripheral*) peripheral UUID:(UInt16) uuid;
--(void) subscribeXYZ8:(CBPeripheral*) peripheral;
--(void) subscribeXYZ14:(CBPeripheral*) peripheral;
--(void) subscribeTap:(CBPeripheral*) peripheral;
--(void) subscribeFreefall:(CBPeripheral*) peripheral;
--(void) subscribeMotion:(CBPeripheral*) peripheral;
--(void) subscribeShake:(CBPeripheral*) peripheral;
+-(void) subscription:(UInt16) suuid withCUUID:(UInt16) cuuid onOff:(BOOL)enable;
+-(void) subscribeXYZ8;
+-(void) subscribeXYZ14;
+-(void) subscribeTap;
+-(void) subscribeFreefall;
+-(void) subscribeMotion;
+-(void) subscribeShake;
 
--(void) modifyRange:(CBPeripheral*) peripheral withRange:(UInt8) value;
+-(void) unsubscribeXYZ8;
 
--(void) modifyTap:(CBPeripheral*) peripheral UUID:(UInt16) uuid withValue:(UInt8) value;
--(void) modifyTapThsz:(CBPeripheral*) withG:(double) g; // 0.064g increment
--(void) modifyTapThsx:(CBPeripheral*) withG:(double) g;
--(void) modifyTapThsy:(CBPeripheral*) withG:(double) g;
--(void) modifyTapTmlt:(CBPeripheral*) withMsec:(double) msec; // multiples of 10msec
--(void) modifyTapLtcy:(CBPeripheral*) withMsec:(double) msec;
--(void) modifyTapWind:(CBPeripheral*) withMsec:(double) msec;
+-(void) modifyRange:(UInt8) value;
 
--(void) modifyFreefall:(CBPeripheral*) peripheral UUID:(UInt16) uuid withValue:(UInt8) value;
--(void) modifyFreefallThs:(CBPeripheral*) withG:(double) g; // 0.064g increment
--(void) modifyFreefallDeb:(CBPeripheral*) withMsec:(double) msec; // 10msec increment
+-(void) modifyTapThsz:(double) g; // 0.064g increment
+-(void) modifyTapThsx:(double) g;
+-(void) modifyTapThsy:(double) g;
+-(void) modifyTapTmlt:(double) msec; // multiples of 10msec
+-(void) modifyTapLtcy:(double) msec;
+-(void) modifyTapWind:(double) msec;
 
--(void) modifyMotion:(CBPeripheral*) peripheral UUID:(UInt16) uuid withValue:(UInt8) value;
--(void) modifyMotionThs:(CBPeripheral*) withG:(double) g; // 0.064g increment
--(void) modifyMotionDeb:(CBPeripheral*) withMsec:(double) msec; // 10msec increment
+-(void) modifyFreefallThs:(double) g; // 0.064g increment
+-(void) modifyFreefallDeb:(double) msec; // 10msec increment
 
--(void) modifyShake:(CBPeripheral*) peripheral UUID:(UInt16) uuid withValue:(UInt8) value;
--(void) modifyShakeThs:(CBPeripheral*) peripheral withG:(double) g;
--(void) modifyShakeDeb:(CBPeripheral*) peripheral withMsec:(double) msec;
--(void) modifyShakeHpf:(CBPeripheral*) peripheral withHz:(double) hz; // 0.063==1, 0.125=2, 0.25=4, 0.5=8, 1=16, 2=32, 4=64
+-(void) modifyMotionThs:(double) g; // 0.064g increment
+-(void) modifyMotionDeb:(double) msec; // 10msec increment
+
+-(void) modifyShakeThs:(double) g;
+-(void) modifyShakeDeb:(double) msec;
+-(void) modifyShakeHpf:(double) hz; // 0.063==1, 0.125=2, 0.25=4, 0.5=8, 1=16, 2=32, 4=64
 
 @end
 

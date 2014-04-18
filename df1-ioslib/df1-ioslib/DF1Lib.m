@@ -17,11 +17,16 @@
 @interface DF1 ()
 {
     NSTimer *scanTimer;
-    NSUInteger deviceCountMax;
-    UInt8 regEnable;
+    NSUInteger g_deviceCountMax;
+    NSMutableDictionary *g_reg; // maintains current register settings
 }
 
 -(NSUInteger) _hasPeripheral:(CBPeripheral*) p;
+-(BOOL) _isPeripheralValid:(CBPeripheral*) p;
+-(void) _syncParameters;
+
+-(void) _enableFeature:(UInt16) cuuid;
+-(void) _disableFeature:(UInt16) cuuid;
 
 @end
 
@@ -42,13 +47,30 @@
     return self;
 }
 
+
+-(BOOL) _isPeripheralValid:(CBPeripheral*) p
+{
+    if(p==nil)
+    {
+        DF_ERR(@"peripheral property is nil!");
+        return false;
+    }
+    if(![p respondsToSelector:@selector(state)])
+    {
+        DF_ERR(@"peripheral property self.p does not respond to state!");
+        return false;
+    }
+    return [p state] == CBPeripheralStateConnected;
+}
+
+
 -(void) scan:(NSUInteger) maxCount
 {
     if(!self.m)
     {
         DF_ERR(@"CBCentralManager does not exist!");
     }
-    deviceCountMax = maxCount;
+    g_deviceCountMax = maxCount;
     if(!self.delegate)
     {
         DF_ERR(@"set the delegate first"); 
@@ -84,7 +106,7 @@
         for(int i=0; i<self.devices.count; i++)
         {
             CBPeripheral *p = [self.devices objectAtIndex:i];
-            if(p.state==CBPeripheralStateConnected)
+            if([self _isPeripheralValid:p])
                 // [self deconfigureDevice:p];
                 [self.m cancelPeripheralConnection:p];
         }
@@ -95,7 +117,7 @@
     {
         if([peripheral isEqual:self.p])
         {
-            [self deconfigureDevice:peripheral];
+            // [self deconfigureDevice:peripheral];
             self.p = nil;
         }
         [self.m cancelPeripheralConnection:peripheral];
@@ -186,7 +208,7 @@
     }
      */
     
-    if(self.devices.count >= deviceCountMax)
+    if(self.devices.count >= g_deviceCountMax)
     {
         DF_DBG(@"stopping scan");
         [self.m stopScan];
@@ -278,10 +300,12 @@
 {
     NSLog(@"entering didDiscoverCharacteristicsForService: %@", service.UUID);
     
-    if([[peripheral.name lowercaseString] hasPrefix:@"dfmove"] && [DF1LibUtil isUUID:service.UUID thisInt:ACC_SERV_UUID]) {
+    if([[peripheral.name lowercaseString] hasPrefix:@"dfmove"] &&
+        [DF1LibUtil isUUID:service.UUID thisInt:ACC_SERV_UUID] &&
+        [service.characteristics count]>0) {
         // int i = [self _hasPeripheral:peripheral];
         NSLog(@"found accelerometer conf characteristic");
-        [self configureDevice:peripheral];
+        [self _syncParameters];
         // here we subscribe to data
     }
 }
@@ -339,32 +363,201 @@
             lastz = z;
             break;
         }
+        case ACC_XYZ_DATA14_UUID:
+        {
+            break;
+        }
+        case ACC_TAP_DATA_UUID:
+        {
+            break;
+        }
+        case ACC_FF_DATA_UUID:
+        {
+            break;
+        }
+        case ACC_MO_DATA_UUID:
+        {
+            break;
+        }
+        case ACC_TRAN_DATA_UUID:
+        {
+            break;
+        }
+        case ACCD_FALL_DATA_UUID:
+        {
+            break;
+        }
+        case BATT_LEVEL_UUID:
+        {
+            break;
+        }
+        case TEST_DATA_UUID:
+        {
+            break;
+        }
+        // rest are all parameter related
+        case ACC_GEN_CFG_UUID:
+        case ACC_ENABLE_UUID:
+        case ACC_TAP_THSZ_UUID:
+        case ACC_TAP_THSX_UUID:
+        case ACC_TAP_THSY_UUID:
+        case ACC_TAP_TMLT_UUID:
+        case ACC_TAP_LTCY_UUID:
+        case ACC_TAP_WIND_UUID:
+        case ACC_FF_THS_UUID:
+        case ACC_MO_THS_UUID:
+        case ACC_FFMO_DEB_UUID:
+        case ACC_TRAN_THS_UUID:
+        case ACC_TRAN_DEB_UUID:
+        case ACC_TRAN_HPF_UUID:
+        case TEST_CONF_UUID:
+            [self _updateParameters:characteristic]; 
     }
 }
 
 
--(void) configureDevice:(CBPeripheral*) peripheral
+
+-(void) _syncParameters
 {
-    NSLog(@"subscribing from accelerometer service");
-    CBUUID *sUUID = [DF1LibUtil IntToCBUUID:ACC_SERV_UUID];
-    CBUUID *cUUID = [DF1LibUtil IntToCBUUID:ACC_ENABLE_UUID];
-    uint8_t data = 0x01;
-    // first enable accelermeter
-    [DF1LibUtil writeCharacteristic:peripheral sCBUUID:sUUID cCBUUID:cUUID data:[NSData dataWithBytes:&data length:1]];
-    cUUID = [DF1LibUtil IntToCBUUID:ACC_XYZ_DATA8_UUID];
-    [DF1LibUtil setNotificationForCharacteristic:peripheral sCBUUID:sUUID cCBUUID:cUUID enable:YES];
+    DF_DBG(@"snapping UUID parameters");
+    if(![self _isPeripheralValid:self.p]) return;
+        
+    NSArray *cuuids = @[@ACC_GEN_CFG_UUID, @ACC_ENABLE_UUID,
+                        @ACC_TAP_THSZ_UUID, @ACC_TAP_THSX_UUID, @ACC_TAP_THSY_UUID,
+                        @ACC_TAP_TMLT_UUID, @ACC_TAP_LTCY_UUID, @ACC_TAP_WIND_UUID,
+                        @ACC_FF_THS_UUID, @ACC_MO_THS_UUID, @ACC_FFMO_DEB_UUID,
+                        @ACC_TRAN_THS_UUID, @ACC_TRAN_DEB_UUID, @ACC_TRAN_HPF_UUID];
+    // read all the config related characteristics first
+    for(int i=0; i<cuuids.count; i++)
+    {
+        CBUUID* cuuid = cuuids[i];
+        [DF1LibUtil readCharacteristic:self.p sUUID:ACC_SERV_UUID cUUID:[DF1LibUtil CBUUIDToInt:cuuid]];
+    }
+}
+
+// Maintain the most up-to-date register values from DF1 device. We attempt to keep the 
+// parameters on the target device and our App synchronized.
+-(void) _updateParameters:(CBCharacteristic*) c
+{
+    // alloc on the fly
+    if(g_reg == nil) 
+        g_reg = [[NSMutableDictionary alloc] init];
+
+    // here, strong reference to the object (value) is maintained 
+    [g_reg setObject:c.value forKey:c.UUID]; // cuuid (CBUUID*) -> CBCharacteristic.value (NSData*)
 }
 
 
--(void) deconfigureDevice:(CBPeripheral*) peripheral
+-(void) _enableFeature:(UInt16) cuuid
 {
-    CBUUID *sUUID = [DF1LibUtil IntToCBUUID:ACC_SERV_UUID];
-    CBUUID *cUUID = [DF1LibUtil IntToCBUUID:ACC_ENABLE_UUID];
-    NSLog(@"disabling accelerometer service");
-    uint8_t data = 0x00;
-    [DF1LibUtil writeCharacteristic:peripheral sCBUUID:sUUID cCBUUID:cUUID data:[NSData dataWithBytes:&data length:1]];
-    cUUID = [DF1LibUtil IntToCBUUID:ACC_XYZ_DATA8_UUID];
-    [DF1LibUtil setNotificationForCharacteristic:peripheral sCBUUID:sUUID cCBUUID:cUUID enable:NO];
+    if(![self _isPeripheralValid:self.p]) 
+        return;
+
+    char enreg = 0x00;
+    // get current stored byte 
+    NSData *data = [g_reg objectForKey:[DF1LibUtil IntToCBUUID:ACC_ENABLE_UUID]];
+    if(data.length > 0)
+    {
+        char byte;
+        [data getBytes:&byte length:1];
+        DF_DBG(@"current stored byte for CUUID %x: %x", cuuid, byte);
+        enreg = byte;
+    }
+    switch(cuuid)
+    {
+        case ACC_XYZ_DATA8_UUID:   enreg |= ENABLE_XYZ8_MASK; break;
+        case ACC_XYZ_DATA14_UUID:  enreg |= ENABLE_XYZ14_MASK; break;
+        case ACC_TAP_DATA_UUID:    enreg |= ENABLE_TAP_MASK; break;
+        case ACC_FF_DATA_UUID:     enreg |= ENABLE_FF_MASK; break;
+        case ACC_MO_DATA_UUID:     enreg |= ENABLE_MO_MASK; break;
+        case ACC_TRAN_DATA_UUID:   enreg |= ENABLE_TRAN_MASK; break;
+        case ACCD_FALL_DATA_UUID:  enreg |= ENABLE_USR1_MASK; break;
+        // case ACC_USR2_DATA_UUID:   enreg |= ENABLE_USR2_MASK; break;
+    }
+    [DF1LibUtil writeCharacteristic:self.p sUUID:ACC_SERV_UUID cUUID:ACC_ENABLE_UUID withByte:enreg];
+    [g_reg setObject:[NSData dataWithBytes:&enreg length:1] forKey:[DF1LibUtil IntToCBUUID:ACC_ENABLE_UUID]]; // store the register
+}
+
+
+-(void) _disableFeature:(UInt16) cuuid
+{
+    if(![self _isPeripheralValid:self.p]) 
+        return;
+
+    char enreg = 0x00;
+    // get current stored byte 
+    NSData *data = [g_reg objectForKey:[DF1LibUtil IntToCBUUID:ACC_ENABLE_UUID]];
+    if(data.length > 0)
+    {
+        char byte;
+        [data getBytes:&byte length:1];
+        DF_DBG(@"current stored byte for CUUID %x: %x", cuuid, byte);
+        enreg = byte;
+    }
+    switch(cuuid)
+    {
+        case ACC_XYZ_DATA8_UUID:   enreg &= ~ENABLE_XYZ8_MASK; break;
+        case ACC_XYZ_DATA14_UUID:  enreg &= ~ENABLE_XYZ14_MASK; break;
+        case ACC_TAP_DATA_UUID:    enreg &= ~ENABLE_TAP_MASK; break;
+        case ACC_FF_DATA_UUID:     enreg &= ~ENABLE_FF_MASK; break;
+        case ACC_MO_DATA_UUID:     enreg &= ~ENABLE_MO_MASK; break;
+        case ACC_TRAN_DATA_UUID:   enreg &= ~ENABLE_TRAN_MASK; break;
+        case ACCD_FALL_DATA_UUID:  enreg &= ~ENABLE_USR1_MASK; break; // derived event, hence ACCD_ instead of ACC_
+        // case ACC_USR2_DATA_UUID:   enreg |= ENABLE_USR2_MASK; break;
+    }
+    DF_DBG(@"writing byte to ACC_ENABLE_UUID stored byte for CUUID %x: %x", cuuid, enreg);
+    [DF1LibUtil writeCharacteristic:self.p sUUID:ACC_SERV_UUID cUUID:ACC_ENABLE_UUID withByte:enreg];
+    [g_reg setObject:[NSData dataWithBytes:&enreg length:1] forKey:[DF1LibUtil IntToCBUUID:ACC_ENABLE_UUID]]; // store the register
+}
+
+
+-(void) subscription:(UInt16) suuid withCUUID:(UInt16) cuuid onOff:(BOOL)enable
+{
+    if(![self _isPeripheralValid:self.p]) 
+    {
+        DF_ERR(@"peripheral property self.p not valid!");
+        return;
+    }
+    [DF1LibUtil setNotificationForCharacteristic:self.p sUUID:suuid cUUID:cuuid enable:enable];
+}
+
+// Turn on individual features
+-(void) subscribeXYZ8
+{
+    [self _enableFeature:ACC_XYZ_DATA8_UUID];
+    [self subscription:ACC_SERV_UUID withCUUID:ACC_XYZ_DATA8_UUID onOff:true];
+}
+-(void) subscribeXYZ14
+{
+    [self _enableFeature:ACC_XYZ_DATA14_UUID];
+    [self subscription:ACC_SERV_UUID withCUUID:ACC_XYZ_DATA14_UUID onOff:true];
+}
+-(void) subscribeTap
+{
+    [self _enableFeature:ACC_TAP_DATA_UUID];
+    [self subscription:ACC_SERV_UUID withCUUID:ACC_TAP_DATA_UUID onOff:true];
+}
+-(void) subscribeFreefall
+{
+    [self _enableFeature:ACC_FF_DATA_UUID];
+    [self subscription:ACC_SERV_UUID withCUUID:ACC_FF_DATA_UUID onOff:true];
+}
+-(void) subscribeMotion
+{
+    [self _enableFeature:ACC_MO_DATA_UUID];
+    [self subscription:ACC_SERV_UUID withCUUID:ACC_MO_DATA_UUID onOff:true];
+}
+-(void) subscribeShake
+{
+    [self _enableFeature:ACC_TRAN_DATA_UUID];
+    [self subscription:ACC_SERV_UUID withCUUID:ACC_TRAN_DATA_UUID onOff:true];
+}
+
+// Turn off features
+-(void) unsubscribeXYZ8
+{
+    [self _disableFeature:ACC_XYZ_DATA8_UUID];
+    [self subscription:ACC_SERV_UUID withCUUID:ACC_XYZ_DATA8_UUID onOff:false];
 }
 
 @end
