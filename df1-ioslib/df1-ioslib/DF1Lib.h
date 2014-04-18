@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
+#import "DF1LibDefs.h"
 #import "DF1LibUtil.h"
 
 @protocol DF1Delegate;  // forward declaration
@@ -43,8 +44,10 @@
  *               unique peripheral discovered.
  */
 -(void) scan:(NSUInteger) maxDevices;
+-(void) stopScan:(BOOL) clear;
 -(void) connect:(CBPeripheral*) peripheral;
 -(void) disconnect:(CBPeripheral*) peripheral;
+-(void) askRSSI:(CBPeripheral*) peripheral;
 
 -(void) subscription:(UInt16) suuid withCUUID:(UInt16) cuuid onOff:(BOOL)enable;
 -(void) subscribeXYZ8;
@@ -86,12 +89,14 @@
 @required
 
 -(bool) didScan:(NSArray*) devices;
--(bool) didConnectPeripheral:(CBPeripheral*) peripheral;
--(bool) receivedXYZ8:(double*) data;
--(bool) receivedXYZ14:(double*) data;
+-(void) didStopScan;
+-(void) didConnectPeripheral:(CBPeripheral*) peripheral;
+-(void) receivedXYZ8:(double*) data;
+-(void) receivedXYZ14:(double*) data;
 
 @optional
 
 -(void) hasCentralErrors:(CBCentralManager*) central;
+-(bool) didUpdateRSSI:(CBPeripheral*) peripheral withRSSI:(float) rssi;
 
 @end

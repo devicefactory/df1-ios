@@ -16,6 +16,7 @@
 		C56A3F8A18DF7A8300DB2A5C /* df1_ioslibTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C56A3F8918DF7A8300DB2A5C /* df1_ioslibTests.m */; };
 		C56A3F9518DF7B3800DB2A5C /* DF1Lib.m in Sources */ = {isa = PBXBuildFile; fileRef = C56A3F9418DF7B3800DB2A5C /* DF1Lib.m */; };
 		C56A3F9918DF80D100DB2A5C /* DF1LibUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = C56A3F9818DF80D100DB2A5C /* DF1LibUtil.m */; };
+		C56C08A21901C447001FF641 /* NSData+Conversion.m in Sources */ = {isa = PBXBuildFile; fileRef = C56C08A11901C447001FF641 /* NSData+Conversion.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,8 @@
 		C56A3F9618DF80D100DB2A5C /* DF1LibDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1LibDefs.h; sourceTree = "<group>"; };
 		C56A3F9718DF80D100DB2A5C /* DF1LibUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1LibUtil.h; sourceTree = "<group>"; };
 		C56A3F9818DF80D100DB2A5C /* DF1LibUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1LibUtil.m; sourceTree = "<group>"; };
+		C56C08A01901C447001FF641 /* NSData+Conversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Conversion.h"; sourceTree = "<group>"; };
+		C56C08A11901C447001FF641 /* NSData+Conversion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Conversion.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +115,8 @@
 		C56A3F6F18DF7A8300DB2A5C /* df1-ioslib */ = {
 			isa = PBXGroup;
 			children = (
+				C56C08A01901C447001FF641 /* NSData+Conversion.h */,
+				C56C08A11901C447001FF641 /* NSData+Conversion.m */,
 				C56A3F9618DF80D100DB2A5C /* DF1LibDefs.h */,
 				C56A3F9718DF80D100DB2A5C /* DF1LibUtil.h */,
 				C56A3F9818DF80D100DB2A5C /* DF1LibUtil.m */,
@@ -229,6 +234,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C56C08A21901C447001FF641 /* NSData+Conversion.m in Sources */,
 				C56A3F9518DF7B3800DB2A5C /* DF1Lib.m in Sources */,
 				C56A3F9918DF80D100DB2A5C /* DF1LibUtil.m in Sources */,
 			);

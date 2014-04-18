@@ -107,23 +107,24 @@
 //
 // isCharacteristicNotifable
 //
-+(BOOL) isCharacteristicNotifiable:(CBPeripheral *)peripheral sCBUUID:(CBUUID *)sCBUUID cCBUUID:(CBUUID *) cCBUUID
++(bool) isCharacteristicNotifiable:(CBPeripheral *)peripheral sCBUUID:(CBUUID *)sCBUUID cCBUUID:(CBUUID *) cCBUUID
 {
     CBCharacteristic* characteristic = [DF1LibUtil findCharacteristic:peripheral sCBUUID:sCBUUID cCBUUID:cCBUUID];
     if(characteristic == nil)
         return false;
 
-    return characteristic.properties & CBCharacteristicPropertyNotify;
+    return characteristic.properties == CBCharacteristicPropertyNotify;
+    // return characteristic.properties & CBCharacteristicPropertyNotify;
 }
 
-+(BOOL) isCharacteristicNotifiable:(CBPeripheral *)peripheral sStrUUID:(NSString*)sUUID cStrUUID:(NSString*) cUUID
++(bool) isCharacteristicNotifiable:(CBPeripheral *)peripheral sStrUUID:(NSString*)sUUID cStrUUID:(NSString*) cUUID
 {
     CBUUID* cb_suuid = [CBUUID UUIDWithString:sUUID];
     CBUUID* cb_cuuid = [CBUUID UUIDWithString:cUUID];
     return [DF1LibUtil isCharacteristicNotifiable:peripheral sCBUUID:cb_suuid cCBUUID:cb_cuuid];
 }
 
-+(BOOL) isCharacteristicNotifiable:(CBPeripheral *)peripheral sUUID:(UInt16)sUUID cUUID:(UInt16) cUUID
++(bool) isCharacteristicNotifiable:(CBPeripheral *)peripheral sUUID:(UInt16)sUUID cUUID:(UInt16) cUUID
 {
     CBUUID* cb_suuid = [DF1LibUtil IntToCBUUID:sUUID];
     CBUUID* cb_cuuid = [DF1LibUtil IntToCBUUID:cUUID];
@@ -210,7 +211,7 @@
  *  if they are equal and 0 if they are not
  *
  */
-+(BOOL) compareCBUUIDToInt:(CBUUID *)UUID1 UUID2:(UInt16)UUID2 {
++(bool) compareCBUUIDToInt:(CBUUID *)UUID1 UUID2:(UInt16)UUID2 {
     char b1[16];
     [UUID1.data getBytes:b1];
     UInt16 b2 = [self swap:UUID2];
@@ -271,9 +272,9 @@
     return temp;
 }
 
-+(BOOL) doesPeripheral: (CBPeripheral*) p haveServiceUUID:(CBUUID*) uuid
++(bool) doesPeripheral: (CBPeripheral*) p haveServiceUUID:(CBUUID*) uuid
 {
-    BOOL foundService = NO;
+    bool foundService = NO;
     for(CBService* s in p.services)
     {
         if([s.UUID isEqual: uuid])
@@ -285,7 +286,7 @@
     return foundService;
 }
 
-+(BOOL) isUUID: (CBUUID*) uuid thisInt: (UInt16) intuuid
++(bool) isUUID: (CBUUID*) uuid thisInt: (UInt16) intuuid
 {
   return ([DF1LibUtil CBUUIDToInt:uuid]==intuuid);
 }

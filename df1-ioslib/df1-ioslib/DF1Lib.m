@@ -11,7 +11,7 @@
 #import "DF1Lib.h"
 #import "DF1LibUtil.h"
 #import "DF1LibDefs.h"
-
+#import "NSData+Conversion.h"
 
 // Private stuff
 @interface DF1 ()
@@ -32,7 +32,6 @@
 
 
 @implementation DF1
-
 
 -(id) initWithDelegate:(id<DF1Delegate>) userDelegate
 {
@@ -77,14 +76,36 @@
         return;
     }
     // rssiTimer = [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(triggerReadRSSI:) userInfo:nil repeats:YES];
-    CBUUID *su = [DF1LibUtil IntToCBUUID:ACC_SERV_UUID];
+    // CBUUID *su = [DF1LibUtil IntToCBUUID:ACC_SERV_UUID];
     // defining these services caused the scan to fail
-    NSArray *services = [NSArray arrayWithObject:su];
+    // NSArray *services = [NSArray arrayWithObject:su];
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO],
                                           CBCentralManagerScanOptionAllowDuplicatesKey, nil];
     [self.m scanForPeripheralsWithServices:nil options:options];
 
     DF_DBG(@"scanning for peripheral");
+}
+
+-(void) stopScan:(BOOL) clear
+{
+    if(!self.m)
+        return;
+
+    DF_DBG(@"stopping central scan"); 
+    [self.m stopScan];
+
+    if(clear)
+    {
+        // should we disconnect all the peripherals?
+        for (int i=0; i<self.devices.count; i++)
+        {
+            CBPeripheral *p = [self.devices objectAtIndex:i];
+            if([self _isPeripheralValid:p]) {
+                [self.m cancelPeripheralConnection:p];
+            }
+        }
+        [self.devices removeAllObjects];
+    }
 }
 
 
@@ -121,6 +142,14 @@
             self.p = nil;
         }
         [self.m cancelPeripheralConnection:peripheral];
+    }
+}
+
+-(void) askRSSI:(CBPeripheral *)peripheral
+{
+    if([self _isPeripheralValid:peripheral])
+    {
+        [peripheral readRSSI]; // will invokte delegate function 
     }
 }
 
@@ -222,6 +251,8 @@
         if(!keepScanning)
         {
             [self.m stopScan];
+            if([self.delegate respondsToSelector:@selector(didStopScan)])
+                [self.delegate didStopScan];
         }
     }
     /* left here as reference from:
@@ -296,11 +327,13 @@
     [self.m stopScan];
 }
 
-- (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
+
+- (void) peripheral:(CBPeripheral *)peripheral
+    didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
 {
     NSLog(@"entering didDiscoverCharacteristicsForService: %@", service.UUID);
     
-    if([[peripheral.name lowercaseString] hasPrefix:@"dfmove"] &&
+    if([[peripheral.name lowercaseString] hasPrefix:@"df1"] &&
         [DF1LibUtil isUUID:service.UUID thisInt:ACC_SERV_UUID] &&
         [service.characteristics count]>0) {
         // int i = [self _hasPeripheral:peripheral];
@@ -310,28 +343,41 @@
     }
 }
 
--(void) peripheral:(CBPeripheral *)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
+
+-(void) peripheral:(CBPeripheral *)peripheral
+    didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic
+    error:(NSError *)error
 {
     NSLog(@"didUpdateNotificationStateForCharacteristic %@ error = %@",characteristic,error);
 }
 
--(void) peripheral:(CBPeripheral *)peripheral didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
+
+-(void) peripheral:(CBPeripheral *)peripheral
+    didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
     NSLog(@"didWriteValueForCharacteristic %@ error = %@",characteristic,error);
 }
 
+
 - (void) peripheralDidUpdateRSSI:(CBPeripheral *)peripheral error:(NSError *)error
 {
     NSUInteger i = [self _hasPeripheral:peripheral];
-    NSLog(@"peripheralDidUpdateRSSI for [%lu] %@ = %f error = %@",(unsigned long)i, peripheral.name, [peripheral.RSSI floatValue], error);
+    float rssi = [peripheral.RSSI floatValue];
+    DF_DBG(@"peripheralDidUpdateRSSI for [%lu] %@ = %f error = %@",
+            (unsigned long)i, peripheral.name, [peripheral.RSSI floatValue], error);
     if(i!=NSNotFound) {
         // NSLog([NSString stringWithFormat:@"RSSI %.0fdBm:", [peripheral.RSSI floatValue]]);
-        NSLog(@"RSSI = %f",[peripheral.RSSI floatValue]);
+        DF_DBG(@"RSSI = %f",rssi);
+        if(self.delegate && [self.delegate respondsToSelector:@selector(didUpdateRSSI:withRSSI:)])
+        {
+            [self.delegate didUpdateRSSI:peripheral withRSSI:rssi];
+        }
     }
 }
 
 
--(void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
+-(void)peripheral:(CBPeripheral *)peripheral
+    didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
     static float lastx = 0;
     static float lasty = 0;
@@ -442,7 +488,8 @@
     // alloc on the fly
     if(g_reg == nil) 
         g_reg = [[NSMutableDictionary alloc] init];
-
+    // notice the use for category extension function
+    DF_DBG(@"received from %@ = %@", [DF1LibUtil CBUUIDToString:c.UUID], [c.value hexString]);
     // here, strong reference to the object (value) is maintained 
     [g_reg setObject:c.value forKey:c.UUID]; // cuuid (CBUUID*) -> CBCharacteristic.value (NSData*)
 }
@@ -559,5 +606,62 @@
     [self _disableFeature:ACC_XYZ_DATA8_UUID];
     [self subscription:ACC_SERV_UUID withCUUID:ACC_XYZ_DATA8_UUID onOff:false];
 }
+
+-(void) modifyRange:(UInt8) value
+{
+}
+
+-(void) modifyTapThsz:(double) g
+{
+}
+
+-(void) modifyTapThsx:(double) g
+{
+}
+
+-(void) modifyTapThsy:(double) g
+{
+}
+
+-(void) modifyTapTmlt:(double) msec
+{
+}
+
+-(void) modifyTapLtcy:(double) msec
+{
+}
+
+-(void) modifyTapWind:(double) msec
+{
+}
+
+-(void) modifyFreefallThs:(double) g
+{
+}
+
+-(void) modifyFreefallDeb:(double) msec
+{
+}
+
+-(void) modifyMotionThs:(double) g
+{
+}
+
+-(void) modifyMotionDeb:(double) msec
+{
+}
+
+-(void) modifyShakeThs:(double) g
+{
+}
+
+-(void) modifyShakeDeb:(double) msec
+{
+}
+
+-(void) modifyShakeHpf:(double) hz
+{
+}
+
 
 @end

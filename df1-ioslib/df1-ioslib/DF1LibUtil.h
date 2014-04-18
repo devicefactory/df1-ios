@@ -34,16 +34,15 @@
 +(CBUUID*) expandToTIUUID:(CBUUID *)sourceUUID;
 /// Function to convert an CBUUID to NSString
 +(NSString*) CBUUIDToString:(CBUUID *)inUUID;
-
 +(const char*) UUIDToString:(CFUUIDRef)UUID;
 +(int) compareCBUUID:(CBUUID *) UUID1 UUID2:(CBUUID *)UUID2;
-+(int) compareCBUUIDToInt:(CBUUID *)UUID1 UUID2:(UInt16)UUID2;
++(bool) compareCBUUIDToInt:(CBUUID *)UUID1 UUID2:(UInt16)UUID2;
 +(UInt16)   CBUUIDToInt:(CBUUID *) UUID;
 +(CBUUID*) IntToCBUUID:(UInt16)UUID;
 +(UInt16) swap:(UInt16)s;
 
-+(BOOL) doesPeripheral: (CBPeripheral*) p haveServiceUUID:(CBUUID*) uuid;
-+(BOOL) isUUID: (CBUUID*) uuid thisInt: (UInt16) intuuid;
++(bool) doesPeripheral: (CBPeripheral*) p haveServiceUUID:(CBUUID*) uuid;
++(bool) isUUID: (CBUUID*) uuid thisInt: (UInt16) intuuid;
 
 @end
 
