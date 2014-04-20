@@ -1,3 +1,18 @@
+/*
+Here, I tried to avoid using the storyboard and setup everything in code.
+This is to avoid potential version control conflicts arising from layout related tweaking on
+storyboard xml files. Also, it's better to maintain full control of the app's look and feel
+in the code.
+
+However, if you do choose to implement UITableView/UITableViewCell via Storyboard following
+facts need to be considered:
+
+* Do NOT call [tableView registerClass:[yourCell class] for CellReuseIdentifier:@"blah"]
+    This confuses the reuseIdentifier with the you define on the storyboard. 
+* No need to initialize the underlying labels or subview members within UITableViewCell.
+* No need to override "layoutSubviews" function.
+
+*/
 #define DF_LEVEL 0
 
 #import "DF1Lib.h"
@@ -22,7 +37,6 @@
 {
     // Custom initialization
     self.df = [[DF1 alloc] initWithDelegate:self];
-    self.nDevices = [[NSMutableArray alloc] init];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -39,8 +53,6 @@
 - (void) loadView
 {
     [super loadView];
-    // self.tableView.rowHeight = 60.0f;
-    // self.tableView.backgroundColor = [UIColor colorWithWhite:0.75f alpha:1.0f];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     [self.tableView registerClass:[DF1DevCell class] forCellReuseIdentifier:@"df1cell"];
 }
@@ -52,16 +64,10 @@
 
     self.navigationItem.title = @"DF1 Demo1";
 
-    UIImageView *imageView = [[UIImageView alloc] init];
-    imageView.image = [UIImage imageNamed:@"DFLOGO07_launch.png"];
-    [imageView setAutoresizingMask:UIViewAutoresizingNone];
-    imageView.contentMode = UIViewContentModeScaleAspectFit;
-
-    // [self.tableView setBackgroundColor: [UIColor colorWithPatternImage: [UIImage imageNamed:@"background1.png"]]];
-    [self.tableView setBackgroundView: imageView];
+    [self.tableView setBackgroundView: [[UIImageView alloc]
+        initWithImage: [UIImage imageNamed:@"DFLOGO07_launch.png"]]];
 
     [self initializeMembers];
-    // [self.tableView reloadData];
 
     self.navigationItem.rightBarButtonItem = BARBUTTON(@"Clear", @selector(clearScan));
     self.refreshControl = [[UIRefreshControl alloc] init];
@@ -73,7 +79,6 @@
 {
     // self.navigationController.navigationBar.tintColor = [UIColor blackColor];
     self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.0 alpha:0.7];
-    
     // kick off timer for reading RSSI for connected peripherals
     rssiTimer = [NSTimer scheduledTimerWithTimeInterval:3.0f
         target:self selector:@selector(triggerReadRSSI:) userInfo:nil repeats:YES];
@@ -94,9 +99,8 @@
 
 - (void) clearScan
 {
-    [self.refreshControl endRefreshing];
-    [self.df stopScan:YES]; // clear the devices
-    // [self.nDevices removeAllObjects];
+    [self.df stopScan:true]; // clear the internal device list
+    [self finishScan];
     [self.tableView reloadData];
 }
 
@@ -106,31 +110,29 @@
     self.title = @"Scanning...";
     // self.navigationItem.rightBarButtonItem.enabled = NO;
     [self.refreshControl beginRefreshing];
-
     [self.df scan:10];
-    [NSTimer scheduledTimerWithTimeInterval:20.0f
+    [NSTimer scheduledTimerWithTimeInterval:6.0f
         target:self selector:@selector(timeoutScan:) userInfo:nil repeats:NO];
 }
 
 - (void) finishScan
 {
     DF_DBG(@"finishScan");
-    // [self.df stopScan:NO];
+    [self.refreshControl endRefreshing];
     self.title = @"Select Device";
     self.navigationItem.rightBarButtonItem.enabled = YES;
-    [self.refreshControl endRefreshing];
 }
 
 // so that we avoid scanning indefinitely
 - (void) timeoutScan: (NSTimer *) timer
 {
     if([self.refreshControl isRefreshing]) {
-       self.title = @"Select Device";
-       [self finishScan];
+        self.title = @"Select Device";
+        [self.df stopScan:false]; // don't clear the internal device list
+        [self finishScan];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Scan Timeout" message:@"Stopped scanning"
                                 delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-        // [self.df stopScan:NO];
+        // [alert show];
         // [alert release];
     }
 }
@@ -153,22 +155,39 @@
 
 #pragma mark - DF1Delegate delegate
 
+// NOTE: once we find the df1 device we want, this function should stop the central scan
+//       and initiate connection to the peripheral as necessary.
 -(bool) didScan:(NSArray*) devices
 {
     // simply set the pointer to the internal one : is this dangerous?
     self.nDevices = devices; 
     [self.tableView reloadData];
-    return false; // false means stop scanning
+    return (devices.count>2) ? false : true; // just scan for more than 2 devices
 }
 
 -(void) didStopScan
 {
-    [self finishScan];
+    DF_DBG(@"stopped scanning");    
+}
+
+-(void) didConnectPeripheral:(CBPeripheral *) peripheral
+{
+
 }
 
 -(void) didUpdateRSSI:(CBPeripheral *)p withRSSI:(float)rssi
 {
     DF_DBG(@"received rssi: %f",rssi);
+}
+
+-(void) receivedXYZ8:(double*) data
+{
+
+}
+
+-(void) receivedXYZ14:(double*) data
+{
+
 }
 
 
@@ -187,14 +206,18 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CBPeripheral *p = [self.nDevices objectAtIndex:indexPath.row];
-    DF_NRM(@"trying to create df1 cell!");
 
     // depending on name, we returns either the DF1DevCell or GenericCell
     if([[p.name lowercaseString] hasPrefix:@"df1"]) {
+        DF_NRM(@"trying to create df1 cell!");
         DF1DevCell *cell = (DF1DevCell *) [self.tableView dequeueReusableCellWithIdentifier:@"df1cell"
                             forIndexPath:indexPath];
+        if(cell==nil) {
+            cell = [[DF1DevCell alloc] initWithStyle:UITableViewCellStyleDefault
+                    reuseIdentifier:@"df1cell"];
+        }
+
         cell.nameLabel.text = [NSString stringWithFormat:@"%@",p.name];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@",p.name];
         // cell.detailLabel.text = [NSString stringWithFormat:@"%@",[DF1LibUtil CBUUIDToString:p.UUID]];
         cell.subLabel.text = [NSString stringWithFormat:@"RSSI: NA"];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -258,7 +281,7 @@
 
 -(void) flashLED:(CBPeripheral*) p withByte:(NSData*) data
 {
-    if(!p.isConnected)
+    if(![self.df isConnected:p])
         return;
     DF_DBG(@"writing characteristic to the LED service for peripheral: %@", p.name);
     [DF1LibUtil writeCharacteristic:p sUUID:TEST_SERV_UUID cUUID:TEST_CONF_UUID data:data];

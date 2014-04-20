@@ -44,10 +44,11 @@
  *               unique peripheral discovered.
  */
 -(void) scan:(NSUInteger) maxDevices;
--(void) stopScan:(BOOL) clear;
+-(void) stopScan:(bool) clear;
 -(void) connect:(CBPeripheral*) peripheral;
 -(void) disconnect:(CBPeripheral*) peripheral;
 -(void) askRSSI:(CBPeripheral*) peripheral;
+-(bool) isConnected:(CBPeripheral*) peripheral;
 
 -(void) subscription:(UInt16) suuid withCUUID:(UInt16) cuuid onOff:(BOOL)enable;
 -(void) subscribeXYZ8;
@@ -91,12 +92,12 @@
 -(bool) didScan:(NSArray*) devices;
 -(void) didStopScan;
 -(void) didConnectPeripheral:(CBPeripheral*) peripheral;
--(void) receivedXYZ8:(double*) data;
--(void) receivedXYZ14:(double*) data;
 
 @optional
 
 -(void) hasCentralErrors:(CBCentralManager*) central;
--(bool) didUpdateRSSI:(CBPeripheral*) peripheral withRSSI:(float) rssi;
+-(void) didUpdateRSSI:(CBPeripheral*) peripheral withRSSI:(float) rssi;
+-(void) receivedXYZ8:(double*) data;
+-(void) receivedXYZ14:(double*) data;
 
 @end

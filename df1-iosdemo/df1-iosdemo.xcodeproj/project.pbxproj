@@ -424,6 +424,7 @@
 					"/Users/jbkim/Development/df/df1-ios/df1-ioslib/build/Debug-iphoneos",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -446,6 +447,7 @@
 					"/Users/jbkim/Development/df/df1-ios/df1-ioslib/build/Debug-iphoneos",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

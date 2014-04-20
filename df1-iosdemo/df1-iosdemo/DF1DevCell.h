@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreBluetooth/CoreBluetooth.h>
-// #import "UITableViewCell.h"
 
 @protocol DF1DevCellDelegate
 
@@ -19,10 +18,11 @@
 
 @interface DF1DevCell : UITableViewCell
 
-@property (nonatomic,weak) IBOutlet UILabel *nameLabel;
-@property (nonatomic,weak) IBOutlet UILabel *subLabel;
-@property (nonatomic,weak) IBOutlet UILabel *detailLabel;
-@property (nonatomic,weak) IBOutlet UIImageView *deviceIcon;
+// IBOutlet markers are not necessary on manual interface build, but just in case
+@property (nonatomic,strong) IBOutlet UILabel *nameLabel;
+@property (nonatomic,strong) IBOutlet UILabel *subLabel;
+@property (nonatomic,strong) IBOutlet UILabel *detailLabel;
+@property (nonatomic,strong) IBOutlet UIImageView *deviceIcon;
 @property (nonatomic,assign) id<DF1DevCellDelegate> delegate;
 @property (nonatomic,assign) CBPeripheral *p;
 @property (nonatomic,weak) IBOutlet UIButton *ledButton;

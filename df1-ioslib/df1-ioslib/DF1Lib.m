@@ -22,7 +22,6 @@
 }
 
 -(NSUInteger) _hasPeripheral:(CBPeripheral*) p;
--(BOOL) _isPeripheralValid:(CBPeripheral*) p;
 -(void) _syncParameters;
 
 -(void) _enableFeature:(UInt16) cuuid;
@@ -47,7 +46,7 @@
 }
 
 
--(BOOL) _isPeripheralValid:(CBPeripheral*) p
+-(bool) isConnected:(CBPeripheral*) p
 {
     if(p==nil)
     {
@@ -86,7 +85,7 @@
     DF_DBG(@"scanning for peripheral");
 }
 
--(void) stopScan:(BOOL) clear
+-(void) stopScan:(bool) clear
 {
     if(!self.m)
         return;
@@ -100,12 +99,15 @@
         for (int i=0; i<self.devices.count; i++)
         {
             CBPeripheral *p = [self.devices objectAtIndex:i];
-            if([self _isPeripheralValid:p]) {
+            if([self isConnected:p]) {
                 [self.m cancelPeripheralConnection:p];
             }
         }
         [self.devices removeAllObjects];
     }
+
+    if([self.delegate respondsToSelector:@selector(didStopScan)])
+        [self.delegate didStopScan];
 }
 
 
@@ -120,14 +122,13 @@
 
 -(void) disconnect:(CBPeripheral *)peripheral
 {
-    [self.m stopScan];
     if(peripheral==nil)
     {
         DF_DBG(@"removing %d peripherals", self.devices.count);
         for(int i=0; i<self.devices.count; i++)
         {
             CBPeripheral *p = [self.devices objectAtIndex:i];
-            if([self _isPeripheralValid:p])
+            if([self isConnected:p])
                 // [self deconfigureDevice:p];
                 [self.m cancelPeripheralConnection:p];
         }
@@ -147,7 +148,7 @@
 
 -(void) askRSSI:(CBPeripheral *)peripheral
 {
-    if([self _isPeripheralValid:peripheral])
+    if([self isConnected:peripheral])
     {
         [peripheral readRSSI]; // will invokte delegate function 
     }
@@ -240,7 +241,7 @@
     if(self.devices.count >= g_deviceCountMax)
     {
         DF_DBG(@"stopping scan");
-        [self.m stopScan];
+        [self stopScan:false];
     }
 
     if(self.delegate &&
@@ -250,9 +251,7 @@
         bool keepScanning = [self.delegate didScan:(NSArray*) self.devices]; // casting?
         if(!keepScanning)
         {
-            [self.m stopScan];
-            if([self.delegate respondsToSelector:@selector(didStopScan)])
-                [self.delegate didStopScan];
+            [self stopScan:false];
         }
     }
     /* left here as reference from:
@@ -324,7 +323,6 @@
             self.p.delegate = self;
         }
     }
-    [self.m stopScan];
 }
 
 
@@ -466,7 +464,7 @@
 -(void) _syncParameters
 {
     DF_DBG(@"snapping UUID parameters");
-    if(![self _isPeripheralValid:self.p]) return;
+    if(![self isConnected:self.p]) return;
         
     NSArray *cuuids = @[@ACC_GEN_CFG_UUID, @ACC_ENABLE_UUID,
                         @ACC_TAP_THSZ_UUID, @ACC_TAP_THSX_UUID, @ACC_TAP_THSY_UUID,
@@ -497,7 +495,7 @@
 
 -(void) _enableFeature:(UInt16) cuuid
 {
-    if(![self _isPeripheralValid:self.p]) 
+    if(![self isConnected:self.p]) 
         return;
 
     char enreg = 0x00;
@@ -528,7 +526,7 @@
 
 -(void) _disableFeature:(UInt16) cuuid
 {
-    if(![self _isPeripheralValid:self.p]) 
+    if(![self isConnected:self.p]) 
         return;
 
     char enreg = 0x00;
@@ -560,7 +558,7 @@
 
 -(void) subscription:(UInt16) suuid withCUUID:(UInt16) cuuid onOff:(BOOL)enable
 {
-    if(![self _isPeripheralValid:self.p]) 
+    if(![self isConnected:self.p]) 
     {
         DF_ERR(@"peripheral property self.p not valid!");
         return;

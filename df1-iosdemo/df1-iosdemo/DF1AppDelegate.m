@@ -14,14 +14,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
-    // [application setStatusBarHidden:YES];
-    // [[UINavigationBar appearance] setTintColor:COOKBOOK_BLACK_COLOR];
-    [[UINavigationBar appearance] setTintColor:[UIColor blackColor]];
+    // [[UINavigationBar appearance] setTintColor:[UIColor blackColor]];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    DF1DevListController *devlist = [[DF1DevListController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:devlist];
+    // initial root view controller under navigation view controller
+    DF1DevListController *devlist = [[DF1DevListController alloc] initWithStyle:UITableViewStyleGrouped];
+    UINavigationController *nav   = [[UINavigationController alloc] initWithRootViewController:devlist];
     self.window.rootViewController = nav;
     [self.window makeKeyAndVisible];
     return YES;

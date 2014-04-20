@@ -32,7 +32,10 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) return nil;
-
+    DF_DBG(@"initWithStyle for DF1DevCell");
+    self.accessoryType = UITableViewCellAccessoryNone; // UITableViewCellAccessoryDetailDisclosureButton
+    self.selectionStyle = UITableViewCellSelectionStyleNone;  
+    
     // self.contentView.backgroundColor = [UIColor darkGrayColor];
     self.ledButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     // ledButton.tag = CustomCellActionTitle;
@@ -54,14 +57,18 @@
     self.deviceIcon = [[UIImageView alloc] init];
     [self.deviceIcon setAutoresizingMask:UIViewAutoresizingNone];
     self.deviceIcon.contentMode = UIViewContentModeScaleAspectFit;
+    // UIImage *theImage = [UIImage imageWithContentsOfFile:@"icon.png"];
+    // self.deviceIcon.image = theImage;
 
     [self.contentView addSubview:self.nameLabel];
     [self.contentView addSubview:self.subLabel];
     [self.contentView addSubview:self.detailLabel];
+    [self.contentView addSubview:self.deviceIcon];
     [self.contentView addSubview:self.ledButton];
 
     return self;
 }
+
 
 -(void) layoutSubviews
 {
@@ -71,13 +78,16 @@
     CGRect fr;
 
     // if (contentRect.size.width < WIDTH_CHECKER) {
-    self.nameLabel.font = [UIFont boldSystemFontOfSize:17];
-    fr = CGRectMake(boundsX + 10, 10, 300, 30);
+    self.nameLabel.font = [UIFont boldSystemFontOfSize:18];
+    fr = CGRectMake(boundsX + 10, 10, 200, 30);
     self.nameLabel.frame = fr;
 
     self.subLabel.font = [UIFont boldSystemFontOfSize:12];
-    fr = CGRectMake(boundsX + 10, 30, 300, 30);
+    fr = CGRectMake(boundsX + 10, 40, 200, 30);
     self.subLabel.frame = fr;
+
+    fr = CGRectMake(contantRect.size.width-50, 20, 40, 50);
+    self.deviceIcon.frame = fr 
 
     DF_DBG(@"calling layoutSubview in DF1DevCell");
     // fr = CGRectMake(boundsX + contentRect.size.width - 90, 10, 100, 30);
