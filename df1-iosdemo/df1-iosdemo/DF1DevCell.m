@@ -34,7 +34,10 @@
     if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) return nil;
     DF_DBG(@"initWithStyle for DF1DevCell");
     self.accessoryType = UITableViewCellAccessoryNone; // UITableViewCellAccessoryDetailDisclosureButton
-    self.selectionStyle = UITableViewCellSelectionStyleNone;  
+    // self.selectionStyle = UITableViewCellSelectionStyleNone;
+    // [[self contentView] setBackgroundColor:[UIColor clearColor]];
+    // [[self backgroundView] setBackgroundColor:[UIColor clearColor]];
+    // [self setBackgroundColor:[UIColor clearColor]];
     
     // self.contentView.backgroundColor = [UIColor darkGrayColor];
     self.ledButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -45,21 +48,21 @@
     self.nameLabel = [[UILabel alloc] init];
     self.nameLabel.textAlignment = NSTextAlignmentLeft;
     self.nameLabel.font = [UIFont boldSystemFontOfSize:14];
+    self.nameLabel.textColor = [UIColor colorWithRed:0.2 green:0.2 blue:0.5 alpha:1.0];
 
     self.subLabel = [[UILabel alloc] init];
     self.subLabel.textAlignment = NSTextAlignmentLeft;
     self.subLabel.font = [UIFont boldSystemFontOfSize:8];
+    self.subLabel.textColor = [UIColor grayColor];
 
     self.detailLabel = [[UILabel alloc] init];
     self.detailLabel.textAlignment = NSTextAlignmentLeft;
     self.detailLabel.font = [UIFont boldSystemFontOfSize:8];
 
-    self.deviceIcon = [[UIImageView alloc] init];
+    self.deviceIcon = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"oem-front1-icon.png"]];
     [self.deviceIcon setAutoresizingMask:UIViewAutoresizingNone];
     self.deviceIcon.contentMode = UIViewContentModeScaleAspectFit;
-    // UIImage *theImage = [UIImage imageWithContentsOfFile:@"icon.png"];
-    // self.deviceIcon.image = theImage;
-
+    
     [self.contentView addSubview:self.nameLabel];
     [self.contentView addSubview:self.subLabel];
     [self.contentView addSubview:self.detailLabel];
@@ -75,19 +78,18 @@
     [super layoutSubviews];
     CGRect contentRect = self.contentView.bounds;
     CGFloat boundsX = contentRect.origin.x;
-    CGRect fr;
+    // CGRect fr;
 
-    // if (contentRect.size.width < WIDTH_CHECKER) {
+    self.deviceIcon.frame = CGRectMake(boundsX+11, 12, 60, 60);
+    
     self.nameLabel.font = [UIFont boldSystemFontOfSize:18];
-    fr = CGRectMake(boundsX + 10, 10, 200, 30);
-    self.nameLabel.frame = fr;
+    self.nameLabel.frame = CGRectMake(boundsX+85, 15, 200, 30);
 
     self.subLabel.font = [UIFont boldSystemFontOfSize:12];
-    fr = CGRectMake(boundsX + 10, 40, 200, 30);
-    self.subLabel.frame = fr;
+    self.subLabel.frame = CGRectMake(boundsX+85, 40, 200, 30);
 
-    fr = CGRectMake(contantRect.size.width-50, 20, 40, 50);
-    self.deviceIcon.frame = fr 
+    // fr = CGRectMake(contentRect.size.width-75, 10, 60, 60);
+    // self.deviceIcon.frame = fr;
 
     DF_DBG(@"calling layoutSubview in DF1DevCell");
     // fr = CGRectMake(boundsX + contentRect.size.width - 90, 10, 100, 30);

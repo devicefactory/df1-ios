@@ -91,7 +91,7 @@
 
 -(bool) didScan:(NSArray*) devices;
 -(void) didStopScan;
--(void) didConnectPeripheral:(CBPeripheral*) peripheral;
+-(void) didConnect:(CBPeripheral*) peripheral; // at this point, services and characteristics discovered
 
 @optional
 

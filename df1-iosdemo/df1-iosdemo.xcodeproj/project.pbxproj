@@ -26,6 +26,10 @@
 		C56C08991901A4E9001FF641 /* DF1DevListController.m in Sources */ = {isa = PBXBuildFile; fileRef = C56C08981901A4E9001FF641 /* DF1DevListController.m */; };
 		C56C089E1901C1B0001FF641 /* DF1DevCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C56C089B1901C1B0001FF641 /* DF1DevCell.m */; };
 		C56C089F1901C1B0001FF641 /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = C56C089D1901C1B0001FF641 /* Utility.m */; };
+		C56C08A51904A971001FF641 /* DFLOGO07_58x58.png in Resources */ = {isa = PBXBuildFile; fileRef = C56C08A41904A971001FF641 /* DFLOGO07_58x58.png */; };
+		C56C08A71904AA14001FF641 /* DFLOGO07_launch_2.png in Resources */ = {isa = PBXBuildFile; fileRef = C56C08A61904AA14001FF641 /* DFLOGO07_launch_2.png */; };
+		C56C08A91904ACD4001FF641 /* DFLOGO07_launch_invert.png in Resources */ = {isa = PBXBuildFile; fileRef = C56C08A81904ACD4001FF641 /* DFLOGO07_launch_invert.png */; };
+		C56C08AB1904BA2D001FF641 /* oem-front1-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = C56C08AA1904BA2D001FF641 /* oem-front1-icon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +69,10 @@
 		C56C089B1901C1B0001FF641 /* DF1DevCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1DevCell.m; sourceTree = "<group>"; };
 		C56C089C1901C1B0001FF641 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
 		C56C089D1901C1B0001FF641 /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utility.m; sourceTree = "<group>"; };
+		C56C08A41904A971001FF641 /* DFLOGO07_58x58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DFLOGO07_58x58.png; path = "df1-iosdemo/assets/DFLOGO07_58x58.png"; sourceTree = "<group>"; };
+		C56C08A61904AA14001FF641 /* DFLOGO07_launch_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DFLOGO07_launch_2.png; path = "df1-iosdemo/assets/DFLOGO07_launch_2.png"; sourceTree = "<group>"; };
+		C56C08A81904ACD4001FF641 /* DFLOGO07_launch_invert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DFLOGO07_launch_invert.png; path = "df1-iosdemo/assets/DFLOGO07_launch_invert.png"; sourceTree = "<group>"; };
+		C56C08AA1904BA2D001FF641 /* oem-front1-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "oem-front1-icon.png"; path = "df1-iosdemo/assets/oem-front1-icon.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +104,7 @@
 		C56A3EEB18DF77B700DB2A5C = {
 			isa = PBXGroup;
 			children = (
+				C56C08A31904A95F001FF641 /* assets */,
 				C56A3EFD18DF77B700DB2A5C /* df1-iosdemo */,
 				C56A3F1F18DF77B700DB2A5C /* df1-iosdemoTests */,
 				C56A3EF618DF77B700DB2A5C /* Frameworks */,
@@ -171,6 +180,17 @@
 				C56A3F2218DF77B700DB2A5C /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C56C08A31904A95F001FF641 /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				C56C08AA1904BA2D001FF641 /* oem-front1-icon.png */,
+				C56C08A81904ACD4001FF641 /* DFLOGO07_launch_invert.png */,
+				C56C08A61904AA14001FF641 /* DFLOGO07_launch_2.png */,
+				C56C08A41904A971001FF641 /* DFLOGO07_58x58.png */,
+			);
+			name = assets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -253,7 +273,11 @@
 				C56A3F0E18DF77B700DB2A5C /* Main_iPad.storyboard in Resources */,
 				C56A3F1318DF77B700DB2A5C /* Images.xcassets in Resources */,
 				C56A3F0B18DF77B700DB2A5C /* Main_iPhone.storyboard in Resources */,
+				C56C08A51904A971001FF641 /* DFLOGO07_58x58.png in Resources */,
+				C56C08AB1904BA2D001FF641 /* oem-front1-icon.png in Resources */,
 				C56A3F0218DF77B700DB2A5C /* InfoPlist.strings in Resources */,
+				C56C08A71904AA14001FF641 /* DFLOGO07_launch_2.png in Resources */,
+				C56C08A91904ACD4001FF641 /* DFLOGO07_launch_invert.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

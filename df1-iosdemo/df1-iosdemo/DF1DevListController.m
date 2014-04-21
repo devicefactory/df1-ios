@@ -36,7 +36,8 @@ facts need to be considered:
 - (void)initializeMembers
 {
     // Custom initialization
-    self.df = [[DF1 alloc] initWithDelegate:self];
+    if(self.df == nil)
+        self.df = [[DF1 alloc] initWithDelegate:self];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -46,6 +47,7 @@ facts need to be considered:
         [self initializeMembers];
         self.title = @"DF1 Demo1";
         DF_DBG(@"loaded DF1DevListController");
+
     }
     return self;
 }
@@ -63,22 +65,29 @@ facts need to be considered:
     DF_DBG(@"view loaded DF1DevListController");
 
     self.navigationItem.title = @"DF1 Demo1";
-
-    [self.tableView setBackgroundView: [[UIImageView alloc]
-        initWithImage: [UIImage imageNamed:@"DFLOGO07_launch.png"]]];
-
+    // style related stuff
+    // self.tableView.backgroundColor = [UIColor clearColor];
     [self initializeMembers];
+    
+    [self.tableView setBackgroundView: [[UIImageView alloc]
+                                        initWithImage: [UIImage imageNamed:@"DFLOGO07_launch_invert.png"]]];
 
     self.navigationItem.rightBarButtonItem = BARBUTTON(@"Clear", @selector(clearScan));
+    
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(triggerScan)
         forControlEvents:UIControlEventValueChanged];
+    // [self.refreshControl setBackgroundColor:[UIColor grayColor]];
+    self.refreshControl.tintColor = [UIColor redColor];
+    // make sure it's on top of the background
+    self.refreshControl.layer.zPosition = self.tableView.backgroundView.layer.zPosition + 1;
 }
 
 -(void) viewDidAppear:(BOOL)animated
 {
     // self.navigationController.navigationBar.tintColor = [UIColor blackColor];
-    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.0 alpha:0.7];
+    // self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.0 alpha:0.7];
+    [[UINavigationBar appearance] setTintColor:[UIColor blackColor]];
     // kick off timer for reading RSSI for connected peripherals
     rssiTimer = [NSTimer scheduledTimerWithTimeInterval:3.0f
         target:self selector:@selector(triggerReadRSSI:) userInfo:nil repeats:YES];
@@ -130,8 +139,8 @@ facts need to be considered:
         self.title = @"Select Device";
         [self.df stopScan:false]; // don't clear the internal device list
         [self finishScan];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Scan Timeout" message:@"Stopped scanning"
-                                delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        // UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Scan Timeout" message:@"Stopped scanning"
+        //                        delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         // [alert show];
         // [alert release];
     }
@@ -170,14 +179,24 @@ facts need to be considered:
     DF_DBG(@"stopped scanning");    
 }
 
--(void) didConnectPeripheral:(CBPeripheral *) peripheral
+-(void) didConnect:(CBPeripheral *) peripheral
 {
-
+    DF_DBG(@"did connect peripheral: %@", peripheral.name);
+    for (CBService *s in peripheral.services)
+    {
+        NSString *cname = [DF1LibUtil CBUUIDToString:s.UUID];
+        DF_DBG(@"contains service: %@",cname);
+    }
 }
 
 -(void) didUpdateRSSI:(CBPeripheral *)p withRSSI:(float)rssi
 {
     DF_DBG(@"received rssi: %f",rssi);
+    NSUInteger i = [self.nDevices indexOfObject:p];
+    if(i!=NSNotFound) {
+        DF1DevCell *cell = (DF1DevCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        cell.subLabel.text = [NSString stringWithFormat:@"RSSI  %.0f dBm", rssi];
+    }
 }
 
 -(void) receivedXYZ8:(double*) data
@@ -220,7 +239,6 @@ facts need to be considered:
         cell.nameLabel.text = [NSString stringWithFormat:@"%@",p.name];
         // cell.detailLabel.text = [NSString stringWithFormat:@"%@",[DF1LibUtil CBUUIDToString:p.UUID]];
         cell.subLabel.text = [NSString stringWithFormat:@"RSSI: NA"];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         // we set these attributes so that the cell can trigger action back to this controller
         cell.p = p;
         cell.delegate = self;
@@ -239,8 +257,9 @@ facts need to be considered:
     } else {
         UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell"
                                  forIndexPath:indexPath];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.text = [NSString stringWithFormat:@"%@",p.name];
-        cell.textLabel.textColor = [UIColor whiteColor];
+        cell.textLabel.textColor = [UIColor grayColor];
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
         // MBGenericDeviceCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
         // cell.nameLabel.text = [NSString stringWithFormat:@"%@",p.name];
@@ -253,21 +272,29 @@ facts need to be considered:
 }
 
 
+- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    // if (section == 0) return 0.0f;
+    return 32.0f;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CBPeripheral *p = [self.nDevices objectAtIndex:indexPath.row];
     if([[p.name lowercaseString] hasPrefix:@"df1"]) {
-        return 100;
+        return 85;
     }
     return 45;
 }
 
 -(NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    // return nil;
+    
     if (section == 0) {
-        if (self.nDevices.count > 1)
+        if (self.nDevices.count > 0)
             return [NSString stringWithFormat:@"%d Devices Found",self.nDevices.count];
         else
-            return [NSString stringWithFormat:@"%d Devices Found",self.nDevices.count];
+            return [NSString stringWithFormat:@"swipe down to scan"];
     }
     return @"";
 }
@@ -291,20 +318,13 @@ facts need to be considered:
 #pragma mark - Table view delegate
 
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // CBPeripheral *p = [self.nDevices objectAtIndex:indexPath.row];
-
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     NSLog(@"setting peripheral to selectedPeripheral: row %d section %d", indexPath.row, indexPath.section);
     // self.selectedPeripheral = p;
+    CBPeripheral *p = [self.nDevices objectAtIndex:indexPath.row];
 
-    //BLEDevice *d = [[BLEDevice alloc]init];
-    //d.p = p;
-    //d.m = self.m;
-    //d.setupData = [self makeSensorTagConfiguration];
-
-    // SensorTagApplicationViewController *vC = [[SensorTagApplicationViewController alloc]initWithStyle:UITableViewStyleGrouped andSensorTag:d];
-    // [self.navigationController pushViewController:vC animated:YES];
+    [self.df connect:p];
 
     // MBFirstViewController *vc = [[MBFirstViewController alloc] initWithBLEDevice:d];
     // [self.navigationController pushViewController:vc animated:YES];

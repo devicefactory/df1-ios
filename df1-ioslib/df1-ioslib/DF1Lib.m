@@ -283,8 +283,10 @@
     // if this peripheral is the one we were trying to connect to
     if([peripheral isEqual: self.p])
     {
-        CBUUID *su = [DF1LibUtil IntToCBUUID:ACC_SERV_UUID];
-        NSArray *services    = [NSArray arrayWithObject:su];
+        CBUUID *aserv = [DF1LibUtil IntToCBUUID:ACC_SERV_UUID];
+        CBUUID *bserv = [DF1LibUtil IntToCBUUID:BATT_SERVICE_UUID];
+        CBUUID *tserv = [DF1LibUtil IntToCBUUID:TEST_SERV_UUID];
+        NSArray *services    = [NSArray arrayWithObjects: aserv, bserv, tserv, nil];
         [peripheral discoverServices:services];
     }
 }
@@ -316,12 +318,13 @@
     for (CBService *s in peripheral.services) {
         UInt16 iuuid = [DF1LibUtil CBUUIDToInt:s.UUID];
         NSLog(@"Service found : %@, 0x%4x",s.UUID, iuuid);
-        if([DF1LibUtil isUUID:s.UUID thisInt:ACC_SERV_UUID]) {
-            [peripheral discoverCharacteristics:nil forService:s];
-            NSLog(@"Found the accel service!!");
-            self.p = peripheral;
-            self.p.delegate = self;
-        }
+        [peripheral discoverCharacteristics:nil forService:s];
+        // if([DF1LibUtil isUUID:s.UUID thisInt:ACC_SERV_UUID]) {
+        //    [peripheral discoverCharacteristics:nil forService:s];
+        //    NSLog(@"Found the accel service!!");
+        //    self.p = peripheral;
+        //    self.p.delegate = self;
+        //}
     }
 }
 
@@ -338,6 +341,10 @@
         NSLog(@"found accelerometer conf characteristic");
         [self _syncParameters];
         // here we subscribe to data
+    }
+    if(self.delegate && [self.delegate respondsToSelector:@selector(didConnect:)])
+    {
+        [self.delegate didConnect:peripheral];
     }
 }
 
@@ -474,8 +481,8 @@
     // read all the config related characteristics first
     for(int i=0; i<cuuids.count; i++)
     {
-        CBUUID* cuuid = cuuids[i];
-        [DF1LibUtil readCharacteristic:self.p sUUID:ACC_SERV_UUID cUUID:[DF1LibUtil CBUUIDToInt:cuuid]];
+        UInt16 cuuid = cuuids[i];
+        [DF1LibUtil readCharacteristic:self.p sUUID:ACC_SERV_UUID cUUID:cuuid];
     }
 }
 
