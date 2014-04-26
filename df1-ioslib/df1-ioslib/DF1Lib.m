@@ -472,14 +472,16 @@
 {
     DF_DBG(@"snapping UUID parameters");
     if(![self isConnected:self.p]) return;
-        
-    NSArray *cuuids = @[@ACC_GEN_CFG_UUID, @ACC_ENABLE_UUID,
-                        @ACC_TAP_THSZ_UUID, @ACC_TAP_THSX_UUID, @ACC_TAP_THSY_UUID,
-                        @ACC_TAP_TMLT_UUID, @ACC_TAP_LTCY_UUID, @ACC_TAP_WIND_UUID,
-                        @ACC_FF_THS_UUID, @ACC_MO_THS_UUID, @ACC_FFMO_DEB_UUID,
-                        @ACC_TRAN_THS_UUID, @ACC_TRAN_DEB_UUID, @ACC_TRAN_HPF_UUID];
+    
+    #define UUID_NUM 14
+    
+    UInt16 cuuids[UUID_NUM] = {ACC_GEN_CFG_UUID, ACC_ENABLE_UUID,
+                        ACC_TAP_THSZ_UUID, ACC_TAP_THSX_UUID, ACC_TAP_THSY_UUID,
+                        ACC_TAP_TMLT_UUID, ACC_TAP_LTCY_UUID, ACC_TAP_WIND_UUID,
+                        ACC_FF_THS_UUID,   ACC_MO_THS_UUID,   ACC_FFMO_DEB_UUID,
+        ACC_TRAN_THS_UUID, ACC_TRAN_DEB_UUID, ACC_TRAN_HPF_UUID};
     // read all the config related characteristics first
-    for(int i=0; i<cuuids.count; i++)
+    for(int i=0; i<UUID_NUM; i++)
     {
         UInt16 cuuid = cuuids[i];
         [DF1LibUtil readCharacteristic:self.p sUUID:ACC_SERV_UUID cUUID:cuuid];
