@@ -18,6 +18,7 @@ facts need to be considered:
 #import "DF1Lib.h"
 #import "DF1DevListController.h"
 #import "DF1DevCell.h"
+#import "DF1DevDetailController.h"
 #import "Utility.h"
 
 
@@ -33,18 +34,22 @@ facts need to be considered:
 @synthesize nDevices;
 @synthesize selectedPeripheral;
 
-- (void)initializeMembers
+- (void)initializeMembers:(DF1 *) userdf
 {
     // Custom initialization
-    if(self.df == nil)
+    if(self.df == nil) {
         self.df = [[DF1 alloc] initWithDelegate:self];
+    } else {
+        self.df = userdf;
+        self.df.delegate = self;
+    }
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
     if (self) {
-        [self initializeMembers];
+        [self initializeMembers:nil];
         self.title = @"DF1 Demo1";
         DF_DBG(@"loaded DF1DevListController");
 
@@ -67,7 +72,6 @@ facts need to be considered:
     self.navigationItem.title = @"DF1 Demo1";
     // style related stuff
     // self.tableView.backgroundColor = [UIColor clearColor];
-    [self initializeMembers];
     
     [self.tableView setBackgroundView: [[UIImageView alloc]
                                         initWithImage: [UIImage imageNamed:@"DFLOGO07_launch_invert.png"]]];
@@ -93,8 +97,10 @@ facts need to be considered:
         target:self selector:@selector(triggerReadRSSI:) userInfo:nil repeats:YES];
 }
 
--(void) viewWillAppear:(BOOL)animated {
-
+-(void) viewWillAppear:(BOOL)animated
+{
+    if(self.df==nil)
+        [self initializeMembers:nil];
 }
 
 // so that the timer doesn't hang around
@@ -105,6 +111,15 @@ facts need to be considered:
     rssiTimer = nil;
   }
 }
+
+
+#pragma mark - DF1DevDetailDelegate
+
+-(void) willTransitionBack:(DF1 *) userdf
+{
+    [self initializeMembers:userdf];
+}
+
 
 - (void) clearScan
 {
@@ -326,46 +341,10 @@ facts need to be considered:
 
     [self.df connect:p];
 
-    // MBFirstViewController *vc = [[MBFirstViewController alloc] initWithBLEDevice:d];
-    // [self.navigationController pushViewController:vc animated:YES];
+    DF1DevDetailController *vc = [[DF1DevDetailController alloc] initWithDF:self.df];
+    vc.previousVC = self;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
-/*
-- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    NSLog(@"entering prepareForSegue");
-    if([segue.identifier isEqualToString:@"DeviceDetailSegue"])
-    {
-        NSLog(@"hitting segue to MBFirstViewController");
-        UITabBarController* tbc = [segue destinationViewController];
-        MBFirstViewController *detailViewController = (MBFirstViewController*) [[tbc customizableViewControllers] objectAtIndex:0];
-
-        NSIndexPath *path = [self.tableView indexPathForSelectedRow];
-        CBPeripheral *p = [self.nDevices objectAtIndex:path.row];
-
-        // cancel connection on all the devices except the one we chose
-        for(int i=0; i<nDevices.count; i++) {
-            CBPeripheral *pother = [self.nDevices objectAtIndex:i];
-            if(![pother isEqual:p]) {
-                if(pother.isConnected) {
-                    [self.m cancelPeripheralConnection:pother];
-                }
-            }
-        }
-        [self.nDevices removeAllObjects];
-        [self.nDevices addObject:p]; // save just the one we care about.
-        [self.tableView reloadData];
-        [self.m stopScan];
-
-        BLEDevice *d = [[BLEDevice alloc] init];
-        d.p = p;
-        d.m = self.m;
-        d.setupData = [BLEConfig makeMBConfig];
-        [d assignDelegate: detailViewController];
-
-        detailViewController.d = d;
-    }
-}
-*/
 
 @end

@@ -2,9 +2,10 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "DF1Lib.h"
 #import "DF1DevCell.h"
-// #import "SensorTagApplicationViewController.h"
+#import "DF1DevDetailController.h"
 
-@interface DF1DevListController : UITableViewController <DF1Delegate,DF1DevCellDelegate>
+
+@interface DF1DevListController : UITableViewController <DF1Delegate,DF1DevCellDelegate,DF1DevDetailDelegate>
 
 @property (strong,nonatomic) DF1 *df;
 // @property (strong,nonatomic) NSMutableArray *nDevices;

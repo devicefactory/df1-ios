@@ -30,6 +30,8 @@
 		C56C08A71904AA14001FF641 /* DFLOGO07_launch_2.png in Resources */ = {isa = PBXBuildFile; fileRef = C56C08A61904AA14001FF641 /* DFLOGO07_launch_2.png */; };
 		C56C08A91904ACD4001FF641 /* DFLOGO07_launch_invert.png in Resources */ = {isa = PBXBuildFile; fileRef = C56C08A81904ACD4001FF641 /* DFLOGO07_launch_invert.png */; };
 		C56C08AB1904BA2D001FF641 /* oem-front1-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = C56C08AA1904BA2D001FF641 /* oem-front1-icon.png */; };
+		C579DD47190EFB2A0029B92D /* DF1DevDetailCells.m in Sources */ = {isa = PBXBuildFile; fileRef = C579DD44190EFB2A0029B92D /* DF1DevDetailCells.m */; };
+		C579DD48190EFB2A0029B92D /* DF1DevDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = C579DD46190EFB2A0029B92D /* DF1DevDetailController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +75,10 @@
 		C56C08A61904AA14001FF641 /* DFLOGO07_launch_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DFLOGO07_launch_2.png; path = "df1-iosdemo/assets/DFLOGO07_launch_2.png"; sourceTree = "<group>"; };
 		C56C08A81904ACD4001FF641 /* DFLOGO07_launch_invert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DFLOGO07_launch_invert.png; path = "df1-iosdemo/assets/DFLOGO07_launch_invert.png"; sourceTree = "<group>"; };
 		C56C08AA1904BA2D001FF641 /* oem-front1-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "oem-front1-icon.png"; path = "df1-iosdemo/assets/oem-front1-icon.png"; sourceTree = "<group>"; };
+		C579DD43190EFB2A0029B92D /* DF1DevDetailCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1DevDetailCells.h; sourceTree = "<group>"; };
+		C579DD44190EFB2A0029B92D /* DF1DevDetailCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1DevDetailCells.m; sourceTree = "<group>"; };
+		C579DD45190EFB2A0029B92D /* DF1DevDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1DevDetailController.h; sourceTree = "<group>"; };
+		C579DD46190EFB2A0029B92D /* DF1DevDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1DevDetailController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +143,10 @@
 		C56A3EFD18DF77B700DB2A5C /* df1-iosdemo */ = {
 			isa = PBXGroup;
 			children = (
+				C579DD43190EFB2A0029B92D /* DF1DevDetailCells.h */,
+				C579DD44190EFB2A0029B92D /* DF1DevDetailCells.m */,
+				C579DD45190EFB2A0029B92D /* DF1DevDetailController.h */,
+				C579DD46190EFB2A0029B92D /* DF1DevDetailController.m */,
 				C56C089A1901C1B0001FF641 /* DF1DevCell.h */,
 				C56C089B1901C1B0001FF641 /* DF1DevCell.m */,
 				C56C089C1901C1B0001FF641 /* Utility.h */,
@@ -298,7 +308,9 @@
 			files = (
 				C56C08991901A4E9001FF641 /* DF1DevListController.m in Sources */,
 				C56C089E1901C1B0001FF641 /* DF1DevCell.m in Sources */,
+				C579DD47190EFB2A0029B92D /* DF1DevDetailCells.m in Sources */,
 				C56C089F1901C1B0001FF641 /* Utility.m in Sources */,
+				C579DD48190EFB2A0029B92D /* DF1DevDetailController.m in Sources */,
 				C56A3F0818DF77B700DB2A5C /* DF1AppDelegate.m in Sources */,
 				C56A3F0418DF77B700DB2A5C /* main.m in Sources */,
 			);

@@ -373,9 +373,9 @@
     if(i!=NSNotFound) {
         // NSLog([NSString stringWithFormat:@"RSSI %.0fdBm:", [peripheral.RSSI floatValue]]);
         DF_DBG(@"RSSI = %f",rssi);
-        if(self.delegate && [self.delegate respondsToSelector:@selector(didUpdateRSSI:withRSSI:)])
-        {
-            [self.delegate didUpdateRSSI:peripheral withRSSI:rssi];
+        if(self.delegate!=nil) {
+            if([self.delegate respondsToSelector:@selector(didUpdateRSSI:withRSSI:)])
+                [self.delegate didUpdateRSSI:peripheral withRSSI:rssi];
         }
     }
 }
