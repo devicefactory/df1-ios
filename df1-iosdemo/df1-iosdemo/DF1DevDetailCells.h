@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "F3PlotStrip.h"
 
 @interface AccXYZCell : UITableViewCell
 @property int height;
@@ -15,11 +16,23 @@
 @property (nonatomic,retain) UILabel *accValueX;
 @property (nonatomic,retain) UILabel *accValueY;
 @property (nonatomic,retain) UILabel *accValueZ;
-@property (nonatomic,retain) UIProgressView *accBarX;
-@property (nonatomic,retain) UIProgressView *accBarY;
-@property (nonatomic,retain) UIProgressView *accBarZ;
-@property (nonatomic,retain) UIView *accBarHolder;
+@property (nonatomic,retain) IBOutlet F3PlotStrip *accXStrip;
+@property (nonatomic,retain) UILabel *accXStripLabel;
+@property (nonatomic,retain) IBOutlet F3PlotStrip *accYStrip;
+@property (nonatomic,retain) UILabel *accYStripLabel;
+@property (nonatomic,retain) IBOutlet F3PlotStrip *accZStrip;
+@property (nonatomic,retain) UILabel *accZStripLabel;
+// @property (nonatomic,retain) UIProgressView *accBarX;
+// @property (nonatomic,retain) UIProgressView *accBarY;
+// @property (nonatomic,retain) UIProgressView *accBarZ;
+// @property (nonatomic,retain) UIView *accBarHolder;
 // -(void)setPosition:(UACellBackgroundViewPosition)newPosition;
+@end
+
+@interface AccTapCell : UITableViewCell
+@property int height;
+@property (nonatomic,retain) UILabel *accLabel;
+@property (nonatomic,retain) UILabel *accValueTap;
 @end
 
 @interface BattCell : UITableViewCell

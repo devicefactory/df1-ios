@@ -403,15 +403,18 @@
             float x = ((float)adata[0])/64.0;
             float y = ((float)adata[1])/64.0;
             float z = ((float)adata[2])/64.0;
-            if(count++ % 50 == 0)
-                DF_DBG(@"getting values: %f,%f,%f",x,y,z);
-            x = (x+2)*64.0;
-            y = (-y+2)*64.0;
-            
-            // [renderer renderByRotatingAroundX:(lastx - x) rotatingAroundY:(lasty - y)];
+            // if(count++ % 50 == 0) DF_DBG(@"getting values: %f,%f,%f",x,y,z);
             lastx = x;
             lasty = y;
             lastz = z;
+            NSNumber *xf = [NSNumber numberWithFloat:x];
+            NSNumber *yf = [NSNumber numberWithFloat:y];
+            NSNumber *zf = [NSNumber numberWithFloat:z];
+            NSArray *fdata = [[NSArray alloc] initWithObjects:xf,yf,zf,nil];
+
+            if([self.delegate respondsToSelector:@selector(receivedXYZ8:)]) {
+                [self.delegate receivedXYZ8:fdata];
+            }
             break;
         }
         case ACC_XYZ_DATA14_UUID:
@@ -420,6 +423,29 @@
         }
         case ACC_TAP_DATA_UUID:
         {
+            char bt;
+            [characteristic.value getBytes:&bt length:1]; 
+            // Bit 7   EA  one or more event flag has been asserted
+            // Bit 6   AxZ Z-event triggered
+            // Bit 5   AxY Y-event triggered
+            // Bit 4   AxX X-event triggered
+            // Bit 3   DPE 0 = single pulse, 1 = double pulse
+            // Bit 2   PolZ    Z event 0=positive g 1=negative g
+            // Bit 1   PolY    Y event 0=positive g 1=negative g
+            // Bit 0   PolX    X event 0=positive g 1=negative g
+            NSDictionary  *data = @{
+                @"TapHasEvent"    : [NSNumber numberWithInt: (bt & 0x80)],
+                @"TapIsZEvent"    : [NSNumber numberWithInt: (bt & 0x40)],
+                @"TapIsYEvent"    : [NSNumber numberWithInt: (bt & 0x20)],
+                @"TapIsXEvent"    : [NSNumber numberWithInt: (bt & 0x10)],
+                @"TapDoubleEvent" : [NSNumber numberWithInt: (bt & 0x08)],
+                @"TapIsXNegative" : [NSNumber numberWithInt: (bt & 0x04)],
+                @"TapIsYNegative" : [NSNumber numberWithInt: (bt & 0x02)],
+                @"TapIsZNegative" : [NSNumber numberWithInt: (bt & 0x01)],
+            };
+            if([self.delegate respondsToSelector:@selector(receivedTap:)]) {
+                [self.delegate receivedTap:data];
+            }
             break;
         }
         case ACC_FF_DATA_UUID:
@@ -440,6 +466,12 @@
         }
         case BATT_LEVEL_UUID:
         {
+            char bt;
+            [characteristic.value getBytes:&bt length:1]; 
+            float battlev = ((float)bt) / 100.0;
+            if([self.delegate respondsToSelector:@selector(receivedBatt:)]) {
+                [self.delegate receivedBatt:battlev];
+            }
             break;
         }
         case TEST_DATA_UUID:
@@ -499,6 +531,12 @@
     DF_DBG(@"received from %@ = %@", [DF1LibUtil CBUUIDToString:c.UUID], [c.value hexString]);
     // here, strong reference to the object (value) is maintained 
     [g_reg setObject:c.value forKey:c.UUID]; // cuuid (CBUUID*) -> CBCharacteristic.value (NSData*)
+    if([DF1LibUtil compareCBUUIDToInt:c.UUID UUID2:ACC_TRAN_HPF_UUID] && [g_reg count]>5)
+    {
+        if([self.delegate respondsToSelector:@selector(didSyncParameters:)]) {
+            [self.delegate didSyncParameters:(NSDictionary*)g_reg];
+        }
+    }
 }
 
 
@@ -572,7 +610,16 @@
         DF_ERR(@"peripheral property self.p not valid!");
         return;
     }
+    DF_DBG(@"subscribing from %@ %@",[DF1LibUtil CBUUIDToString:[DF1LibUtil IntToCBUUID:suuid]],
+                                    [DF1LibUtil CBUUIDToString:[DF1LibUtil IntToCBUUID:cuuid]]);
     [DF1LibUtil setNotificationForCharacteristic:self.p sUUID:suuid cUUID:cuuid enable:enable];
+}
+
+-(void) subscribeBatt
+{
+    // initiate the first read
+    [DF1LibUtil readCharacteristic:self.p sUUID:BATT_SERVICE_UUID cUUID:BATT_LEVEL_UUID];
+    [self subscription:BATT_SERVICE_UUID withCUUID:BATT_LEVEL_UUID onOff:true];
 }
 
 // Turn on individual features
@@ -608,10 +655,21 @@
 }
 
 // Turn off features
+-(void) unsubscribeBatt
+{
+    [self subscription:BATT_SERVICE_UUID withCUUID:BATT_LEVEL_UUID onOff:false];
+}
+
 -(void) unsubscribeXYZ8
 {
     [self _disableFeature:ACC_XYZ_DATA8_UUID];
     [self subscription:ACC_SERV_UUID withCUUID:ACC_XYZ_DATA8_UUID onOff:false];
+}
+
+-(void) unsubscribeTap
+{
+    [self _disableFeature:ACC_TAP_DATA_UUID];
+    [self subscription:ACC_SERV_UUID withCUUID:ACC_TAP_DATA_UUID onOff:false];
 }
 
 -(void) modifyRange:(UInt8) value

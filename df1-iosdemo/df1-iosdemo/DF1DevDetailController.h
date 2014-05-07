@@ -23,6 +23,7 @@
 @property (strong,nonatomic) UIViewController *previousVC;
 
 @property (strong,nonatomic) AccXYZCell *accXyzCell;
+@property (strong,nonatomic) AccTapCell *accTapCell;
 @property (strong,nonatomic) BattCell   *battCell;
 @property (strong,nonatomic) RSSICell   *rssiCell;
 @property (nonatomic) DF1Data *df1data;

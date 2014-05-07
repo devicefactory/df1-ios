@@ -214,12 +214,12 @@ facts need to be considered:
     }
 }
 
--(void) receivedXYZ8:(double*) data
+-(void) receivedXYZ8:(NSArray*) data
 {
 
 }
 
--(void) receivedXYZ14:(double*) data
+-(void) receivedXYZ14:(NSArray*) data
 {
 
 }

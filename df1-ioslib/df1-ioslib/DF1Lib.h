@@ -51,6 +51,7 @@
 -(bool) isConnected:(CBPeripheral*) peripheral;
 
 -(void) subscription:(UInt16) suuid withCUUID:(UInt16) cuuid onOff:(BOOL)enable;
+-(void) subscribeBatt;
 -(void) subscribeXYZ8;
 -(void) subscribeXYZ14;
 -(void) subscribeTap;
@@ -58,7 +59,9 @@
 -(void) subscribeMotion;
 -(void) subscribeShake;
 
+-(void) unsubscribeBatt;
 -(void) unsubscribeXYZ8;
+-(void) unsubscribeTap;
 
 -(void) modifyRange:(UInt8) value;
 
@@ -95,9 +98,13 @@
 
 @optional
 
+-(void) didSyncParameters:(NSDictionary*) params;
 -(void) hasCentralErrors:(CBCentralManager*) central;
 -(void) didUpdateRSSI:(CBPeripheral*) peripheral withRSSI:(float) rssi;
--(void) receivedXYZ8:(double*) data;
--(void) receivedXYZ14:(double*) data;
+-(void) receivedBatt:(float) level;
+// passes NSArray containing NSNumber objects.
+-(void) receivedXYZ8:(NSArray*) data;
+-(void) receivedXYZ14:(NSArray*) data;
+-(void) receivedTap:(NSDictionary*) data;
 
 @end

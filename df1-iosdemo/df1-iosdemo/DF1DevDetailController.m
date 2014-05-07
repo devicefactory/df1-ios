@@ -14,6 +14,7 @@
 @interface DF1DevDetailController ()
 {
     NSTimer *reconnectTimer;
+    NSTimer *eventResetTimer;
     BOOL isConnecting;
     double xyzUpdateTime;
     int connectionRetries;
@@ -45,12 +46,22 @@
                                               reuseIdentifier:@"AccXYZCell"];
         // do other default initialization here
         self.accXyzCell.accLabel.text = @"Acceleration";
+        self.accXyzCell.accValueX.text = @"x axis";
+        self.accXyzCell.accValueY.text = @"y axis";
+        self.accXyzCell.accValueZ.text = @"z axis";
     }
     if(!self.battCell) {
         self.battCell = [[BattCell alloc] initWithStyle:UITableViewCellStyleDefault
                                               reuseIdentifier:@"BattCell"];
         self.battCell.battLabel.text = @"Battery Level";
-        self.battCell.battBar.progress = 1.0;
+        self.battCell.battLevel.text = @"NA";
+        self.battCell.battBar.progress = 0.0;
+    }
+    if(!self.accTapCell) {
+        self.accTapCell = [[AccTapCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                            reuseIdentifier:@"AccTapCell"];
+        self.accTapCell.accLabel.text = @"Tap Event";
+        self.accTapCell.accValueTap.text = @"no events";
     }
     // if(!self.rssiCell) {
     //     self.rssiCell = [[RSSICell alloc] initWithStyle:UITableViewCellStyleDefault
@@ -75,6 +86,10 @@
 
 -(void)viewWillDisappear:(BOOL)animated
 {
+    // removing subscription has to happen before we reset the delegate for df object
+    [self.df unsubscribeBatt];
+    [self.df unsubscribeXYZ8];
+    [self.df unsubscribeTap];
     [(DF1DevListController*) self.previousVC willTransitionBack:self.df];
 }
 
@@ -90,7 +105,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;    
+    return 3;
     // int count = 1; // by default we need the signal strength
     // if([self.d isEnabled:@"Accelerometer service active"])
     //   count += 2;
@@ -105,11 +120,14 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    DF_DBG(@"indexpath row: %d", indexPath.row);
+    DF_DBG(@"indexpath row: %ld", (long)indexPath.row);
     if(indexPath.row==0) {
         return self.accXyzCell;
     }
     if(indexPath.row==1) {
+        return self.accTapCell;
+    }
+    if(indexPath.row==2) {
         return self.battCell;
     }
     // if (indexPath.row==0 && [self.d isEnabled:@"Accelerometer service active"]) {
@@ -123,7 +141,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // if(indexPath.row==0) return self.babyCell.height;
+    if(indexPath.row==0) return self.accXyzCell.height;
+    if(indexPath.row==1) return self.accTapCell.height;
+    if(indexPath.row==2) return self.battCell.height;
     return 100;
 }
 
@@ -139,7 +159,7 @@
     return @"";
 }
 
--(float) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+-(CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     return 0.0f;
 }
 
@@ -162,20 +182,76 @@
 {
 }
 
+// this function gets called when services and characteristics are all discovered
 -(void) didConnect:(CBPeripheral*) peripheral
 {
+    // [self.df subscribeBatt];
+    // [self.df subscribeXYZ8];
+    // [self.df subscribeTap];
+}
+
+-(void) didSyncParameters:(NSDictionary *)params
+{
+    NSLog(@"%@",params);
+    [self.df subscribeBatt];
+    [self.df subscribeXYZ8];
+    [self.df subscribeTap];
 }
 
 -(void) didUpdateRSSI:(CBPeripheral*) peripheral withRSSI:(float) rssi
 {
 }
 
--(void) receivedXYZ8:(double*) data
+-(void) receivedBatt:(float) battlev
+{
+    DF_DBG(@"received battery data: %f",battlev);
+    self.battCell.battLevel.text = [[NSString alloc] initWithFormat:@"%.0f%%", battlev*100.0];
+    self.battCell.battBar.progress = battlev;
+    self.battCell.battBar.progressTintColor =
+        (battlev > 0.75)                   ? [UIColor greenColor] :
+        (battlev > 0.50 & battlev <= 0.75) ? [UIColor orangeColor] :
+        (battlev <= 0.50)                  ? [UIColor redColor] : [UIColor redColor];
+}
+
+-(void) receivedXYZ8:(NSArray*) data
+{
+    float x = [data[0] floatValue];
+    float y = [data[1] floatValue];
+    float z = [data[2] floatValue];
+    // self.accXyzCell.accBarX.progress = (x + 2) / 4.0;
+    self.accXyzCell.accValueX.text = [[NSString alloc] initWithFormat:@"X: %.3f", x];
+    self.accXyzCell.accXStrip.value = x;
+    self.accXyzCell.accValueY.text = [[NSString alloc] initWithFormat:@"Y: %.3f", y];
+    self.accXyzCell.accYStrip.value = y;
+    self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z: %.3f", z];
+    self.accXyzCell.accZStrip.value = z;
+}
+
+-(void) receivedXYZ14:(NSArray*) data
 {
 }
 
--(void) receivedXYZ14:(double*) data
+-(void) _resetTap
 {
+    self.accTapCell.accValueTap.textColor = [UIColor blackColor];
+    self.accTapCell.accValueTap.text = @"no event";
+}
+
+-(void) receivedTap:(NSMutableDictionary*) tbl
+{
+    NSInteger hasEvent = [[tbl valueForKey:@"TapHasEvent"] intValue];
+    NSInteger isZEvent = [[tbl valueForKey:@"TapIsZEvent"] intValue];
+    
+    if(hasEvent>0) DF_DBG(@"has tap!");
+    
+    if(hasEvent) {
+        self.accTapCell.accValueTap.textColor = [UIColor redColor];
+        self.accTapCell.accValueTap.text = [[NSString alloc] initWithFormat:@"Tap!"];
+        eventResetTimer = [NSTimer scheduledTimerWithTimeInterval:0.25f target:self selector:@selector(_resetTap)
+                                                         userInfo:nil repeats:FALSE];
+    } else {
+        self.accTapCell.accValueTap.text = @"no event";
+    }
 }
 
 @end
