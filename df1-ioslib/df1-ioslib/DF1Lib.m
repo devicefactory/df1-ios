@@ -589,6 +589,11 @@
     [g_reg setObject:[NSData dataWithBytes:&enreg length:1] forKey:[DF1LibUtil IntToCBUUID:cuuid]]; // store the register
 }
 
+-(void) _modifyRegister:(UInt16) cuuid setValue:(uint8_t) value
+{
+    [self _modifyRegister:cuuid clearMask:0xff setMask:value];
+}
+
 
 -(void) _enableFeature:(UInt16) cuuid
 {
@@ -717,55 +722,69 @@
     [DF1LibUtil readCharacteristic:self.p sUUID:ACC_SERV_UUID cUUID:ACC_GEN_CFG_UUID];
 }
 
--(void) modifyTapThsz:(double) g
+-(void) modifyTapThsz:(float) g
+{
+    g = fabsf(g); // just to make sure
+    uint8_t mult = (uint8_t) (g / 0.063f); 
+    DF_DBG(@"TapThsz is %d", mult);
+    [self _modifyRegister:ACC_TAP_THSZ_UUID setValue:mult];
+}
+
+-(void) modifyTapThsx:(float) g
+{
+    g = fabsf(g); // just to make sure
+    uint8_t mult = (uint8_t) (g / 0.063f); 
+    [self _modifyRegister:ACC_TAP_THSX_UUID setValue:mult];
+}
+
+-(void) modifyTapThsy:(float) g
+{
+    g = fabsf(g); // just to make sure
+    uint8_t mult = (uint8_t) (g / 0.063f); 
+    [self _modifyRegister:ACC_TAP_THSY_UUID setValue:mult];
+}
+
+-(void) modifyTapTmlt:(float) msec
+{
+    msec = fabsf(msec);
+    uint8_t incr = (uint8_t) (msec / 10.0f); // expressed as multiple of 10msec
+    DF_DBG(@"TapTmlt is %d or %f msec", incr, msec);
+    [self _modifyRegister:ACC_TAP_TMLT_UUID setValue:incr];
+}
+
+-(void) modifyTapLtcy:(float) msec
 {
 }
 
--(void) modifyTapThsx:(double) g
+-(void) modifyTapWind:(float) msec
 {
 }
 
--(void) modifyTapThsy:(double) g
+-(void) modifyFreefallThs:(float) g
 {
 }
 
--(void) modifyTapTmlt:(double) msec
+-(void) modifyFreefallDeb:(float) msec
 {
 }
 
--(void) modifyTapLtcy:(double) msec
+-(void) modifyMotionThs:(float) g
 {
 }
 
--(void) modifyTapWind:(double) msec
+-(void) modifyMotionDeb:(float) msec
 {
 }
 
--(void) modifyFreefallThs:(double) g
+-(void) modifyShakeThs:(float) g
 {
 }
 
--(void) modifyFreefallDeb:(double) msec
+-(void) modifyShakeDeb:(float) msec
 {
 }
 
--(void) modifyMotionThs:(double) g
-{
-}
-
--(void) modifyMotionDeb:(double) msec
-{
-}
-
--(void) modifyShakeThs:(double) g
-{
-}
-
--(void) modifyShakeDeb:(double) msec
-{
-}
-
--(void) modifyShakeHpf:(double) hz
+-(void) modifyShakeHpf:(float) hz
 {
 }
 

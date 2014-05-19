@@ -50,18 +50,18 @@
         self.accXyzCell.accValueY.text = @"y axis";
         self.accXyzCell.accValueZ.text = @"z axis";
     }
+    if(!self.accTapCell) {
+        self.accTapCell = [[AccTapCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                            reuseIdentifier:@"AccTapCell" parentController:self];
+        self.accTapCell.accLabel.text = @"Tap Event";
+        self.accTapCell.accValueTap.text = @"no events";
+    }
     if(!self.battCell) {
         self.battCell = [[BattCell alloc] initWithStyle:UITableViewCellStyleDefault
                                               reuseIdentifier:@"BattCell"];
         self.battCell.battLabel.text = @"Battery Level";
         self.battCell.battLevel.text = @"NA";
         self.battCell.battBar.progress = 0.0;
-    }
-    if(!self.accTapCell) {
-        self.accTapCell = [[AccTapCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                            reuseIdentifier:@"AccTapCell"];
-        self.accTapCell.accLabel.text = @"Tap Event";
-        self.accTapCell.accValueTap.text = @"no events";
     }
     // if(!self.rssiCell) {
     //     self.rssiCell = [[RSSICell alloc] initWithStyle:UITableViewCellStyleDefault
@@ -190,12 +190,27 @@
     // [self.df subscribeTap];
 }
 
+-(void) _setParamToUIControl:(NSDictionary*) params
+{
+    NSData *data; uint8_t byte;
+    data = [params objectForKey:[DF1LibUtil IntToCBUUID:ACC_TAP_THSZ_UUID]]; 
+    [data getBytes:&byte length:1];
+    [self.accTapCell.accThsSlider setValue:(NSUInteger)byte animated:YES];
+    self.accTapCell.accThsLabel.text = [[NSString alloc] initWithFormat:@"Thresh %.3fG",(float)byte*0.063f];
+
+    data = [params objectForKey:[DF1LibUtil IntToCBUUID:ACC_TAP_TMLT_UUID]]; 
+    [data getBytes:&byte length:1];
+    [self.accTapCell.accTmltSlider setValue:(NSUInteger)byte animated:YES];
+    self.accTapCell.accTmltLabel.text = [[NSString alloc] initWithFormat:@"Tmlt %.0fms",(float)byte*10.0f];
+}
+
 -(void) didSyncParameters:(NSDictionary *)params
 {
     NSLog(@"%@",params);
     [self.df subscribeBatt];
     [self.df subscribeXYZ8];
     [self.df subscribeTap];
+    [self _setParamToUIControl:params];
 }
 
 -(void) didUpdateRSSI:(CBPeripheral*) peripheral withRSSI:(float) rssi

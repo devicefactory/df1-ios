@@ -67,22 +67,22 @@
 
 -(void) modifyRange:(UInt8) value;
 
--(void) modifyTapThsz:(double) g; // 0.064g increment
--(void) modifyTapThsx:(double) g;
--(void) modifyTapThsy:(double) g;
--(void) modifyTapTmlt:(double) msec; // multiples of 10msec
--(void) modifyTapLtcy:(double) msec;
--(void) modifyTapWind:(double) msec;
+-(void) modifyTapThsz:(float) g; // 0.064g increment
+-(void) modifyTapThsx:(float) g;
+-(void) modifyTapThsy:(float) g;
+-(void) modifyTapTmlt:(float) msec; // multiples of 10msec
+-(void) modifyTapLtcy:(float) msec;
+-(void) modifyTapWind:(float) msec;
 
--(void) modifyFreefallThs:(double) g; // 0.064g increment
--(void) modifyFreefallDeb:(double) msec; // 10msec increment
+-(void) modifyFreefallThs:(float) g; // 0.064g increment
+-(void) modifyFreefallDeb:(float) msec; // 10msec increment
 
--(void) modifyMotionThs:(double) g; // 0.064g increment
--(void) modifyMotionDeb:(double) msec; // 10msec increment
+-(void) modifyMotionThs:(float) g; // 0.064g increment
+-(void) modifyMotionDeb:(float) msec; // 10msec increment
 
--(void) modifyShakeThs:(double) g;
--(void) modifyShakeDeb:(double) msec;
--(void) modifyShakeHpf:(double) hz; // 0.063==1, 0.125=2, 0.25=4, 0.5=8, 1=16, 2=32, 4=64
+-(void) modifyShakeThs:(float) g;
+-(void) modifyShakeDeb:(float) msec;
+-(void) modifyShakeHpf:(float) hz; // 0.063==1, 0.125=2, 0.25=4, 0.5=8, 1=16, 2=32, 4=64
 
 @end
 
