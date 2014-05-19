@@ -281,6 +281,7 @@ facts need to be considered:
         if(!foundService) {
             cell.ledButton.hidden = YES;
         }
+        [cell updateSignalValue:-100.0f];
         // only discover the battery and test services : accel takes longer
         CBUUID *bserv = [DF1LibUtil IntToCBUUID:BATT_SERVICE_UUID];
         CBUUID *tserv = [DF1LibUtil IntToCBUUID:TEST_SERV_UUID];
