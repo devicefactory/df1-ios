@@ -43,7 +43,7 @@
 {
     if(!self.accXyzCell) {
         self.accXyzCell = [[AccXYZCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                              reuseIdentifier:@"AccXYZCell"];
+                                              reuseIdentifier:@"AccXYZCell" parentController:self];
         // do other default initialization here
         self.accXyzCell.accLabel.text = @"Acceleration";
         self.accXyzCell.accValueX.text = @"x axis";
@@ -242,7 +242,7 @@
     NSInteger hasEvent = [[tbl valueForKey:@"TapHasEvent"] intValue];
     NSInteger isZEvent = [[tbl valueForKey:@"TapIsZEvent"] intValue];
     
-    if(hasEvent>0) DF_DBG(@"has tap!");
+    // if(hasEvent>0) DF_DBG(@"has tap!");
     
     if(hasEvent) {
         self.accTapCell.accValueTap.textColor = [UIColor redColor];

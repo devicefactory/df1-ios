@@ -16,7 +16,7 @@
 +(void) writeCharacteristic:(CBPeripheral*)peripheral sCBUUID:(CBUUID *)sUUID   cCBUUID:(CBUUID*)cUUID    data:(NSData*)data;
 +(void) writeCharacteristic:(CBPeripheral*)peripheral sStrUUID:(NSString*)sUUID cStrUUID:(NSString*)cUUID data:(NSData*)data;
 +(void) writeCharacteristic:(CBPeripheral*)peripheral sUUID:  (UInt16)sUUID     cUUID:  (UInt16)cUUID     data:(NSData*)data;
-+(void) writeCharacteristic:(CBPeripheral*)peripheral sUUID:  (UInt16)sUUID     cUUID:  (UInt16)cUUID     withByte:(UInt8) byte;
++(void) writeCharacteristic:(CBPeripheral*)peripheral sUUID:  (UInt16)sUUID     cUUID:  (UInt16)cUUID     withByte:(uint8_t) byte;
 // readCharacteristic with overloaded args
 +(void) readCharacteristic:(CBPeripheral*)peripheral  sCBUUID:(CBUUID *)sUUID    cCBUUID:(CBUUID *)cUUID;
 +(void) readCharacteristic:(CBPeripheral*)peripheral  sStrUUID:(NSString*) sUUID cStrUUID:(NSString *)cUUID;

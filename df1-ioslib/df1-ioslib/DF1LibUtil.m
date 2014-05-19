@@ -51,9 +51,10 @@
     [DF1LibUtil writeCharacteristic:peripheral sCBUUID:cb_suuid cCBUUID:cb_cuuid data:data];
 }
 
-+(void)writeCharacteristic:(CBPeripheral *)peripheral sUUID:(UInt16)sUUID cUUID:(UInt16)cUUID withByte:(UInt8)byte
++(void)writeCharacteristic:(CBPeripheral *)peripheral sUUID:(UInt16)sUUID cUUID:(UInt16)cUUID withByte:(uint8_t)byte
 {
-    [DF1LibUtil writeCharacteristic:peripheral sUUID:sUUID cUUID:cUUID data:[NSData dataWithBytes:&byte length:1]];
+    // [DF1LibUtil writeCharacteristic:peripheral sUUID:sUUID cUUID:cUUID data:[NSData dataWithBytes:&byte length:1]];
+    [DF1LibUtil writeCharacteristic:peripheral sUUID:sUUID cUUID:cUUID data:[[NSData alloc] initWithBytes:&byte length:1]];
 }
 
 //

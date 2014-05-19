@@ -23,7 +23,8 @@
 //-----------------------------------------------------------------------------
 // MEMBERS
 //-----------------------------------------------------------------------------
-@property (strong,nonatomic) NSMutableArray *devices;
+@property (strong,nonatomic) NSMutableDictionary *devices;
+@property (strong,nonatomic) NSMutableArray *deviceList; // possible external dep
 // @property (strong,nonatomic) NSMutableDictionary *registers;
 @property (strong,nonatomic) CBCentralManager *m;
 @property (strong,nonatomic) CBPeripheral *p;
@@ -46,6 +47,7 @@
 -(void) scan:(NSUInteger) maxDevices;
 -(void) stopScan:(bool) clear;
 -(void) connect:(CBPeripheral*) peripheral;
+-(void) connect:(CBPeripheral*) peripheral withServices:(NSArray*) services;
 -(void) disconnect:(CBPeripheral*) peripheral;
 -(void) askRSSI:(CBPeripheral*) peripheral;
 -(bool) isConnected:(CBPeripheral*) peripheral;

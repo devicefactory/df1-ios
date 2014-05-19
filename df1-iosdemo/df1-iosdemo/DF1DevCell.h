@@ -8,26 +8,28 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreBluetooth/CoreBluetooth.h>
+#import "DF1Lib.h"
 
 @protocol DF1DevCellDelegate
-
 @optional
 -(void) flashLED:(CBPeripheral*) p withByte:(NSData*) byte;
-
 @end
+
 
 @interface DF1DevCell : UITableViewCell
 
-// IBOutlet markers are not necessary on manual interface build, but just in case
+@property (nonatomic,assign) id<DF1DevCellDelegate> delegate;
 @property (nonatomic,strong) IBOutlet UILabel *nameLabel;
 @property (nonatomic,strong) IBOutlet UILabel *subLabel;
 @property (nonatomic,strong) IBOutlet UILabel *detailLabel;
 @property (nonatomic,strong) IBOutlet UIImageView *deviceIcon;
-@property (nonatomic,assign) id<DF1DevCellDelegate> delegate;
 @property (nonatomic,assign) CBPeripheral *p;
 @property (nonatomic,weak) IBOutlet UIButton *ledButton;
+@property (nonatomic,retain) UIProgressView *signalBar;
+@property (nonatomic,retain) UIView *barHolder;
 
-- (IBAction)ledButton2Up:(UIButton*)sender;
-- (IBAction)ledButton2Dn:(UIButton*)sender;
+- (IBAction)ledButtonUp:(UIButton*)sender;
+- (IBAction)ledButtonDn:(UIButton*)sender;
+- (void) updateSignalValue:(float) value;
 
 @end

@@ -8,9 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "F3PlotStrip.h"
+#import "DF1Lib.h"
+
+@class DF1DevDetailController;
 
 @interface AccXYZCell : UITableViewCell
 @property int height;
+@property (nonatomic,strong) DF1DevDetailController *parent;
 @property (nonatomic,retain) UILabel *accLabel;
 @property (nonatomic,retain) UIImageView *accIcon;
 @property (nonatomic,retain) UILabel *accValueX;
@@ -27,6 +31,12 @@
 // @property (nonatomic,retain) UIProgressView *accBarZ;
 // @property (nonatomic,retain) UIView *accBarHolder;
 // -(void)setPosition:(UACellBackgroundViewPosition)newPosition;
+@property (nonatomic,retain) UILabel *accRangeLabel;
+@property (nonatomic,retain) UISlider *accRangeSlider;
+
+-(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+  parentController:(DF1DevDetailController*) parent;
+-(IBAction) accSliderChanged:(UISlider*)sender;
 @end
 
 @interface AccTapCell : UITableViewCell

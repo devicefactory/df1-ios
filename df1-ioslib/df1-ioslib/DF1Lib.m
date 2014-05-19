@@ -19,9 +19,11 @@
     NSTimer *scanTimer;
     NSUInteger g_deviceCountMax;
     NSMutableDictionary *g_reg; // maintains current register settings
+    NSArray *g_defaultServices;
+    float accDivisor;
 }
 
--(NSUInteger) _hasPeripheral:(CBPeripheral*) p;
+-(bool) _hasPeripheral:(CBPeripheral*) p;
 -(void) _syncParameters;
 
 -(void) _enableFeature:(UInt16) cuuid;
@@ -37,10 +39,21 @@
     self = [self init];
     if(self)
     {
-        self.m = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
-        self.devices = [[NSMutableArray alloc] init];
         self.delegate = userDelegate;
+        self.m = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+        
+        self.devices = [[NSMutableDictionary alloc] init];
+        // self.deviceList = [[NSMutableArray alloc] init]; // initialized later
+
         DF_DBG(@"initializing central");
+        if(g_defaultServices==nil)
+        {
+            CBUUID *aserv = [DF1LibUtil IntToCBUUID:ACC_SERV_UUID];
+            CBUUID *bserv = [DF1LibUtil IntToCBUUID:BATT_SERVICE_UUID];
+            CBUUID *tserv = [DF1LibUtil IntToCBUUID:TEST_SERV_UUID];
+            g_defaultServices = [NSArray arrayWithObjects: aserv, bserv, tserv, nil];
+        }
+        accDivisor = 64.0; // default is 2G
     }
     return self;
 }
@@ -95,15 +108,19 @@
 
     if(clear)
     {
+        // [inventory enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        //    NSLog(@"There are %@ %@'s in stock", obj, key);
+        // }];
         // should we disconnect all the peripherals?
-        for (int i=0; i<self.devices.count; i++)
+        for (id key in self.devices)
         {
-            CBPeripheral *p = [self.devices objectAtIndex:i];
+            CBPeripheral *p = (CBPeripheral*) key;
             if([self isConnected:p]) {
                 [self.m cancelPeripheralConnection:p];
             }
         }
         [self.devices removeAllObjects];
+        [self.deviceList removeAllObjects];
     }
 
     if([self.delegate respondsToSelector:@selector(didStopScan)])
@@ -111,13 +128,19 @@
 }
 
 
+-(void) connect:(CBPeripheral*) peripheral withServices:(NSArray*) services
+{
+    peripheral.delegate = self;
+    if(services==nil)
+        services = g_defaultServices;
+    DF_DBG(@"connect with %d specified services",services.count);
+    [self.devices setObject:services forKey:peripheral]; // CBPeripheral -> CBUUIDs
+    [self.m connectPeripheral:peripheral options:nil];
+}
+
 -(void) connect:(CBPeripheral*) peripheral
 {
-    // this is the one we are intending to connect
-    peripheral.delegate = self;
-    self.p = peripheral;
-    // self.p.delegate = self;
-    [self.m connectPeripheral:peripheral options:nil];
+    [self connect:peripheral withServices:nil];
 }
 
 -(void) disconnect:(CBPeripheral *)peripheral
@@ -125,9 +148,9 @@
     if(peripheral==nil)
     {
         DF_DBG(@"removing %d peripherals", self.devices.count);
-        for(int i=0; i<self.devices.count; i++)
+        for (id key in self.devices)
         {
-            CBPeripheral *p = [self.devices objectAtIndex:i];
+            CBPeripheral *p = (CBPeripheral*) key;
             if([self isConnected:p])
                 // [self deconfigureDevice:p];
                 [self.m cancelPeripheralConnection:p];
@@ -164,29 +187,14 @@
 }
 
 // we actually need to check the UUID
--(NSUInteger) _hasPeripheral:(CBPeripheral*) p1
+-(bool) _hasPeripheral:(CBPeripheral*) p1
 {
-    if([self.devices containsObject:p1])
+    if([self.devices objectForKey:p1]!=nil)
     {
-        return [self.devices indexOfObject:p1];
+        return true;
     }
-    else
-    {
-        DF_DBG(@"Found a BLE Device : %@",p1);
-        return NSNotFound;
-    }
-    /*
-    if(p1.identifier == nil)
-        return NSNotFound;
-    
-    for(int i=0; i<self.devices.count; i++)
-    {
-        CBPeripheral *p = [self.devices objectAtIndex:i];
-        if([p.identifier isEqual:p1.identifier])
-            return i;
-    }
-    return NSNotFound;
-     */
+    DF_DBG(@"Found a BLE Device : %@",p1);
+    return false;
 }
 
 
@@ -222,21 +230,9 @@
 -(void) centralManager:(CBCentralManager*) central didDiscoverPeripheral:(CBPeripheral*) peripheral
             advertisementData:(NSDictionary*) advertisementData RSSI:(NSNumber*) RSSI
 {
-    NSUInteger i = [self _hasPeripheral:peripheral];
-    (i==NSNotFound) ?
-        [self.devices addObject:peripheral] :
-        [self.devices replaceObjectAtIndex:i withObject:peripheral];
-
-    // if the peripheral is found, and we are scanning but has already been connected
-    /*
-    if([peripheral respondsToSelector:@selector(state)] &&
-       [peripheral state] == CBPeripheralStateConnected &&
-       i==NSNotFound)
-    {
-        DF_DBG(@"cancelling peripheral connection because of previous connected state");
-        [self.m cancelPeripheralConnection:peripheral];
-    }
-     */
+    bool hasit = [self _hasPeripheral:peripheral];
+    if(!hasit)
+        [self.devices setObject:g_defaultServices forKey:peripheral];
     
     if(self.devices.count >= g_deviceCountMax)
     {
@@ -246,9 +242,12 @@
 
     if(self.delegate &&
        [self.delegate respondsToSelector:@selector(didScan:)] &&
-       i==NSNotFound)
+       !hasit)
     {
-        bool keepScanning = [self.delegate didScan:(NSArray*) self.devices]; // casting?
+        // self.deviceList = (NSMutableArray*) [self.devices allKeys];
+        // create a copy here because external app can hold a pointer to this
+        self.deviceList = [[NSMutableArray alloc] initWithArray:[self.devices allKeys] copyItems:YES];
+        bool keepScanning = [self.delegate didScan:self.deviceList];
         if(!keepScanning)
         {
             [self stopScan:false];
@@ -275,20 +274,13 @@
 {
     peripheral.delegate = self;
     // Match if we have this device from before
-    NSUInteger i = [self _hasPeripheral:peripheral];
-    (i==NSNotFound) ?
-        [self.devices addObject:peripheral] :
-        [self.devices replaceObjectAtIndex:i withObject:peripheral];
+    bool hasit = [self _hasPeripheral:peripheral];
+    if(!hasit)
+        [self.devices setObject:g_defaultServices forKey:peripheral];
     
+    NSArray *services = [self.devices objectForKey:peripheral];
     // if this peripheral is the one we were trying to connect to
-    if([peripheral isEqual: self.p])
-    {
-        CBUUID *aserv = [DF1LibUtil IntToCBUUID:ACC_SERV_UUID];
-        CBUUID *bserv = [DF1LibUtil IntToCBUUID:BATT_SERVICE_UUID];
-        CBUUID *tserv = [DF1LibUtil IntToCBUUID:TEST_SERV_UUID];
-        NSArray *services    = [NSArray arrayWithObjects: aserv, bserv, tserv, nil];
-        [peripheral discoverServices:services];
-    }
+    [peripheral discoverServices:services];
 }
 
 -(void) centralManager:(CBCentralManager*) central didFailToConnectPeripheral:(CBPeripheral*) peripheral
@@ -301,9 +293,9 @@
             error:(NSError*) error
 {
     DF_DBG(@"didDisconnectPeripheral for %@ error = %@",peripheral.name, error);
-    NSUInteger i = [self _hasPeripheral: peripheral];
-    if(i!=NSNotFound) {
-        [self.devices removeObjectAtIndex:i];
+    bool hasit = [self _hasPeripheral: peripheral];
+    if(hasit) {
+        [self.devices removeObjectForKey:peripheral];
     }
 }
 
@@ -334,13 +326,13 @@
 {
     NSLog(@"entering didDiscoverCharacteristicsForService: %@", service.UUID);
     
+    // if we found DF1 and we have valid list of characteristics for ACC_SERV_UUID
     if([[peripheral.name lowercaseString] hasPrefix:@"df1"] &&
         [DF1LibUtil isUUID:service.UUID thisInt:ACC_SERV_UUID] &&
         [service.characteristics count]>0) {
-        // int i = [self _hasPeripheral:peripheral];
+        self.p = peripheral;
         NSLog(@"found accelerometer conf characteristic");
-        [self _syncParameters];
-        // here we subscribe to data
+        [self _syncParameters];        
     }
     if(self.delegate && [self.delegate respondsToSelector:@selector(didConnect:)])
     {
@@ -360,7 +352,24 @@
 -(void) peripheral:(CBPeripheral *)peripheral
     didWriteValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
-    NSLog(@"didWriteValueForCharacteristic %@ error = %@",characteristic,error);
+    // Useless, the values in the characteristic is not updated
+    // NSLog(@"didWriteValueForCharacteristic %@ error = %@",characteristic,error);
+
+//     UInt16 cUUID = [DF1LibUtil CBUUIDToInt:characteristic.UUID];
+//     switch(cUUID)
+//     {
+//         case ACC_GEN_CFG_UUID:
+//         {
+//             uint8_t bt;
+//             [characteristic.value getBytes:&bt length:1];
+//             DF_DBG(@"did write ACC_GEN_CFG_UUID with byte: 0x%x",bt);
+//             if(! (bt & (GEN_CFG_RA1_MASK|GEN_CFG_RA0_MASK)) )            {  accDivisor = 64.0; }
+//             else if((bt & GEN_CFG_RA0_MASK) && !(bt & GEN_CFG_RA1_MASK)) {  accDivisor = 32.0; }
+//             else if(!(bt & GEN_CFG_RA0_MASK) && (bt & GEN_CFG_RA1_MASK)) {  accDivisor = 16.0; }
+//             else                                                         {  accDivisor = 64.0; } 
+//             break;
+//         }
+//     }
 }
 
 
@@ -387,7 +396,7 @@
     static float lastx = 0;
     static float lasty = 0;
     static float lastz = 0;
-    static NSUInteger count = 0;
+    // static NSUInteger count = 0;
     if (error) {
         NSLog(@"didUpdateValueForCharacteristic error: %@", error);
         return;
@@ -400,9 +409,9 @@
         {
             char adata[3];
             [characteristic.value getBytes:&adata length:3];
-            float x = ((float)adata[0])/64.0;
-            float y = ((float)adata[1])/64.0;
-            float z = ((float)adata[2])/64.0;
+            float x = ((float)adata[0])/accDivisor;
+            float y = ((float)adata[1])/accDivisor;
+            float z = ((float)adata[2])/accDivisor;
             // if(count++ % 50 == 0) DF_DBG(@"getting values: %f,%f,%f",x,y,z);
             lastx = x;
             lasty = y;
@@ -466,7 +475,7 @@
         }
         case BATT_LEVEL_UUID:
         {
-            char bt;
+            uint8_t bt;
             [characteristic.value getBytes:&bt length:1]; 
             float battlev = ((float)bt) / 100.0;
             if([self.delegate respondsToSelector:@selector(receivedBatt:)]) {
@@ -480,6 +489,15 @@
         }
         // rest are all parameter related
         case ACC_GEN_CFG_UUID:
+        {
+            uint8_t bt;
+            [characteristic.value getBytes:&bt length:1];
+            DF_DBG(@"did write ACC_GEN_CFG_UUID with byte: 0x%x",bt);
+            if(! (bt & (GEN_CFG_RA1_MASK|GEN_CFG_RA0_MASK)) )            {  accDivisor = 64.0; }
+            else if((bt & GEN_CFG_RA0_MASK) && !(bt & GEN_CFG_RA1_MASK)) {  accDivisor = 32.0; }
+            else if(!(bt & GEN_CFG_RA0_MASK) && (bt & GEN_CFG_RA1_MASK)) {  accDivisor = 16.0; }
+            else                                                         {  accDivisor = 64.0; } 
+        }
         case ACC_ENABLE_UUID:
         case ACC_TAP_THSZ_UUID:
         case ACC_TAP_THSX_UUID:
@@ -539,67 +557,72 @@
     }
 }
 
+-(void) _modifyRegister:(UInt16) cuuid clearMask:(uint8_t) clear setMask:(uint8_t) set
+{
+    if(![self isConnected:self.p]) 
+    {
+        DF_DBG(@"peripheral not connected!");
+        return;
+    }
+
+    uint8_t enreg = 0x00;
+    // get current stored byte 
+    NSData *data = [g_reg objectForKey:[DF1LibUtil IntToCBUUID:cuuid]];
+    if(data != nil && data.length > 0)
+    {
+        uint8_t byte;
+        [data getBytes:&byte length:1];
+        // DF_DBG(@"current stored byte for CUUID %x: %x", cuuid, byte);
+        enreg = byte;
+    }
+    // clear first and then set
+    if(clear > 0)
+    {
+        enreg &= ~clear;
+    }
+    if(set > 0)
+    {
+        enreg |= set;
+    }
+    DF_DBG(@"writing byte to CUUID 0x%x: 0x%x", cuuid, enreg);
+    [DF1LibUtil writeCharacteristic:self.p sUUID:ACC_SERV_UUID cUUID:cuuid withByte:enreg];
+    [g_reg setObject:[NSData dataWithBytes:&enreg length:1] forKey:[DF1LibUtil IntToCBUUID:cuuid]]; // store the register
+}
+
 
 -(void) _enableFeature:(UInt16) cuuid
 {
-    if(![self isConnected:self.p]) 
-        return;
-
     char enreg = 0x00;
-    // get current stored byte 
-    NSData *data = [g_reg objectForKey:[DF1LibUtil IntToCBUUID:ACC_ENABLE_UUID]];
-    if(data.length > 0)
-    {
-        char byte;
-        [data getBytes:&byte length:1];
-        DF_DBG(@"current stored byte for CUUID %x: %x", cuuid, byte);
-        enreg = byte;
-    }
     switch(cuuid)
     {
-        case ACC_XYZ_DATA8_UUID:   enreg |= ENABLE_XYZ8_MASK; break;
-        case ACC_XYZ_DATA14_UUID:  enreg |= ENABLE_XYZ14_MASK; break;
-        case ACC_TAP_DATA_UUID:    enreg |= ENABLE_TAP_MASK; break;
-        case ACC_FF_DATA_UUID:     enreg |= ENABLE_FF_MASK; break;
-        case ACC_MO_DATA_UUID:     enreg |= ENABLE_MO_MASK; break;
-        case ACC_TRAN_DATA_UUID:   enreg |= ENABLE_TRAN_MASK; break;
-        case ACCD_FALL_DATA_UUID:  enreg |= ENABLE_USR1_MASK; break;
+        case ACC_XYZ_DATA8_UUID:   enreg = ENABLE_XYZ8_MASK; break;
+        case ACC_XYZ_DATA14_UUID:  enreg = ENABLE_XYZ14_MASK; break;
+        case ACC_TAP_DATA_UUID:    enreg = ENABLE_TAP_MASK; break;
+        case ACC_FF_DATA_UUID:     enreg = ENABLE_FF_MASK; break;
+        case ACC_MO_DATA_UUID:     enreg = ENABLE_MO_MASK; break;
+        case ACC_TRAN_DATA_UUID:   enreg = ENABLE_TRAN_MASK; break;
+        case ACCD_FALL_DATA_UUID:  enreg = ENABLE_USR1_MASK; break;
         // case ACC_USR2_DATA_UUID:   enreg |= ENABLE_USR2_MASK; break;
     }
-    [DF1LibUtil writeCharacteristic:self.p sUUID:ACC_SERV_UUID cUUID:ACC_ENABLE_UUID withByte:enreg];
-    [g_reg setObject:[NSData dataWithBytes:&enreg length:1] forKey:[DF1LibUtil IntToCBUUID:ACC_ENABLE_UUID]]; // store the register
+    [self _modifyRegister:ACC_ENABLE_UUID clearMask:0x00 setMask:enreg];
 }
 
 
 -(void) _disableFeature:(UInt16) cuuid
 {
-    if(![self isConnected:self.p]) 
-        return;
-
     char enreg = 0x00;
-    // get current stored byte 
-    NSData *data = [g_reg objectForKey:[DF1LibUtil IntToCBUUID:ACC_ENABLE_UUID]];
-    if(data.length > 0)
-    {
-        char byte;
-        [data getBytes:&byte length:1];
-        DF_DBG(@"current stored byte for CUUID %x: %x", cuuid, byte);
-        enreg = byte;
-    }
     switch(cuuid)
     {
-        case ACC_XYZ_DATA8_UUID:   enreg &= ~ENABLE_XYZ8_MASK; break;
-        case ACC_XYZ_DATA14_UUID:  enreg &= ~ENABLE_XYZ14_MASK; break;
-        case ACC_TAP_DATA_UUID:    enreg &= ~ENABLE_TAP_MASK; break;
-        case ACC_FF_DATA_UUID:     enreg &= ~ENABLE_FF_MASK; break;
-        case ACC_MO_DATA_UUID:     enreg &= ~ENABLE_MO_MASK; break;
-        case ACC_TRAN_DATA_UUID:   enreg &= ~ENABLE_TRAN_MASK; break;
-        case ACCD_FALL_DATA_UUID:  enreg &= ~ENABLE_USR1_MASK; break; // derived event, hence ACCD_ instead of ACC_
+        case ACC_XYZ_DATA8_UUID:   enreg = ENABLE_XYZ8_MASK; break;
+        case ACC_XYZ_DATA14_UUID:  enreg = ENABLE_XYZ14_MASK; break;
+        case ACC_TAP_DATA_UUID:    enreg = ENABLE_TAP_MASK; break;
+        case ACC_FF_DATA_UUID:     enreg = ENABLE_FF_MASK; break;
+        case ACC_MO_DATA_UUID:     enreg = ENABLE_MO_MASK; break;
+        case ACC_TRAN_DATA_UUID:   enreg = ENABLE_TRAN_MASK; break;
+        case ACCD_FALL_DATA_UUID:  enreg = ENABLE_USR1_MASK; break; // derived event, hence ACCD_ instead of ACC_
         // case ACC_USR2_DATA_UUID:   enreg |= ENABLE_USR2_MASK; break;
     }
-    DF_DBG(@"writing byte to ACC_ENABLE_UUID stored byte for CUUID %x: %x", cuuid, enreg);
-    [DF1LibUtil writeCharacteristic:self.p sUUID:ACC_SERV_UUID cUUID:ACC_ENABLE_UUID withByte:enreg];
-    [g_reg setObject:[NSData dataWithBytes:&enreg length:1] forKey:[DF1LibUtil IntToCBUUID:ACC_ENABLE_UUID]]; // store the register
+    [self _modifyRegister:ACC_ENABLE_UUID clearMask:enreg setMask:0x00];
 }
 
 
@@ -674,6 +697,24 @@
 
 -(void) modifyRange:(UInt8) value
 {
+    uint8_t clear = GEN_CFG_RA1_MASK|GEN_CFG_RA0_MASK;
+    if(value==4)       // RA1:RA0 == 0:1  4G
+    {
+        [self _modifyRegister:ACC_GEN_CFG_UUID clearMask:clear setMask:GEN_CFG_RA0_MASK];
+        // accDivisor = 32.0;
+    } 
+    else if(value==8)  // RA1:RA0 == 1:0  8G
+    {
+        [self _modifyRegister:ACC_GEN_CFG_UUID clearMask:clear setMask:GEN_CFG_RA1_MASK];
+        // accDivisor = 16.0;
+    } 
+    else               // RA1:RA0 == 0:0  2G by default
+    {
+        [self _modifyRegister:ACC_GEN_CFG_UUID clearMask:clear setMask:0x00];
+        // accDivisor = 64.0;
+    }
+    // incur a read immediately following the setting : this will modify the accDivisor in didUpdateChar..
+    [DF1LibUtil readCharacteristic:self.p sUUID:ACC_SERV_UUID cUUID:ACC_GEN_CFG_UUID];
 }
 
 -(void) modifyTapThsz:(double) g

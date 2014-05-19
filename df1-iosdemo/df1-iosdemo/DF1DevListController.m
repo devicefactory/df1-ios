@@ -20,6 +20,7 @@ facts need to be considered:
 #import "DF1DevCell.h"
 #import "DF1DevDetailController.h"
 #import "Utility.h"
+#import "NSData+Conversion.h"
 
 
 @interface DF1DevListController ()
@@ -93,8 +94,10 @@ facts need to be considered:
     // self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.0 alpha:0.7];
     [[UINavigationBar appearance] setTintColor:[UIColor blackColor]];
     // kick off timer for reading RSSI for connected peripherals
-    rssiTimer = [NSTimer scheduledTimerWithTimeInterval:3.0f
+    rssiTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
         target:self selector:@selector(triggerReadRSSI:) userInfo:nil repeats:YES];
+    
+    [self triggerScan];
 }
 
 -(void) viewWillAppear:(BOOL)animated
@@ -186,7 +189,7 @@ facts need to be considered:
     // simply set the pointer to the internal one : is this dangerous?
     self.nDevices = devices; 
     [self.tableView reloadData];
-    return (devices.count>2) ? false : true; // just scan for more than 2 devices
+    return (devices.count>10) ? false : true; // just scan for more than 2 devices
 }
 
 -(void) didStopScan
@@ -202,6 +205,16 @@ facts need to be considered:
         NSString *cname = [DF1LibUtil CBUUIDToString:s.UUID];
         DF_DBG(@"contains service: %@",cname);
     }
+
+    if([[peripheral.name lowercaseString] hasPrefix:@"df1"])
+    {
+        NSUInteger i = [self.nDevices indexOfObject:peripheral];
+        if(i!=NSNotFound) {
+            DF1DevCell *cell = (DF1DevCell*)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow: i inSection:0]];
+            // cell.ledButton2.userInteractionEnabled = YES;
+            cell.ledButton.hidden = NO;
+        }
+    }
 }
 
 -(void) didUpdateRSSI:(CBPeripheral *)p withRSSI:(float)rssi
@@ -210,7 +223,7 @@ facts need to be considered:
     NSUInteger i = [self.nDevices indexOfObject:p];
     if(i!=NSNotFound) {
         DF1DevCell *cell = (DF1DevCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-        cell.subLabel.text = [NSString stringWithFormat:@"RSSI  %.0f dBm", rssi];
+        [cell updateSignalValue:rssi];
     }
 }
 
@@ -268,6 +281,11 @@ facts need to be considered:
         if(!foundService) {
             cell.ledButton.hidden = YES;
         }
+        // only discover the battery and test services : accel takes longer
+        CBUUID *bserv = [DF1LibUtil IntToCBUUID:BATT_SERVICE_UUID];
+        CBUUID *tserv = [DF1LibUtil IntToCBUUID:TEST_SERV_UUID];
+        NSArray *services = [NSArray arrayWithObjects: bserv, tserv, nil];
+        [self.df connect:p withServices:services];
         return cell;
     } else {
         UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell"
@@ -276,6 +294,7 @@ facts need to be considered:
         cell.textLabel.text = [NSString stringWithFormat:@"%@",p.name];
         cell.textLabel.textColor = [UIColor grayColor];
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        cell.userInteractionEnabled = false;
         // MBGenericDeviceCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
         // cell.nameLabel.text = [NSString stringWithFormat:@"%@",p.name];
         // cell.detailLabel.text = [NSString stringWithFormat:@"%@",CFUUIDCreateString(nil, p.UUID)];
@@ -325,7 +344,7 @@ facts need to be considered:
 {
     if(![self.df isConnected:p])
         return;
-    DF_DBG(@"writing characteristic to the LED service for peripheral: %@", p.name);
+    DF_DBG(@"writing characteristic to the LED service for peripheral: %@ : %@", p.name, [data hexString]);
     [DF1LibUtil writeCharacteristic:p sUUID:TEST_SERV_UUID cUUID:TEST_CONF_UUID data:data];
 }
 
