@@ -33,5 +33,16 @@ These are the steps required to complie the code in the repo and install on an i
 * This should open the "df1-isodemo"
 
 *Step 3:* Connect your iOS device and select as a destination.
+* The navigation at the top to the right of the Play buttom should list "df1-iosdemo" > "your iOS device"
+* If your iOS device is not selected from the drop down, click on the destination device and choose it
+
+*Step 4:* Compile and install...
+* Press the Play button on the navigation at the top
+* This will compile the code and install the app on you device.
+
+That's it... you now have the app on your iOS device and can now connect to your DF1.
+
+
+
 
 
