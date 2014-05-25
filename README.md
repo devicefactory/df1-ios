@@ -1,7 +1,7 @@
 DF1-IOS
 =======
 
-**About:** This repository is for DeviceFactory iOS applications.  These apps are intended to be for demonstration purposes.  They can be compiled and install in an iOS product and used to control the DF1 device.
+**About:** This repository is for Device Factory iOS applications.  These apps are intended to be for demonstration purposes.  They can be compiled and install in an iOS product and used to control the DF1 device.
 
 **Contents:**
 * docs - Supporting files and documentaion
