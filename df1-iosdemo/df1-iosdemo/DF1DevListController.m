@@ -137,7 +137,7 @@ facts need to be considered:
     self.title = @"Scanning...";
     // self.navigationItem.rightBarButtonItem.enabled = NO;
     [self.refreshControl beginRefreshing];
-    [self.df scan:10];
+    [self.df scan:30];
     [NSTimer scheduledTimerWithTimeInterval:6.0f
         target:self selector:@selector(timeoutScan:) userInfo:nil repeats:NO];
 }
