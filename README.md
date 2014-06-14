@@ -8,15 +8,14 @@ DF1-IOS
 * ios-lib - Base librabry to communicate with DF1
 * ios-demo - Main demo app for DF1
 
-![DF1 black and white](docs/pics/df1_shot1.jpg)
-
+![DF1](https://raw.githubusercontent.com/devicefactory/share/master/media/df1/df1.png)
 
 BLE Services Doc
 ================
 
 For details on available GATT services and related characteristics, refer to:
 
-[DF1Services Document](docs/DF1Services.md)
+[DF1 Services Document](https://github.com/devicefactory/df1-manual/blob/master/manual.md)
 
 How To: Compile and Install
 ===========================
