@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "DF1Lib.h"
-#import "DF1DevDetailCells.h"
 #import "DF1Data.h"
+#import "DF1CellAccXyz.h"
+#import "DF1CellAccTap.h"
+#import "DF1CellBatt.h"
 
 
 @protocol DF1DevDetailDelegate <NSObject>
@@ -22,10 +24,10 @@
 @property (strong,nonatomic) DF1 *df;
 @property (strong,nonatomic) UIViewController *previousVC;
 
-@property (strong,nonatomic) AccXYZCell *accXyzCell;
-@property (strong,nonatomic) AccTapCell *accTapCell;
-@property (strong,nonatomic) BattCell   *battCell;
-@property (strong,nonatomic) RSSICell   *rssiCell;
+@property (strong,nonatomic) DF1CellAccXyz *accXyzCell;
+@property (strong,nonatomic) DF1CellAccTap *accTapCell;
+@property (strong,nonatomic) DF1CellBatt   *battCell;
+// @property (strong,nonatomic) DF1CellBatt   *rssiCell;
 @property (nonatomic) DF1Data *df1data;
 
 -(id)initWithDF:(DF1*) df;

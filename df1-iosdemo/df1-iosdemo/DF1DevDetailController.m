@@ -10,6 +10,7 @@
 #import "DF1DevDetailController.h"
 #import "DF1DevListController.h"
 #import "DF1Lib.h"
+#import "MBProgressHUD.h"
 
 @interface DF1DevDetailController ()
 {
@@ -28,6 +29,8 @@
 
 @synthesize df;
 
+
+
 -(id)initWithDF:(DF1*) userdf
 {
     self = [super init];
@@ -39,10 +42,29 @@
     return self; 
 }
 
+// here, we create a dictionary we want to save under NSUserDefault library
+-(void) saveUserDefaultsForDevice
+{
+    CBPeripheral *p = self.df.p;
+    NSString *uuid = [p.identifier UUIDString];
+    
+    NSArray *cellList = [NSArray arrayWithObjects:@"DF1CellAccXyz", @"DF1CellAccTap", @"DF1CellBatt", nil];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+                          p.name, @"defaultName",
+                          cellList,    @"cellList",
+                          nil];
+
+    // NSDictionary *dict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:uuid];
+    [[NSUserDefaults standardUserDefaults] setValue:dict forKey:uuid];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 -(void)initializeCells
 {
+    // check the userdefaults uuid -> dict -> cellList and instantiate accordingly
+    
     if(!self.accXyzCell) {
-        self.accXyzCell = [[AccXYZCell alloc] initWithStyle:UITableViewCellStyleDefault
+        self.accXyzCell = [[DF1CellAccXyz alloc] initWithStyle:UITableViewCellStyleDefault
                                               reuseIdentifier:@"AccXYZCell" parentController:self];
         // do other default initialization here
         self.accXyzCell.accLabel.text = @"Acceleration";
@@ -51,13 +73,13 @@
         self.accXyzCell.accValueZ.text = @"z axis";
     }
     if(!self.accTapCell) {
-        self.accTapCell = [[AccTapCell alloc] initWithStyle:UITableViewCellStyleDefault
+        self.accTapCell = [[DF1CellAccTap alloc] initWithStyle:UITableViewCellStyleDefault
                                             reuseIdentifier:@"AccTapCell" parentController:self];
         self.accTapCell.accLabel.text = @"Tap Event";
         self.accTapCell.accValueTap.text = @"no events";
     }
     if(!self.battCell) {
-        self.battCell = [[BattCell alloc] initWithStyle:UITableViewCellStyleDefault
+        self.battCell = [[DF1CellBatt alloc] initWithStyle:UITableViewCellStyleDefault
                                               reuseIdentifier:@"BattCell"];
         self.battCell.battLabel.text = @"Battery Level";
         self.battCell.battLevel.text = @"NA";
@@ -70,10 +92,11 @@
 }
 
 
--(void)viewDidLoad
+
+-(void) viewDidLoad
 {
     [super viewDidLoad];
-     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -211,6 +234,14 @@
     [self.df subscribeXYZ8];
     [self.df subscribeTap];
     [self _setParamToUIControl:params];
+    [MBProgressHUD hideHUDForView:self.view animated:true];
+    
+    // Every DF1 device we ever connected gets userDefault saved.
+    NSString *uuid = [self.df.p.identifier UUIDString];
+    NSDictionary *dict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:uuid];
+    if(dict==nil) {
+        [self saveUserDefaultsForDevice];
+    }
 }
 
 -(void) didUpdateRSSI:(CBPeripheral*) peripheral withRSSI:(float) rssi

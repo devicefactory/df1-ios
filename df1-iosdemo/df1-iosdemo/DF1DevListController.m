@@ -123,6 +123,17 @@ facts need to be considered:
     [self initializeMembers:userdf];
 }
 
+#pragma mark - Internal functions
+
+- (NSString*) getUserDefaultNameForDevice:(CBPeripheral*) p
+{
+    NSString *uuid = [p.identifier UUIDString];
+    NSDictionary *dict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:uuid];
+    if(dict==nil)
+        return p.name;
+    NSString *defaultName = (NSString*)[dict valueForKey:@"defaultName"];
+    return defaultName;
+}
 
 - (void) clearScan
 {
@@ -264,7 +275,8 @@ facts need to be considered:
                     reuseIdentifier:@"df1cell"];
         }
 
-        cell.nameLabel.text = [NSString stringWithFormat:@"%@",p.name];
+        NSString *name = [self getUserDefaultNameForDevice:p];
+        cell.nameLabel.text = [NSString stringWithFormat:@"%@",name];
         // cell.detailLabel.text = [NSString stringWithFormat:@"%@",[DF1LibUtil CBUUIDToString:p.UUID]];
         cell.subLabel.text = [NSString stringWithFormat:@"RSSI: NA"];
         // we set these attributes so that the cell can trigger action back to this controller

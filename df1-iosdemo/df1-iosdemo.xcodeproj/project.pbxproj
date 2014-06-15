@@ -30,8 +30,12 @@
 		C56C08A71904AA14001FF641 /* DFLOGO07_launch_2.png in Resources */ = {isa = PBXBuildFile; fileRef = C56C08A61904AA14001FF641 /* DFLOGO07_launch_2.png */; };
 		C56C08A91904ACD4001FF641 /* DFLOGO07_launch_invert.png in Resources */ = {isa = PBXBuildFile; fileRef = C56C08A81904ACD4001FF641 /* DFLOGO07_launch_invert.png */; };
 		C56C08AB1904BA2D001FF641 /* oem-front1-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = C56C08AA1904BA2D001FF641 /* oem-front1-icon.png */; };
-		C579DD47190EFB2A0029B92D /* DF1DevDetailCells.m in Sources */ = {isa = PBXBuildFile; fileRef = C579DD44190EFB2A0029B92D /* DF1DevDetailCells.m */; };
 		C579DD48190EFB2A0029B92D /* DF1DevDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = C579DD46190EFB2A0029B92D /* DF1DevDetailController.m */; };
+		C5A71BE9194D48360074B087 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A71BE8194D48360074B087 /* MBProgressHUD.m */; };
+		C5A71BF2194D51ED0074B087 /* DF1Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A71BEB194D51ED0074B087 /* DF1Cell.m */; };
+		C5A71BF3194D51ED0074B087 /* DF1CellAccTap.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A71BED194D51ED0074B087 /* DF1CellAccTap.m */; };
+		C5A71BF4194D51ED0074B087 /* DF1CellAccXyz.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A71BEF194D51ED0074B087 /* DF1CellAccXyz.m */; };
+		C5A71BF5194D51ED0074B087 /* DF1CellBatt.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A71BF1194D51ED0074B087 /* DF1CellBatt.m */; };
 		C5CA41E9191AC9C000C29D76 /* F3PlotStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = C5CA41E8191AC9C000C29D76 /* F3PlotStrip.m */; };
 		C5CACDE819297B5F00A2DD7B /* green-in.png in Resources */ = {isa = PBXBuildFile; fileRef = C5CACDE419297B5F00A2DD7B /* green-in.png */; };
 		C5CACDE919297B5F00A2DD7B /* green-out.png in Resources */ = {isa = PBXBuildFile; fileRef = C5CACDE519297B5F00A2DD7B /* green-out.png */; };
@@ -81,10 +85,18 @@
 		C56C08A61904AA14001FF641 /* DFLOGO07_launch_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DFLOGO07_launch_2.png; path = "df1-iosdemo/assets/DFLOGO07_launch_2.png"; sourceTree = "<group>"; };
 		C56C08A81904ACD4001FF641 /* DFLOGO07_launch_invert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DFLOGO07_launch_invert.png; path = "df1-iosdemo/assets/DFLOGO07_launch_invert.png"; sourceTree = "<group>"; };
 		C56C08AA1904BA2D001FF641 /* oem-front1-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "oem-front1-icon.png"; path = "df1-iosdemo/assets/oem-front1-icon.png"; sourceTree = "<group>"; };
-		C579DD43190EFB2A0029B92D /* DF1DevDetailCells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1DevDetailCells.h; sourceTree = "<group>"; };
-		C579DD44190EFB2A0029B92D /* DF1DevDetailCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1DevDetailCells.m; sourceTree = "<group>"; };
 		C579DD45190EFB2A0029B92D /* DF1DevDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1DevDetailController.h; sourceTree = "<group>"; };
 		C579DD46190EFB2A0029B92D /* DF1DevDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1DevDetailController.m; sourceTree = "<group>"; };
+		C5A71BE7194D48360074B087 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		C5A71BE8194D48360074B087 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		C5A71BEA194D51ED0074B087 /* DF1Cell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1Cell.h; sourceTree = "<group>"; };
+		C5A71BEB194D51ED0074B087 /* DF1Cell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1Cell.m; sourceTree = "<group>"; };
+		C5A71BEC194D51ED0074B087 /* DF1CellAccTap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1CellAccTap.h; sourceTree = "<group>"; };
+		C5A71BED194D51ED0074B087 /* DF1CellAccTap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1CellAccTap.m; sourceTree = "<group>"; };
+		C5A71BEE194D51ED0074B087 /* DF1CellAccXyz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1CellAccXyz.h; sourceTree = "<group>"; };
+		C5A71BEF194D51ED0074B087 /* DF1CellAccXyz.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1CellAccXyz.m; sourceTree = "<group>"; };
+		C5A71BF0194D51ED0074B087 /* DF1CellBatt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1CellBatt.h; sourceTree = "<group>"; };
+		C5A71BF1194D51ED0074B087 /* DF1CellBatt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1CellBatt.m; sourceTree = "<group>"; };
 		C5CA41E7191AC9C000C29D76 /* F3PlotStrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = F3PlotStrip.h; sourceTree = "<group>"; };
 		C5CA41E8191AC9C000C29D76 /* F3PlotStrip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = F3PlotStrip.m; sourceTree = "<group>"; };
 		C5CACDE419297B5F00A2DD7B /* green-in.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "green-in.png"; path = "df1-iosdemo/assets/green-in.png"; sourceTree = "<group>"; };
@@ -156,10 +168,18 @@
 		C56A3EFD18DF77B700DB2A5C /* df1-iosdemo */ = {
 			isa = PBXGroup;
 			children = (
+				C5A71BEA194D51ED0074B087 /* DF1Cell.h */,
+				C5A71BEB194D51ED0074B087 /* DF1Cell.m */,
+				C5A71BEC194D51ED0074B087 /* DF1CellAccTap.h */,
+				C5A71BED194D51ED0074B087 /* DF1CellAccTap.m */,
+				C5A71BEE194D51ED0074B087 /* DF1CellAccXyz.h */,
+				C5A71BEF194D51ED0074B087 /* DF1CellAccXyz.m */,
+				C5A71BF0194D51ED0074B087 /* DF1CellBatt.h */,
+				C5A71BF1194D51ED0074B087 /* DF1CellBatt.m */,
+				C5A71BE7194D48360074B087 /* MBProgressHUD.h */,
+				C5A71BE8194D48360074B087 /* MBProgressHUD.m */,
 				C5CA41E7191AC9C000C29D76 /* F3PlotStrip.h */,
 				C5CA41E8191AC9C000C29D76 /* F3PlotStrip.m */,
-				C579DD43190EFB2A0029B92D /* DF1DevDetailCells.h */,
-				C579DD44190EFB2A0029B92D /* DF1DevDetailCells.m */,
 				C579DD45190EFB2A0029B92D /* DF1DevDetailController.h */,
 				C579DD46190EFB2A0029B92D /* DF1DevDetailController.m */,
 				C56C089A1901C1B0001FF641 /* DF1DevCell.h */,
@@ -334,9 +354,13 @@
 				C56C08991901A4E9001FF641 /* DF1DevListController.m in Sources */,
 				C56C089E1901C1B0001FF641 /* DF1DevCell.m in Sources */,
 				C5CA41E9191AC9C000C29D76 /* F3PlotStrip.m in Sources */,
-				C579DD47190EFB2A0029B92D /* DF1DevDetailCells.m in Sources */,
+				C5A71BF3194D51ED0074B087 /* DF1CellAccTap.m in Sources */,
+				C5A71BE9194D48360074B087 /* MBProgressHUD.m in Sources */,
 				C56C089F1901C1B0001FF641 /* Utility.m in Sources */,
+				C5A71BF4194D51ED0074B087 /* DF1CellAccXyz.m in Sources */,
 				C579DD48190EFB2A0029B92D /* DF1DevDetailController.m in Sources */,
+				C5A71BF5194D51ED0074B087 /* DF1CellBatt.m in Sources */,
+				C5A71BF2194D51ED0074B087 /* DF1Cell.m in Sources */,
 				C56A3F0818DF77B700DB2A5C /* DF1AppDelegate.m in Sources */,
 				C56A3F0418DF77B700DB2A5C /* main.m in Sources */,
 			);
