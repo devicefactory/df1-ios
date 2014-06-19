@@ -51,6 +51,7 @@
 -(void) disconnect:(CBPeripheral*) peripheral;
 -(void) askRSSI:(CBPeripheral*) peripheral;
 -(bool) isConnected:(CBPeripheral*) peripheral;
+-(NSDictionary*) getParams;
 
 -(void) subscription:(UInt16) suuid withCUUID:(UInt16) cuuid onOff:(BOOL)enable;
 -(void) subscribeBatt;

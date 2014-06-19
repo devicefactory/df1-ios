@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "df1-iosdemo/df1-iosdemo/DF1DevDetailController.m"
-            timestampString = "424496711.32556"
+            timestampString = "424839527.64035"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "185"
-            endingLineNumber = "185"
-            landmarkName = "-tableView:heightForFooterInSection:"
+            startingLineNumber = "212"
+            endingLineNumber = "212"
+            landmarkName = "-tableView:willDisplayCell:forRowAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

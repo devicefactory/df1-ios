@@ -5,7 +5,7 @@
 #import "DF1DevDetailController.h"
 
 
-@interface DF1DevListController : UITableViewController <DF1Delegate,DF1DevCellDelegate,DF1DevDetailDelegate>
+@interface DF1DevListController : UITableViewController <DF1Delegate,DF1DevCellDelegate,UINavigationControllerDelegate>
 
 @property (strong,nonatomic) DF1 *df;
 // @property (strong,nonatomic) NSMutableArray *nDevices;

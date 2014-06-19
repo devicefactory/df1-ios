@@ -21,6 +21,9 @@
     DF1DevListController *devlist = [[DF1DevListController alloc] initWithStyle:UITableViewStyleGrouped];
     UINavigationController *nav   = [[UINavigationController alloc] initWithRootViewController:devlist];
     self.window.rootViewController = nav;
+    // you tell the navigationViewController this current viewController is a delegate
+    [nav setDelegate:(id<UINavigationControllerDelegate>)devlist];
+    [[nav delegate] navigationController:nav willShowViewController:devlist animated:YES];
     [self.window makeKeyAndVisible];
     return YES;
 }

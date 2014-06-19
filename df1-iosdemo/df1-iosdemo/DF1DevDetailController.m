@@ -8,8 +8,10 @@
 #define DF_LEVEL 0
 
 #import "DF1DevDetailController.h"
+#import "DF1CfgController.h"
 #import "DF1DevListController.h"
 #import "DF1Lib.h"
+#import "Utility.h"
 #import "MBProgressHUD.h"
 
 @interface DF1DevDetailController ()
@@ -21,7 +23,6 @@
     int connectionRetries;
     int subscriptionRetries;
 }
-
 @end
 
 
@@ -38,6 +39,7 @@
         [self initializeCells];
         self.df = userdf;
         self.df.delegate = self;
+        [self.df connect:self.df.p];
     }
     return self; 
 }
@@ -97,6 +99,7 @@
 {
     [super viewDidLoad];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    self.navigationItem.rightBarButtonItem = BARBUTTON(@"Config", @selector(showCfgController));
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -110,12 +113,46 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
     // removing subscription has to happen before we reset the delegate for df object
-    [self.df unsubscribeBatt];
-    [self.df unsubscribeXYZ8];
-    [self.df unsubscribeTap];
-    [(DF1DevListController*) self.previousVC willTransitionBack:self.df];
+    // [self.df unsubscribeBatt];
+    // [self.df unsubscribeXYZ8];
+    // [self.df unsubscribeTap];
+    // [(DF1DevListController*) self.previousVC willTransitionBack:self.df];
 }
 
+
+-(void) showCfgController
+{
+    // DF1CfgController *vc = [[DF1CfgController alloc] initWithStyle:UITableViewCellStyleDefault];
+    DF1CfgController *vc = [[DF1CfgController alloc] initWithDF:self.df];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+#pragma mark - UINavigationControllerDelegate
+
+- (void)navigationController:(UINavigationController *)navigationController
+      willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    DF_DBG(@"DF1DevDetailController calling navigationController:willShowViewController:animated");
+    if ([viewController isEqual:self]) {
+        [viewController viewWillAppear:animated];
+    } else if ([viewController conformsToProtocol:@protocol(UINavigationControllerDelegate)]){
+        // Set the navigation controller delegate to the passed-in view controller and call the UINavigationViewControllerDelegate method on the new delegate.
+        [navigationController setDelegate:(id<UINavigationControllerDelegate>)viewController];
+        
+        if([viewController isMemberOfClass:[DF1DevListController class]])
+        {
+            [self.df unsubscribeBatt];
+            [self.df unsubscribeXYZ8];
+            [self.df unsubscribeTap];
+            DF1DevListController *vc = (DF1DevListController*) viewController;
+            vc.df = self.df;
+            vc.df.delegate = vc;
+        }
+        
+        [[navigationController delegate] navigationController:navigationController willShowViewController:viewController animated:YES];
+    }
+    
+}
 
 
 #pragma mark - Table view data source
@@ -178,10 +215,18 @@
 
 -(NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == 0) {
+        NSString *uuid     = [self.df.p.identifier UUIDString];
+        NSDictionary *dict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:uuid];
+        NSString *name     = [dict objectForKey:@"defaultName"];
+        return name;
     }
     return @"";
 }
 
+- (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 25.0f;
+}
 -(CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     return 0.0f;
 }

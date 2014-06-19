@@ -130,6 +130,7 @@
 
 -(void) connect:(CBPeripheral*) peripheral withServices:(NSArray*) services
 {
+    self.p = peripheral;
     peripheral.delegate = self;
     if(services==nil)
         services = g_defaultServices;
@@ -184,6 +185,11 @@
         [scanTimer invalidate];
         scanTimer = nil;
     }
+}
+
+-(NSDictionary*) getParams
+{
+    return g_reg;
 }
 
 // we actually need to check the UUID

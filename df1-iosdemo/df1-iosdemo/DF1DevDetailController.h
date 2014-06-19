@@ -13,13 +13,14 @@
 #import "DF1CellAccTap.h"
 #import "DF1CellBatt.h"
 
-
+/*
 @protocol DF1DevDetailDelegate <NSObject>
 @required
 -(void) willTransitionBack:(DF1 *) userdf;
 @end
+ */
 
-@interface DF1DevDetailController : UITableViewController <DF1Delegate>
+@interface DF1DevDetailController : UITableViewController <DF1Delegate,UINavigationControllerDelegate>
 
 @property (strong,nonatomic) DF1 *df;
 @property (strong,nonatomic) UIViewController *previousVC;

@@ -22,7 +22,6 @@ facts need to be considered:
 #import "Utility.h"
 #import "NSData+Conversion.h"
 
-
 @interface DF1DevListController ()
 {
   NSTimer *rssiTimer;
@@ -53,7 +52,6 @@ facts need to be considered:
         [self initializeMembers:nil];
         self.title = @"DF1 Demo1";
         DF_DBG(@"loaded DF1DevListController");
-
     }
     return self;
 }
@@ -115,13 +113,29 @@ facts need to be considered:
   }
 }
 
+#pragma mark - UINavigationControllerDelegate
 
+- (void)navigationController:(UINavigationController *)navigationController
+      willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    DF_DBG(@"DF1DevListController calling navigationController:willShowViewController:animated");
+    if ([viewController isEqual:self]) {
+        [viewController viewWillAppear:animated];
+    } else if ([viewController conformsToProtocol:@protocol(UINavigationControllerDelegate)]){
+        // Set the navigation controller delegate to the passed-in view controller and call the UINavigationViewControllerDelegate method on the new delegate.
+        [navigationController setDelegate:(id<UINavigationControllerDelegate>)viewController];
+        [[navigationController delegate] navigationController:navigationController willShowViewController:viewController animated:YES];
+    }
+}
+
+/*
 #pragma mark - DF1DevDetailDelegate
 
 -(void) willTransitionBack:(DF1 *) userdf
 {
     [self initializeMembers:userdf];
 }
+*/
 
 #pragma mark - Internal functions
 
@@ -364,17 +378,18 @@ facts need to be considered:
 
 #pragma mark - Table view delegate
 
--(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+-(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     NSLog(@"setting peripheral to selectedPeripheral: row %d section %d", indexPath.row, indexPath.section);
     // self.selectedPeripheral = p;
     CBPeripheral *p = [self.nDevices objectAtIndex:indexPath.row];
 
-    [self.df connect:p];
+    self.df.p = p;
 
     DF1DevDetailController *vc = [[DF1DevDetailController alloc] initWithDF:self.df];
-    vc.previousVC = self;
+    // vc.previousVC = self;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
