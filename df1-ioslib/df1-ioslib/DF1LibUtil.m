@@ -292,5 +292,42 @@
   return ([DF1LibUtil CBUUIDToInt:uuid]==intuuid);
 }
 
+/*
+ * Helper functions against NSUserDefaults
+ */
+
+// retrieves the user default dictionary for peripheral : assumes we store the dict by the uuid
++(NSDictionary*) getUserCfgDict:(CBPeripheral*) p
+{
+    NSString *uuid = [p.identifier UUIDString];
+    return [[NSUserDefaults standardUserDefaults] dictionaryForKey:uuid];
+}
+
++(NSString*) getUserCfgName:(CBPeripheral*) p
+{
+    NSDictionary *dict = [DF1LibUtil getUserCfgDict:p];
+    if(dict==nil)
+        return p.name;
+    NSString *defaultName = (NSString*)[dict valueForKey:CFG_NAME];
+    return defaultName;
+}
+
++(NSDictionary*) mergeUserCfgDict:(CBPeripheral*) p withDict:(NSDictionary*) dict
+{
+    NSDictionary *udict = [DF1LibUtil getUserCfgDict:p];
+    // merge the dict with udict (existing) here 
+    return dict;
+}
+
++(NSDictionary*) saveUserCfgDict:(CBPeripheral*) p withDict:(NSDictionary*) dict
+{
+    NSString *uuid = [p.identifier UUIDString];
+    NSDictionary* mdict = [DF1LibUtil mergeUserCfgDict:p withDict:dict];
+    // do some validation to make sure you required keys are filled in
+    [[NSUserDefaults standardUserDefaults] setValue:mdict forKey:uuid];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    return dict;
+}
+
 
 @end

@@ -71,9 +71,8 @@
     {
         self.title = @"Configuration";
         self.df = userdf;
-        // retrieve from the existing dict if we have it in NSUserDefaults
-        NSString *uuid = [self.df.p.identifier UUIDString];
-        NSDictionary *dict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:uuid];
+
+        NSDictionary *dict = [DF1LibUtil getUserCfgDict:self.df.p];
         if(dict==nil)
             self.cfg = [[NSMutableDictionary alloc] init];
         else
@@ -150,21 +149,9 @@
 
 #pragma mark - Internal functions
 
--(NSString*) getUserDefaultNameForDevice:(CBPeripheral*) p
-{
-    NSString *uuid = [p.identifier UUIDString];
-    NSDictionary *dict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:uuid];
-    if(dict==nil)
-        return p.name;
-    NSString *defaultName = (NSString*)[dict valueForKey:@"defaultName"];
-    return defaultName;
-}
-
 -(void) saveCfg
 {
-    NSString *uuid = [self.df.p.identifier UUIDString];
-    [[NSUserDefaults standardUserDefaults] setValue:self.cfg forKey:uuid];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    NSDictionary *dict = [DF1LibUtil saveUserCfgDict:self.df.p withDict:self.cfg];
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     // Configure for text only and offset down

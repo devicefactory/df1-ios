@@ -21,6 +21,7 @@
     NSMutableDictionary *g_reg; // maintains current register settings
     NSArray *g_defaultServices;
     float accDivisor;
+    bool scanOtherDevices;
 }
 
 -(bool) _hasPeripheral:(CBPeripheral*) p;
@@ -54,6 +55,8 @@
             g_defaultServices = [NSArray arrayWithObjects: aserv, bserv, tserv, nil];
         }
         accDivisor = 64.0; // default is 2G
+
+        scanOtherDevices = false;
     }
     return self;
 }
@@ -134,7 +137,7 @@
     peripheral.delegate = self;
     if(services==nil)
         services = g_defaultServices;
-    DF_DBG(@"connect with %d specified services",services.count);
+    DF_DBG(@"connect with %lu specified services",(unsigned long)services.count);
     [self.devices setObject:services forKey:peripheral]; // CBPeripheral -> CBUUIDs
     [self.m connectPeripheral:peripheral options:nil];
 }
@@ -148,7 +151,7 @@
 {
     if(peripheral==nil)
     {
-        DF_DBG(@"removing %d peripherals", self.devices.count);
+        DF_DBG(@"removing %lu peripherals", (unsigned long)self.devices.count);
         for (id key in self.devices)
         {
             CBPeripheral *p = (CBPeripheral*) key;
@@ -236,6 +239,22 @@
 -(void) centralManager:(CBCentralManager*) central didDiscoverPeripheral:(CBPeripheral*) peripheral
             advertisementData:(NSDictionary*) advertisementData RSSI:(NSNumber*) RSSI
 {
+    // reference from:
+    //  https://github.com/Sensorcon/Sensordrone-iOS-Library/blob/master/SensordroneiOSLibrary/SensordroneiOSLibrary.m
+    // Get the device name from advertisementData
+    NSString *localName = [advertisementData objectForKey:CBAdvertisementDataLocalNameKey];
+    // if the advertisement name contains df1
+    if (localName != nil && [localName rangeOfString:@"df1"].location != NSNotFound) 
+    { 
+    }
+    else
+    {
+        if(!scanOtherDevices) {
+            DF_DBG(@"skipping because we are not interested in other devices");
+            return;
+        }
+    }
+
     bool hasit = [self _hasPeripheral:peripheral];
     if(!hasit)
         [self.devices setObject:g_defaultServices forKey:peripheral];
@@ -259,20 +278,6 @@
             [self stopScan:false];
         }
     }
-    /* left here as reference from:
-      https://github.com/Sensorcon/Sensordrone-iOS-Library/blob/master/SensordroneiOSLibrary/SensordroneiOSLibrary.m
-
-    // Get the device name
-    NSString *localName = [advertisementData objectForKey:CBAdvertisementDataLocalNameKey];
-     if (localName != nil && [localName rangeOfString:@"Sensordrone"].location != NSNotFound) {
-     
-     // Add the name and peripheral to our list
-     [scannedDroneNames addObject:localName];
-     [scannedDronePeriperals addObject:peripheral];
-     // Fire away
-     [self notifyDelegate:@selector(doOnFoundDrone)];
-     }
-     */
 }
 
 
@@ -532,10 +537,10 @@
     #define UUID_NUM 14
     
     UInt16 cuuids[UUID_NUM] = {ACC_GEN_CFG_UUID, ACC_ENABLE_UUID,
-                        ACC_TAP_THSZ_UUID, ACC_TAP_THSX_UUID, ACC_TAP_THSY_UUID,
-                        ACC_TAP_TMLT_UUID, ACC_TAP_LTCY_UUID, ACC_TAP_WIND_UUID,
-                        ACC_FF_THS_UUID,   ACC_MO_THS_UUID,   ACC_FFMO_DEB_UUID,
-        ACC_TRAN_THS_UUID, ACC_TRAN_DEB_UUID, ACC_TRAN_HPF_UUID};
+                               ACC_TAP_THSZ_UUID, ACC_TAP_THSX_UUID, ACC_TAP_THSY_UUID,
+                               ACC_TAP_TMLT_UUID, ACC_TAP_LTCY_UUID, ACC_TAP_WIND_UUID,
+                               ACC_FF_THS_UUID,   ACC_MO_THS_UUID,   ACC_FFMO_DEB_UUID,
+                               ACC_TRAN_THS_UUID, ACC_TRAN_DEB_UUID, ACC_TRAN_HPF_UUID};
     // read all the config related characteristics first
     for(int i=0; i<UUID_NUM; i++)
     {

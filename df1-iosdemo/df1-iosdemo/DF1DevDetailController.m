@@ -47,18 +47,14 @@
 // here, we create a dictionary we want to save under NSUserDefault library
 -(void) saveUserDefaultsForDevice
 {
-    CBPeripheral *p = self.df.p;
-    NSString *uuid = [p.identifier UUIDString];
-    
-    NSArray *cellList = [NSArray arrayWithObjects:@"DF1CellAccXyz", @"DF1CellAccTap", @"DF1CellBatt", nil];
+    NSArray *cellList = [NSArray arrayWithObjects:
+            @"DF1CellAccXyz", @"DF1CellAccTap", @"DF1CellBatt", nil];
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                          p.name, @"defaultName",
-                          cellList,    @"cellList",
+                          self.df.p.name, CFG_NAME,
+                          cellList,       CFG_CELLS,
                           nil];
 
-    // NSDictionary *dict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:uuid];
-    [[NSUserDefaults standardUserDefaults] setValue:dict forKey:uuid];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    dict = [DF1LibUtil saveUserCfgDict:self.df.p withDict:dict];
 }
 
 -(void)initializeCells
@@ -215,10 +211,7 @@
 
 -(NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == 0) {
-        NSString *uuid     = [self.df.p.identifier UUIDString];
-        NSDictionary *dict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:uuid];
-        NSString *name     = [dict objectForKey:@"defaultName"];
-        return name;
+        return [DF1LibUtil getUserCfgName:self.df.p];
     }
     return @"";
 }
@@ -282,11 +275,8 @@
     [MBProgressHUD hideHUDForView:self.view animated:true];
     
     // Every DF1 device we ever connected gets userDefault saved.
-    NSString *uuid = [self.df.p.identifier UUIDString];
-    NSDictionary *dict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:uuid];
-    if(dict==nil) {
-        [self saveUserDefaultsForDevice];
-    }
+    NSDictionary *dict = [DF1LibUtil getUserCfgDict:self.df.p];
+    if(dict==nil) { [self saveUserDefaultsForDevice]; }
 }
 
 -(void) didUpdateRSSI:(CBPeripheral*) peripheral withRSSI:(float) rssi

@@ -139,16 +139,6 @@ facts need to be considered:
 
 #pragma mark - Internal functions
 
-- (NSString*) getUserDefaultNameForDevice:(CBPeripheral*) p
-{
-    NSString *uuid = [p.identifier UUIDString];
-    NSDictionary *dict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:uuid];
-    if(dict==nil)
-        return p.name;
-    NSString *defaultName = (NSString*)[dict valueForKey:@"defaultName"];
-    return defaultName;
-}
-
 - (void) clearScan
 {
     [self.df stopScan:true]; // clear the internal device list
@@ -289,7 +279,7 @@ facts need to be considered:
                     reuseIdentifier:@"df1cell"];
         }
 
-        NSString *name = [self getUserDefaultNameForDevice:p];
+        NSString *name = [DF1LibUtil getUserCfgName:p];
         cell.nameLabel.text = [NSString stringWithFormat:@"%@",name];
         // cell.detailLabel.text = [NSString stringWithFormat:@"%@",[DF1LibUtil CBUUIDToString:p.UUID]];
         cell.subLabel.text = [NSString stringWithFormat:@"RSSI: NA"];

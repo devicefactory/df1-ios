@@ -40,7 +40,7 @@
 
     self.nameField = [[UITextField alloc] init];
     self.nameField.delegate = self;
-    NSString *defaultName = [self.cfg objectForKey:@"defaultName"];
+    NSString *defaultName = [self.cfg objectForKey:CFG_NAME];
     self.nameField.placeholder = (defaultName==nil) ? @"DF1" : defaultName;
     [self.nameField addTarget:self action:@selector(handleTextFieldEdit:) forControlEvents:UIControlEventEditingDidEnd];
     
@@ -62,7 +62,7 @@
 
 -(void) modifyChange:(NSMutableDictionary*) c
 {
-    [c setValue:self.nameField.text forKey:@"defaultName"];
+    [c setValue:self.nameField.text forKey:CFG_NAME];
 }
 
 -(void) handleTextFieldEdit:(UITextField*) sender
