@@ -1,7 +1,10 @@
 DF1-IOS
 =======
 
-**About:** This repository is for Device Factory iOS applications.  These apps are intended to be for demonstration purposes.  They can be compiled and install in an iOS product and used to control the DF1 device.
+**About:**
+
+This repository is for Device Factory iOS applications.  These apps are intended to be for demonstration purposes.
+They can be compiled and installed on iOS hardware and used to interact with the DF1 device.
 
 **Contents:**
 * docs - Supporting files and documentaion
@@ -42,6 +45,9 @@ These are the steps required to complie the code in the repo and install on an i
 That's it... you now have the app on your iOS device and can now connect to your DF1.
 
 
+ScreenShots
+===========
 
+![DF1](https://raw.githubusercontent.com/devicefactory/share/master/media/ios/ios_screenshot1.png)
 
-
+![DF1](https://raw.githubusercontent.com/devicefactory/share/master/media/ios/ios_screenshot2.png)
