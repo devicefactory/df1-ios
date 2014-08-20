@@ -15,7 +15,7 @@ BLE Services Doc
 
 For details on available GATT services and related characteristics, refer to:
 
-[DF1 Services Document](https://github.com/devicefactory/df1-manual/blob/master/manual.md)
+[DF1 Services Document](https://github.com/devicefactory/df1-manual/blob/master/services.md)
 
 How To: Compile and Install
 ===========================
