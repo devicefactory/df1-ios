@@ -48,6 +48,6 @@ That's it... you now have the app on your iOS device and can now connect to your
 ScreenShots
 ===========
 
-![DF1](https://raw.githubusercontent.com/devicefactory/share/master/media/ios/ios_screenshot1.png)
+![DF1](https://raw.githubusercontent.com/devicefactory/df1-manual/master/pics/ios_screenshot1.png)
 
-![DF1](https://raw.githubusercontent.com/devicefactory/share/master/media/ios/ios_screenshot2.png)
+![DF1](https://raw.githubusercontent.com/devicefactory/df1-manual/master/pics/ios_screenshot2.png)
