@@ -13,12 +13,6 @@ They can be compiled and installed on iOS hardware and used to interact with the
 
 ![DF1](https://raw.githubusercontent.com/devicefactory/share/master/media/df1/df1.png)
 
-BLE Services Doc
-================
-
-For details on available GATT services and related characteristics, refer to:
-
-[DF1 Services Document](https://github.com/devicefactory/df1-manual/blob/master/services.md)
 
 How To: Compile and Install
 ===========================
@@ -44,10 +38,17 @@ These are the steps required to complie the code in the repo and install on an i
 
 That's it... you now have the app on your iOS device and can now connect to your DF1.
 
+Manual
+======
 
-ScreenShots
-===========
+Additional information can be found in the DF1 Manual:
 
-![DF1](https://raw.githubusercontent.com/devicefactory/df1-manual/master/pics/ios_screenshot1.png)
+[DF1 iOS Manual](https://github.com/devicefactory/df1-manual/blob/master/howto_ios.md)
 
-![DF1](https://raw.githubusercontent.com/devicefactory/df1-manual/master/pics/ios_screenshot2.png)
+BLE Services Doc
+================
+
+For details on available GATT services and related characteristics, refer to:
+
+[DF1 Services Document](https://github.com/devicefactory/df1-manual/blob/master/services.md)
+
