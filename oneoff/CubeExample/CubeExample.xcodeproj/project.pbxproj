@@ -25,6 +25,9 @@
 		BC958804117F8DAF00BBB1C8 /* MATCLogo_mipmap_2.pvr in Resources */ = {isa = PBXBuildFile; fileRef = BC9587FF117F8DAF00BBB1C8 /* MATCLogo_mipmap_2.pvr */; };
 		BC958805117F8DAF00BBB1C8 /* MATCLogo_mipmap_4.pvr in Resources */ = {isa = PBXBuildFile; fileRef = BC958800117F8DAF00BBB1C8 /* MATCLogo_mipmap_4.pvr */; };
 		BC958806117F8DAF00BBB1C8 /* MATCLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = BC958801117F8DAF00BBB1C8 /* MATCLogo.png */; };
+		C51085FD19E634400003A1E5 /* cubo.png in Resources */ = {isa = PBXBuildFile; fileRef = C51085FA19E634400003A1E5 /* cubo.png */; };
+		C51085FE19E634400003A1E5 /* cubo_preview.png in Resources */ = {isa = PBXBuildFile; fileRef = C51085FB19E634400003A1E5 /* cubo_preview.png */; };
+		C51085FF19E634400003A1E5 /* MATCLogo_cubo.pvr in Resources */ = {isa = PBXBuildFile; fileRef = C51085FC19E634400003A1E5 /* MATCLogo_cubo.pvr */; };
 		C598B4DF18727C64004207E8 /* MATCLogo2.png in Resources */ = {isa = PBXBuildFile; fileRef = C598B4DE18727C64004207E8 /* MATCLogo2.png */; };
 		C598B4E118727EE5004207E8 /* MATCLogo_df.pvr in Resources */ = {isa = PBXBuildFile; fileRef = C598B4E018727EE5004207E8 /* MATCLogo_df.pvr */; };
 		C598B4E31872816E004207E8 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = C598B4E21872816E004207E8 /* Icon.png */; };
@@ -60,6 +63,9 @@
 		BC9587FF117F8DAF00BBB1C8 /* MATCLogo_mipmap_2.pvr */ = {isa = PBXFileReference; lastKnownFileType = file; name = MATCLogo_mipmap_2.pvr; path = Images/MATCLogo_mipmap_2.pvr; sourceTree = "<group>"; };
 		BC958800117F8DAF00BBB1C8 /* MATCLogo_mipmap_4.pvr */ = {isa = PBXFileReference; lastKnownFileType = file; name = MATCLogo_mipmap_4.pvr; path = Images/MATCLogo_mipmap_4.pvr; sourceTree = "<group>"; };
 		BC958801117F8DAF00BBB1C8 /* MATCLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MATCLogo.png; path = Images/MATCLogo.png; sourceTree = "<group>"; };
+		C51085FA19E634400003A1E5 /* cubo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cubo.png; path = Images/cubo.png; sourceTree = "<group>"; };
+		C51085FB19E634400003A1E5 /* cubo_preview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cubo_preview.png; path = Images/cubo_preview.png; sourceTree = "<group>"; };
+		C51085FC19E634400003A1E5 /* MATCLogo_cubo.pvr */ = {isa = PBXFileReference; lastKnownFileType = file; name = MATCLogo_cubo.pvr; path = Images/MATCLogo_cubo.pvr; sourceTree = "<group>"; };
 		C598B4DE18727C64004207E8 /* MATCLogo2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MATCLogo2.png; path = Images/MATCLogo2.png; sourceTree = "<group>"; };
 		C598B4E018727EE5004207E8 /* MATCLogo_df.pvr */ = {isa = PBXFileReference; lastKnownFileType = file; name = MATCLogo_df.pvr; path = Images/MATCLogo_df.pvr; sourceTree = "<group>"; };
 		C598B4E21872816E004207E8 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = Images/Icon.png; sourceTree = "<group>"; };
@@ -146,6 +152,9 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				C51085FA19E634400003A1E5 /* cubo.png */,
+				C51085FB19E634400003A1E5 /* cubo_preview.png */,
+				C51085FC19E634400003A1E5 /* MATCLogo_cubo.pvr */,
 				C598B4E21872816E004207E8 /* Icon.png */,
 				C598B4E018727EE5004207E8 /* MATCLogo_df.pvr */,
 				C598B4DE18727C64004207E8 /* MATCLogo2.png */,
@@ -237,9 +246,12 @@
 				BC958803117F8DAF00BBB1C8 /* MATCLogo_4.pvr in Resources */,
 				BC958804117F8DAF00BBB1C8 /* MATCLogo_mipmap_2.pvr in Resources */,
 				C598B4E118727EE5004207E8 /* MATCLogo_df.pvr in Resources */,
+				C51085FD19E634400003A1E5 /* cubo.png in Resources */,
 				BC958805117F8DAF00BBB1C8 /* MATCLogo_mipmap_4.pvr in Resources */,
 				C598B4DF18727C64004207E8 /* MATCLogo2.png in Resources */,
+				C51085FF19E634400003A1E5 /* MATCLogo_cubo.pvr in Resources */,
 				BC958806117F8DAF00BBB1C8 /* MATCLogo.png in Resources */,
+				C51085FE19E634400003A1E5 /* cubo_preview.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

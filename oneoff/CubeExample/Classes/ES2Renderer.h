@@ -19,6 +19,7 @@
     EAGLContext *context;
 	
 	PVRTexture *pvrTexture;
+	PVRTexture *pvrTexture2;
 
     // The pixel dimensions of the CAEAGLLayer
     GLint backingWidth;

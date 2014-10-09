@@ -61,7 +61,8 @@ enum {
 
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorRenderbuffer);
 		
-		pvrTexture = [[PVRTexture pvrTextureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"MATCLogo_df" ofType:@"pvr"]] retain];
+		  pvrTexture = [[PVRTexture pvrTextureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"MATCLogo_df" ofType:@"pvr"]] retain];
+		  pvrTexture2 = [[PVRTexture pvrTextureWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"MATCLogo_cubo" ofType:@"pvr"]] retain];
 		
     }
 
@@ -70,38 +71,67 @@ enum {
 
 - (void)renderByRotatingAroundX:(float)xRotation rotatingAroundY:(float)yRotation;
 {
-	static const GLfloat cubeVertices[] = {
-		-1.0, -1.0,  1.0,
-		1.0, -1.0,  1.0,
-		-1.0,  1.0,  1.0,
-		1.0,  1.0,  1.0,
-		-1.0, -1.0, -1.0,
-		1.0, -1.0, -1.0,
-		-1.0,  1.0, -1.0,
-		1.0,  1.0, -1.0,
-	};
+	// static const GLfloat cubeVertices[] = {
+	// 	-1.0, -1.0,  1.0,
+	// 	1.0, -1.0,  1.0,
+	// 	-1.0,  1.0,  1.0,
+	// 	1.0,  1.0,  1.0,
+	// 	-1.0, -1.0, -1.0,
+	// 	1.0, -1.0, -1.0,
+	// 	-1.0,  1.0, -1.0,
+	// 	1.0,  1.0, -1.0,
+	// };
 	
-	static const GLushort cubeIndices[] = {
-		0, 1, 2, 3, 7, 1, 5, 4, 7, 6, 2, 4, 0, 1
-	};
+  static const GLfloat cubeVerticesStrip[] = {
+        // Front face
+        -1,-1,1, 1,-1,1, -1,1,1, 1,1,1,
+        // Right face
+        1,-1,1, 1,-1,-1, 1,1,1, 1,1,-1,
+        // Back face
+        1,-1,-1, -1,-1,-1, 1,1,-1, -1,1,-1,
+        // Left face
+        -1,-1,-1, -1,-1,1, -1,1,-1, -1,1,1,
+        // Bottom face
+        -1,-1,-1, 1,-1,-1, -1,-1,1, 1,-1,1,
+        // Top face
+        -1,1,1, 1,1,1, -1,1,-1, 1,1,-1
+    };
+//	static const GLushort cubeIndices[] = {
+//		0, 1, 2, 3, 7, 1, 5, 4, 7, 6, 2, 4, 0, 1
+//	};
 	
 #ifdef DRAWTEXTURE
-	const GLfloat cubeTexCoords[] = {
-        1.0, 0.0,
-        0.0, 0.0,
-        1.0, 1.0,
-        0.0, 1.0,
-		0.0, 0.0,
-		1.0, 0.0,
-		0.0, 1.0,
-		1.0, 1.0,
-        1.0, 1.0,
-        0.0, 1.0,
-		0.0, 0.0,
-		1.0, 0.0,
-		0.0, 1.0,
-		1.0, 1.0,
+static const GLfloat cubeTexCoordsStrip[] = {
+        // Front face
+        0,0, 1,0, 0,1, 1,1,
+        // Right face
+        0,0, 1,0, 0,1, 1,1,
+        // Back face
+        0,0, 1,0, 0,1, 1,1,
+        // Left face
+        0,0, 1,0, 0,1, 1,1,
+        // Bottom face
+        0,0, 1,0, 0,1, 1,1,
+        // Top face
+        0,0, 1,0, 0,1, 1,1
     };
+
+	// const GLfloat cubeTexCoords[] = {
+  //       1.0, 0.0,
+  //       0.0, 0.0,
+  //       1.0, 1.0,
+  //       0.0, 1.0,
+	// 	0.0, 0.0,
+	// 	1.0, 0.0,
+	// 	0.0, 1.0,
+	// 	1.0, 1.0,
+  //       1.0, 1.0,
+  //       0.0, 1.0,
+	// 	0.0, 0.0,
+	// 	1.0, 0.0,
+	// 	0.0, 1.0,
+	// 	1.0, 1.0,
+  //   };
 #endif
 	
     // This application only creates a single context which is already set current at this point.
@@ -168,7 +198,7 @@ enum {
 #ifdef DRAWTEXTURE
 	glEnable(GL_TEXTURE_2D);
 	
-	glBindTexture(GL_TEXTURE_2D, pvrTexture.name);
+	// glBindTexture(GL_TEXTURE_2D, pvrTexture.name);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1.0f);
@@ -181,9 +211,10 @@ enum {
 	glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWMATRIX], 1, 0, currentModelViewMatrix);
 
     // Update attribute values
-    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0, 0, cubeVertices);
-    glEnableVertexAttribArray(ATTRIB_VERTEX);
-	glVertexAttribPointer(ATTRIB_TEXTUREPOSITION, 2, GL_FLOAT, 0, 0, cubeTexCoords);
+    // glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0, 0, cubeVertices);
+  glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0, 0, cubeVerticesStrip);
+  glEnableVertexAttribArray(ATTRIB_VERTEX);
+	glVertexAttribPointer(ATTRIB_TEXTUREPOSITION, 2, GL_FLOAT, 0, 0, cubeTexCoordsStrip);
 	glEnableVertexAttribArray(ATTRIB_TEXTUREPOSITION);
 
     // Validate program before drawing. This is a good check, but only really necessary in a debug build.
@@ -200,7 +231,24 @@ enum {
 //	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
     // Draw
-	glDrawElements(GL_TRIANGLE_STRIP, 14, GL_UNSIGNED_SHORT, cubeIndices);
+	// glDrawElements(GL_TRIANGLE_STRIP, 14, GL_UNSIGNED_SHORT, cubeIndices);
+    glBindTexture(GL_TEXTURE_2D, pvrTexture.name);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    
+    glBindTexture(GL_TEXTURE_2D, pvrTexture2.name);
+    glDrawArrays(GL_TRIANGLE_STRIP, 4, 4);
+    
+    glBindTexture(GL_TEXTURE_2D, pvrTexture.name);
+    glDrawArrays(GL_TRIANGLE_STRIP, 8, 4);
+    
+    glBindTexture(GL_TEXTURE_2D, pvrTexture2.name);
+    glDrawArrays(GL_TRIANGLE_STRIP, 12, 4);
+    
+    glBindTexture(GL_TEXTURE_2D, pvrTexture2.name);
+    glDrawArrays(GL_TRIANGLE_STRIP, 16, 4);
+    
+    glBindTexture(GL_TEXTURE_2D, pvrTexture2.name);
+    glDrawArrays(GL_TRIANGLE_STRIP, 20, 4);
 
     // This application only creates a single color renderbuffer which is already bound at this point.
     // This call is redundant, but needed if dealing with multiple renderbuffers.	
