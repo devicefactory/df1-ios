@@ -8,9 +8,6 @@
 #import "NSData+Conversion.h"
 #import "MBProgressHUD.h"
 
-#define SECTION_NAMES @"DF1 Config",@"DF1 Features",nil
-#define SECTION0 @"DF1CfgCellName",@"DF1CfgCellRange",@"DF1CfgCellAuto",nil 
-#define SECTION1 @"DF1CfgCellBatt",@"DF1CfgCellProx",nil 
 
 @interface DF1CfgController ()
 {
@@ -28,8 +25,8 @@
 {
     // NOTE: array of arrays : define your Cells here
     NSArray *classNames = [NSArray arrayWithObjects:
-        [NSArray arrayWithObjects: SECTION0],
         [NSArray arrayWithObjects: SECTION1],
+        [NSArray arrayWithObjects: SECTION2],
         nil
     ];
     // initialize
@@ -54,6 +51,7 @@
         for(int j=0; j<inner.count; j++)
         {
             NSString *className = [inner objectAtIndex:j];
+            DF_DBG(@"initializing class %@", className);
             Class cl = NSClassFromString(className);
             DF1CfgCell *cell = [[cl alloc] initWithStyle:UITableViewCellStyleDefault
                                               reuseIdentifier:className withCfg:self.cfg];
@@ -94,7 +92,7 @@
 -(void) viewDidLoad
 {
     [super viewDidLoad];
-    DF_DBG(@"view loaded DF1DevListController");
+    DF_DBG(@"view loaded DF1CfgController");
 
     self.navigationItem.title = @"DF1 Configuration";
     // style related stuff
@@ -108,6 +106,7 @@
 
 -(void) viewDidAppear:(BOOL)animated
 {
+    DF_DBG(@"entering viewDidAppear");
     [[UINavigationBar appearance] setTintColor:[UIColor blackColor]];
 }
 

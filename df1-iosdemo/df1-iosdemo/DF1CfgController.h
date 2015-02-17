@@ -8,6 +8,9 @@ DF1CfgController: Configuration Management Controller
 #import "DF1Lib.h"
 #import "DF1CfgCells.h"
 
+#define SECTION_NAMES @"DF1 Config",@"DF1 Features",nil
+#define SECTION1 @"DF1CfgCellName",@"DF1CfgCellRange",@"DF1CfgCellAuto",nil 
+#define SECTION2 @"DF1CfgCellBatt",@"DF1CfgCellProx",nil 
 
 @interface DF1CfgController : UITableViewController <DF1Delegate,UINavigationControllerDelegate>
 

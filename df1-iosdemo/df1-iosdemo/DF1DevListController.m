@@ -43,6 +43,7 @@ facts need to be considered:
         self.df = userdf;
         self.df.delegate = self;
     }
+    // [DF1LibUtil clearUserDefaults];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -361,7 +362,8 @@ facts need to be considered:
 {
     if(![self.df isConnected:p])
         return;
-    DF_DBG(@"writing characteristic to the LED service for peripheral: %@ : %@", p.name, [data hexString]);
+    // JB 20150216: hexString causes issues
+    // DF_DBG(@"writing characteristic to the LED service for peripheral: %@ : %@", p.name, [data hexString]);
     [DF1LibUtil writeCharacteristic:p sUUID:TEST_SERV_UUID cUUID:TEST_CONF_UUID data:data];
 }
 
