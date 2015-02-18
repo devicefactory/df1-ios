@@ -21,11 +21,11 @@
     NSMutableDictionary *g_reg; // maintains current register settings
     NSArray *g_defaultServices;
     float accDivisor;
+    float accDivisor14;
     bool scanOtherDevices;
 }
 
 -(bool) _hasPeripheral:(CBPeripheral*) p;
--(void) _syncParameters;
 
 -(void) _enableFeature:(UInt16) cuuid;
 -(void) _disableFeature:(UInt16) cuuid;
@@ -54,7 +54,9 @@
             CBUUID *tserv = [DF1LibUtil IntToCBUUID:TEST_SERV_UUID];
             g_defaultServices = [NSArray arrayWithObjects: aserv, bserv, tserv, nil];
         }
-        accDivisor = 64.0; // default is 2G
+        // default is 2G
+        accDivisor = 64.0;
+        accDivisor14 = 4096.0;
 
         scanOtherDevices = false;
     }
@@ -343,7 +345,7 @@
         [service.characteristics count]>0) {
         self.p = peripheral;
         NSLog(@"found accelerometer conf characteristic");
-        [self _syncParameters];        
+        // [self syncParameters]; // user callable
     }
     if(self.delegate && [self.delegate respondsToSelector:@selector(didConnect:)])
     {
@@ -407,7 +409,7 @@
     static float lastx = 0;
     static float lasty = 0;
     static float lastz = 0;
-    // static NSUInteger count = 0;
+
     if (error) {
         NSLog(@"didUpdateValueForCharacteristic error: %@", error);
         return;
@@ -418,11 +420,12 @@
     {
         case ACC_XYZ_DATA8_UUID:
         {
-            char adata[3];
-            [characteristic.value getBytes:&adata length:3];
-            float x = ((float)adata[0])/accDivisor;
-            float y = ((float)adata[1])/accDivisor;
-            float z = ((float)adata[2])/accDivisor;
+            // holy shizo, uint8_t and char are different!!!
+            uint8_t adata[3];
+            [characteristic.value getBytes:adata length:3];
+            float x = (float)((int8_t)adata[0])/accDivisor;
+            float y = (float)((int8_t)adata[1])/accDivisor;
+            float z = (float)((int8_t)adata[2])/accDivisor;
             // if(count++ % 50 == 0) DF_DBG(@"getting values: %f,%f,%f",x,y,z);
             lastx = x;
             lasty = y;
@@ -439,11 +442,28 @@
         }
         case ACC_XYZ_DATA14_UUID:
         {
+            uint8_t adata[6];
+            [characteristic.value getBytes:adata length:6];
+            
+            float x = (float)(((int16_t)((adata[0]<<8)|adata[1]))>>2)/accDivisor14;
+            float y = (float)(((int16_t)((adata[2]<<8)|adata[3]))>>2)/accDivisor14;
+            float z = (float)(((int16_t)((adata[4]<<8)|adata[5]))>>2)/accDivisor14;
+            lastx = x;
+            lasty = y;
+            lastz = z;
+            NSNumber *xf = [NSNumber numberWithFloat:x];
+            NSNumber *yf = [NSNumber numberWithFloat:y];
+            NSNumber *zf = [NSNumber numberWithFloat:z];
+            NSArray *fdata = [[NSArray alloc] initWithObjects:xf,yf,zf,nil];
+            
+            if([self.delegate respondsToSelector:@selector(receivedXYZ14:)]) {
+                [self.delegate receivedXYZ14:fdata];
+            }
             break;
         }
         case ACC_TAP_DATA_UUID:
         {
-            char bt;
+            uint8_t bt;
             [characteristic.value getBytes:&bt length:1]; 
             // Bit 7   EA  one or more event flag has been asserted
             // Bit 6   AxZ Z-event triggered
@@ -504,10 +524,22 @@
             uint8_t bt;
             [characteristic.value getBytes:&bt length:1];
             DF_DBG(@"did write ACC_GEN_CFG_UUID with byte: 0x%x",bt);
-            if(! (bt & (GEN_CFG_RA1_MASK|GEN_CFG_RA0_MASK)) )            {  accDivisor = 64.0; }
-            else if((bt & GEN_CFG_RA0_MASK) && !(bt & GEN_CFG_RA1_MASK)) {  accDivisor = 32.0; }
-            else if(!(bt & GEN_CFG_RA0_MASK) && (bt & GEN_CFG_RA1_MASK)) {  accDivisor = 16.0; }
-            else                                                         {  accDivisor = 64.0; } 
+            if(! (bt & (GEN_CFG_RA1_MASK|GEN_CFG_RA0_MASK)) )            {
+                accDivisor = 64.0;
+                accDivisor14 = 4096.0;
+            }
+            else if((bt & GEN_CFG_RA0_MASK) && !(bt & GEN_CFG_RA1_MASK)) {
+                accDivisor = 32.0;
+                accDivisor14 = 2048.0;
+            }
+            else if(!(bt & GEN_CFG_RA0_MASK) && (bt & GEN_CFG_RA1_MASK)) {
+                accDivisor = 16.0;
+                accDivisor14 = 1024.0;
+            }
+            else                                                         {
+                accDivisor = 64.0;
+                accDivisor14 = 4096.0;
+            }
         }
         case ACC_ENABLE_UUID:
         case ACC_TAP_THSZ_UUID:
@@ -529,7 +561,7 @@
 
 
 
--(void) _syncParameters
+-(void) syncParameters
 {
     DF_DBG(@"snapping UUID parameters");
     if(![self isConnected:self.p]) return;
@@ -557,7 +589,7 @@
     if(g_reg == nil) 
         g_reg = [[NSMutableDictionary alloc] init];
     // notice the use for category extension function
-    DF_DBG(@"received from %@ = %@", [DF1LibUtil CBUUIDToString:c.UUID], [c.value hexString]);
+    //DF_DBG(@"received from %@ = %@", [DF1LibUtil CBUUIDToString:c.UUID], [c.value hexString]);
     // here, strong reference to the object (value) is maintained 
     [g_reg setObject:c.value forKey:c.UUID]; // cuuid (CBUUID*) -> CBCharacteristic.value (NSData*)
     if([DF1LibUtil compareCBUUIDToInt:c.UUID UUID2:ACC_TRAN_HPF_UUID] && [g_reg count]>5)
@@ -703,6 +735,12 @@
 {
     [self _disableFeature:ACC_XYZ_DATA8_UUID];
     [self subscription:ACC_SERV_UUID withCUUID:ACC_XYZ_DATA8_UUID onOff:false];
+}
+
+-(void) unsubscribeXYZ14
+{
+    [self _disableFeature:ACC_XYZ_DATA14_UUID];
+    [self subscription:ACC_SERV_UUID withCUUID:ACC_XYZ_DATA14_UUID onOff:false];
 }
 
 -(void) unsubscribeTap

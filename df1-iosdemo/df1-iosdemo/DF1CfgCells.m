@@ -94,7 +94,7 @@
 // 2,4,8G range selector
 @interface DF1CfgCellRange ()
 {
-    NSUInteger accSliderValue;
+    NSUInteger accRangeValue;
 }
 @end
 
@@ -117,18 +117,23 @@
     // self.accRangeLabel.text = @"G Range";
     self.accRangeSlider = [[UISlider alloc] init];
     self.accRangeSlider.continuous = true;
-    [self.accRangeSlider setMinimumValue:2];
-    [self.accRangeSlider setMaximumValue:8];
+    [self.accRangeSlider setMinimumValue:0];
+    [self.accRangeSlider setMaximumValue:2];
     
     [self.accRangeSlider addTarget:self action:@selector(accSliderChanged:)
                forControlEvents:UIControlEventValueChanged];
-    accSliderValue = 2;
+    accRangeValue = 2;
+    NSUInteger accSliderValue = 0;
     if ([self.cfg objectForKey:CFG_XYZ8_RANGE]!=nil) {
         NSNumber *n = (NSNumber*) [self.cfg objectForKey:CFG_XYZ8_RANGE];
-        accSliderValue = [n intValue];
+        accRangeValue = [n intValue];
     }
-    self.accRangeLabel.text = [[NSString alloc] initWithFormat:@"Range %dG",accSliderValue];
-
+    accSliderValue = (accRangeValue==2) ? 0 :
+                     (accRangeValue==4) ? 1 :
+                     (accRangeValue==8) ? 2 : 0;
+    [self.accRangeSlider setValue:(float)accSliderValue];
+    self.accRangeLabel.text = [[NSString alloc] initWithFormat:@"Range %dG",accRangeValue];
+    
     [self.contentView addSubview:self.accRangeLabel];
     [self.contentView addSubview:self.accRangeSlider];
     return self;
@@ -137,38 +142,98 @@
 -(void) layoutSubviews
 {
     [super layoutSubviews];
-    // CGRect contentRect = self.contentView.bounds;
-    // CGFloat boundsX = contentRect.origin.x;
-    // CGFloat width = self.contentView.bounds.size.width;
-    // CGRect fr;
-    // fr = CGRectMake(boundsX + 120, 35+35+35+35, 180,40);
-    // self.accRangeSlider.frame = fr;
     self.accRangeLabel.frame = CGRectMake(PAD_LEFT,      PAD_TOP, 110, 45);
     self.accRangeSlider.frame = CGRectMake(PAD_LEFT+130, PAD_TOP, 150, 45);
 }
 
 -(void) modifyChange:(NSMutableDictionary*) c
 {
-    [c setValue:[NSNumber numberWithInteger:accSliderValue] forKey:CFG_XYZ8_RANGE];
+    [c setValue:[NSNumber numberWithInteger:accRangeValue] forKey:CFG_XYZ8_RANGE];
 }
 
 -(void) accSliderChanged:(UITextField*) sender
 {
-    NSUInteger index = (NSUInteger)(self.accRangeSlider.value + 0.5); // Round the number.
-    if     (2<index && index<3)  { index = 2; }
-    else if(3<=index && index<6) { index = 4; }
-    else if(6<=index)            { index = 8; }
+    NSUInteger index = (NSUInteger)(self.accRangeSlider.value+0.5); // Round the number.
+    NSUInteger range[3] = {2,4,8};
+    NSUInteger currentAccRangeValue = (index<3) ? range[index] : 2;
     
-    if(accSliderValue != index)
+    if(currentAccRangeValue != accRangeValue)
     {
-        //[self.parent.df modifyRange:index];
+        accRangeValue = currentAccRangeValue;
+        [self modifyChange:self.cfg];
+        [sender resignFirstResponder];
     }
+    
     [self.accRangeSlider setValue:index animated:NO];
-    self.accRangeLabel.text = [[NSString alloc] initWithFormat:@"Range %dG",index];
-    accSliderValue = index;
+    self.accRangeLabel.text = [[NSString alloc] initWithFormat:@"Range %dG",accRangeValue];
+}
 
-    [self modifyChange:self.cfg];
-    [sender resignFirstResponder];
+@end
+
+
+
+@interface DF1CfgCellRes ()
+{
+    NSUInteger acc14BitOnOff;
+}
+@end
+
+@implementation DF1CfgCellRes
+
+-(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+            withCfg:(NSMutableDictionary*) ucfg
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier withCfg:ucfg];
+    if(self==nil)
+        return self;
+    
+    self.cfg = ucfg;
+    self.height = 50;
+    // Initialization code
+    self.accResLabel = [[UILabel alloc] init];
+    self.accResLabel.font = [UIFont boldSystemFontOfSize:16];
+    self.accResLabel.textAlignment = NSTextAlignmentLeft;
+    
+    // self.accRangeLabel.text = @"G Range";
+    self.accResSwitch = [[UISwitch alloc] init];
+    [self.accResSwitch addTarget:self action:@selector(accSwitchChanged:)
+               forControlEvents:UIControlEventValueChanged];
+    
+    if ([self.cfg objectForKey:CFG_XYZ14_ON]!=nil) {
+        NSNumber *n = (NSNumber*) [self.cfg objectForKey:CFG_XYZ14_ON];
+        acc14BitOnOff = [n intValue];
+    }
+    [self.accResSwitch setOn:(bool)acc14BitOnOff animated:YES];
+    self.accResLabel.text = [[NSString alloc] initWithFormat:@"14 Bit"];
+    
+    [self.contentView addSubview:self.accResLabel];
+    [self.contentView addSubview:self.accResSwitch];
+    return self;
+}
+
+-(void) layoutSubviews
+{
+    [super layoutSubviews];
+    self.accResLabel.frame =  CGRectMake(PAD_LEFT,     PAD_TOP, 150, 45);
+    self.accResSwitch.frame = CGRectMake(PAD_LEFT+130, PAD_TOP, 200, 45);
+}
+
+-(void) modifyChange:(NSMutableDictionary*) c
+{
+    [c setValue:[NSNumber numberWithInteger:acc14BitOnOff] forKey:CFG_XYZ14_ON];
+}
+
+-(void) accSwitchChanged:(UITextField*) sender
+{
+    NSUInteger currentOnOff = (NSUInteger) [self.accResSwitch isOn];
+    
+    if(currentOnOff != acc14BitOnOff)
+    {
+        acc14BitOnOff = currentOnOff;
+        [self modifyChange:self.cfg];
+        [sender resignFirstResponder];
+    }
+    [self.accResSwitch setOn:(bool)acc14BitOnOff animated:YES];
 }
 
 @end

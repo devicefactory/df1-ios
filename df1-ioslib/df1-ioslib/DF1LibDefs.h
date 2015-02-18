@@ -101,4 +101,17 @@
 #define ENABLE_USR1_MASK   0x40
 #define ENABLE_USR2_MASK   0x80
 
-
+//
+// NSUser Config keys
+//
+#define CFG_NAME       @"defaultName"
+#define CFG_UUID       @"uuid"
+#define CFG_CELLS      @"detailCells"
+#define CFG_XYZ8_RANGE @"xyz8_range"
+#define CFG_XYZ14_ON   @"xyz14_on"
+#define CFG_TAP_THSZ   @"tap_thsz"
+#define CFG_TAP_THSY   @"tap_thsy"
+#define CFG_TAP_THSX   @"tap_thsx"
+#define CFG_TAP_TMLT   @"tap_tmlt"
+#define CFG_TAP_LTCY   @"tap_ltcy"
+#define CFG_TAP_WIND   @"tap_wind"

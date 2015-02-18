@@ -31,8 +31,8 @@
 // @property (nonatomic,retain) UIProgressView *accBarZ;
 // @property (nonatomic,retain) UIView *accBarHolder;
 // -(void)setPosition:(UACellBackgroundViewPosition)newPosition;
-@property (nonatomic,retain) UILabel *accRangeLabel;
-@property (nonatomic,retain) UISlider *accRangeSlider;
+// @property (nonatomic,retain) UILabel *accRangeLabel;
+// @property (nonatomic,retain) UISlider *accRangeSlider;
 
 -(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
   parentController:(DF1DevDetailController*) parent;

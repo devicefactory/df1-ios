@@ -44,11 +44,9 @@
 +(bool) doesPeripheral: (CBPeripheral*) p haveServiceUUID:(CBUUID*) uuid;
 +(bool) isUUID: (CBUUID*) uuid thisInt: (UInt16) intuuid;
 
-#define CFG_NAME  @"defaultName"
-#define CFG_UUID  @"uuid"
-#define CFG_CELLS @"detailCells"
 
 // Returns NSDictionary object to be used with NSUserDefaults
++(void) clearUserDefaults;
 +(NSDictionary*) getUserCfgDict:(CBPeripheral*) p;
 +(NSString*) getUserCfgName:(CBPeripheral*) p;
 +(NSDictionary*) mergeUserCfgDict:(CBPeripheral*) p withDict:(NSDictionary*) dict;

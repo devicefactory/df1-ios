@@ -12,5 +12,5 @@
 #import "DF1DevDetailController.h"
 
 @implementation DF1Cell
-
+-(id) setDefaults { return nil; }
 @end

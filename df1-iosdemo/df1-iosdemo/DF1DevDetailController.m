@@ -18,37 +18,40 @@
 {
     NSTimer *reconnectTimer;
     NSTimer *eventResetTimer;
-    BOOL isConnecting;
-    double xyzUpdateTime;
-    int connectionRetries;
+    BOOL _needResyncDF1Parameters;
     int subscriptionRetries;
+    NSDictionary *_defaultCells;
 }
 @end
 
 
 @implementation DF1DevDetailController
-
 @synthesize df;
-
 
 
 -(id)initWithDF:(DF1*) userdf
 {
     self = [super init];
     if(self) {
-        [self initializeCells];
         self.df = userdf;
         self.df.delegate = self;
         [self.df connect:self.df.p];
+        _needResyncDF1Parameters = FALSE;
+        
+        _defaultCells = [NSDictionary dictionaryWithObjectsAndKeys:
+                         [NSNumber numberWithBool:TRUE],   @"DF1CellAccXyz",  // class names
+                         [NSNumber numberWithBool:TRUE],   @"DF1CellAccTap",  // and boolean
+                         [NSNumber numberWithBool:TRUE],   @"DF1CellBatt",
+                         nil];
+        [self initializeCells];
     }
-    return self; 
+    return self;
 }
 
 // here, we create a dictionary we want to save under NSUserDefault library
 -(void) saveUserDefaultsForDevice
 {
-    NSArray *cellList = [NSArray arrayWithObjects:
-            @"DF1CellAccXyz", @"DF1CellAccTap", @"DF1CellBatt", nil];
+    NSDictionary *cellList = _defaultCells;
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
                           self.df.p.name, CFG_NAME,
                           cellList,       CFG_CELLS,
@@ -60,23 +63,40 @@
 -(void)initializeCells
 {
     // check the userdefaults uuid -> dict -> cellList and instantiate accordingly
+    NSDictionary *dict = [DF1LibUtil getUserCfgDict:self.df.p];
+    NSDictionary *cells;
+    NSString *bitres = @"8bit";
+    if(dict==nil)
+    {
+        cells = _defaultCells;
+        bitres = @"8bit";
+    } else {
+        cells = (NSDictionary*) [dict objectForKey:CFG_CELLS];
+        bitres = ([[dict objectForKey:CFG_XYZ14_ON] boolValue]) ? @"14bit" : @"8bit";
+    }
     
-    if(!self.accXyzCell) {
+    if([[cells objectForKey:@"DF1CellAccXyz"] boolValue] &&
+       !self.accXyzCell)
+    {
         self.accXyzCell = [[DF1CellAccXyz alloc] initWithStyle:UITableViewCellStyleDefault
                                               reuseIdentifier:@"AccXYZCell" parentController:self];
         // do other default initialization here
-        self.accXyzCell.accLabel.text = @"Acceleration";
+        self.accXyzCell.accLabel.text =  [[NSString alloc] initWithFormat:@"Acceleration %@", bitres];
         self.accXyzCell.accValueX.text = @"x axis";
         self.accXyzCell.accValueY.text = @"y axis";
         self.accXyzCell.accValueZ.text = @"z axis";
     }
-    if(!self.accTapCell) {
+    if([[cells objectForKey:@"DF1CellAccTap"] boolValue] &&
+       !self.accTapCell)
+    {
         self.accTapCell = [[DF1CellAccTap alloc] initWithStyle:UITableViewCellStyleDefault
                                             reuseIdentifier:@"AccTapCell" parentController:self];
         self.accTapCell.accLabel.text = @"Tap Event";
         self.accTapCell.accValueTap.text = @"no events";
     }
-    if(!self.battCell) {
+    if([[cells objectForKey:@"DF1CellBatt"] boolValue] &&
+       !self.battCell)
+    {
         self.battCell = [[DF1CellBatt alloc] initWithStyle:UITableViewCellStyleDefault
                                               reuseIdentifier:@"BattCell"];
         self.battCell.battLabel.text = @"Battery Level";
@@ -98,21 +118,26 @@
     self.navigationItem.rightBarButtonItem = BARBUTTON(@"Config", @selector(showCfgController));
 }
 
--(void)viewDidAppear:(BOOL)animated
+-(void)viewWillAppear:(BOOL)animated
 {
+    /*
     if(self.navigationController) {
         self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.4
                                                                 green:0.4 blue:0.9 alpha:0.5];
+    }
+    */
+    if(_needResyncDF1Parameters)
+    {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [self _modifyDF1Parameters];  // contents of user cfg might have changed
+        [self.df syncParameters];  // will incur callback didSyncParameters
+        [self.tableView reloadData];
     }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    // removing subscription has to happen before we reset the delegate for df object
-    // [self.df unsubscribeBatt];
-    // [self.df unsubscribeXYZ8];
-    // [self.df unsubscribeTap];
-    // [(DF1DevListController*) self.previousVC willTransitionBack:self.df];
+    _needResyncDF1Parameters = TRUE;
 }
 
 
@@ -129,9 +154,12 @@
       willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     DF_DBG(@"DF1DevDetailController calling navigationController:willShowViewController:animated");
-    if ([viewController isEqual:self]) {
+    if ([viewController isEqual:self])
+    {
         [viewController viewWillAppear:animated];
-    } else if ([viewController conformsToProtocol:@protocol(UINavigationControllerDelegate)]){
+    }
+    else if ([viewController conformsToProtocol:@protocol(UINavigationControllerDelegate)])
+    {
         // Set the navigation controller delegate to the passed-in view controller and call the UINavigationViewControllerDelegate method on the new delegate.
         [navigationController setDelegate:(id<UINavigationControllerDelegate>)viewController];
         
@@ -139,6 +167,7 @@
         {
             [self.df unsubscribeBatt];
             [self.df unsubscribeXYZ8];
+            [self.df unsubscribeXYZ14]; // just in case
             [self.df unsubscribeTap];
             DF1DevListController *vc = (DF1DevListController*) viewController;
             vc.df = self.df;
@@ -243,16 +272,62 @@
 {
 }
 
+
+// takes user config and modifies the parameters on DF1 accordingly.
+-(void) _modifyDF1Parameters
+{
+    NSDictionary *dict = [DF1LibUtil getUserCfgDict:self.df.p];
+    if(dict==nil)
+    {
+        DF_DBG(@"no user specific parameters to update");
+        return;
+    }
+    
+    if([dict objectForKey:CFG_XYZ8_RANGE]!=nil)
+    {
+        int range = [[dict objectForKey:CFG_XYZ8_RANGE] intValue];
+        [self.df modifyRange:range];
+        DF_DBG(@"modifying user CFG_XYZ8_RANGE to %d", range);
+    }
+    if([dict objectForKey:CFG_TAP_TMLT]!=nil)
+    {
+        float tmlt = [[dict objectForKey:CFG_TAP_TMLT] floatValue];
+        [self.df modifyTapTmlt:tmlt];
+        DF_DBG(@"modifying user CFG_TAP_TMLT to %f", tmlt);
+    }
+    if([dict objectForKey:CFG_TAP_THSZ]!=nil)
+    {
+        float gz = [[dict objectForKey:CFG_TAP_THSZ] floatValue];
+        [self.df modifyTapTmlt:gz];
+        DF_DBG(@"modifying user CFG_TAP_THSZ to %f", gz);
+    }
+    if([dict objectForKey:CFG_TAP_THSY]!=nil)
+    {
+        float gy = [[dict objectForKey:CFG_TAP_THSY] floatValue];
+        [self.df modifyTapTmlt:gy];
+        DF_DBG(@"modifying user CFG_TAP_THSZ to %f", gy);
+    }
+    if([dict objectForKey:CFG_TAP_THSX]!=nil)
+    {
+        float gx = [[dict objectForKey:CFG_TAP_THSX] floatValue];
+        [self.df modifyTapTmlt:gx];
+        DF_DBG(@"modifying user CFG_TAP_THSZ to %f", gx);
+    }
+}
+
+
 // this function gets called when services and characteristics are all discovered
 -(void) didConnect:(CBPeripheral*) peripheral
 {
-    // [self.df subscribeBatt];
-    // [self.df subscribeXYZ8];
-    // [self.df subscribeTap];
+    [self _modifyDF1Parameters];
+    [self.df syncParameters];
 }
 
 -(void) _setParamToUIControl:(NSDictionary*) params
 {
+    NSDictionary *dict = [DF1LibUtil getUserCfgDict:self.df.p];
+    
+    
     NSData *data; uint8_t byte;
     data = [params objectForKey:[DF1LibUtil IntToCBUUID:ACC_TAP_THSZ_UUID]]; 
     [data getBytes:&byte length:1];
@@ -265,18 +340,39 @@
     self.accTapCell.accTmltLabel.text = [[NSString alloc] initWithFormat:@"Tmlt %.0fms",(float)byte*10.0f];
 }
 
+
 -(void) didSyncParameters:(NSDictionary *)params
 {
     NSLog(@"%@",params);
-    [self.df subscribeBatt];
-    [self.df subscribeXYZ8];
-    [self.df subscribeTap];
+
+    NSDictionary *dict = [DF1LibUtil getUserCfgDict:self.df.p];
+    if(dict==nil)
+    {
+        [self.df subscribeBatt];
+        [self.df subscribeXYZ8];
+        [self.df subscribeTap];
+        // Every DF1 device we ever connected gets userDefault saved.
+        [self saveUserDefaultsForDevice];
+    }
+    else
+    {
+        NSDictionary *cells = (NSDictionary*) [dict objectForKey:CFG_CELLS];
+        if([[cells objectForKey:@"DF1CellAccXyz"] boolValue]) {
+          if([[dict objectForKey:CFG_XYZ14_ON] boolValue]) {
+            [self.df unsubscribeXYZ8];
+            [self.df subscribeXYZ14];
+          } else {
+            [self.df unsubscribeXYZ14];
+            [self.df subscribeXYZ8];
+          } 
+        }
+        if([[cells objectForKey:@"DF1CellAccTap"] boolValue]) {  [self.df subscribeTap]; }
+        if([[cells objectForKey:@"DF1CellBatt"] boolValue])   {  [self.df subscribeBatt]; }
+    }
+    
     [self _setParamToUIControl:params];
     [MBProgressHUD hideHUDForView:self.view animated:true];
-    
-    // Every DF1 device we ever connected gets userDefault saved.
-    NSDictionary *dict = [DF1LibUtil getUserCfgDict:self.df.p];
-    if(dict==nil) { [self saveUserDefaultsForDevice]; }
+    _needResyncDF1Parameters = FALSE;
 }
 
 -(void) didUpdateRSSI:(CBPeripheral*) peripheral withRSSI:(float) rssi
@@ -299,6 +395,7 @@
     float x = [data[0] floatValue];
     float y = [data[1] floatValue];
     float z = [data[2] floatValue];
+    DF_DBG(@"8bit is coming too??");
     // self.accXyzCell.accBarX.progress = (x + 2) / 4.0;
     self.accXyzCell.accValueX.text = [[NSString alloc] initWithFormat:@"X: %.3f", x];
     self.accXyzCell.accXStrip.value = x;
@@ -310,6 +407,17 @@
 
 -(void) receivedXYZ14:(NSArray*) data
 {
+    float x = [data[0] floatValue];
+    float y = [data[1] floatValue];
+    float z = [data[2] floatValue];
+    DF_DBG(@"14bit coming in: %.2f %.2f %.2f", x, y, z);
+    // self.accXyzCell.accBarX.progress = (x + 2) / 4.0;
+    self.accXyzCell.accValueX.text = [[NSString alloc] initWithFormat:@"X: %.4f", x];
+    self.accXyzCell.accXStrip.value = x;
+    self.accXyzCell.accValueY.text = [[NSString alloc] initWithFormat:@"Y: %.4f", y];
+    self.accXyzCell.accYStrip.value = y;
+    self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z: %.4f", z];
+    self.accXyzCell.accZStrip.value = z;
 }
 
 -(void) _resetTap

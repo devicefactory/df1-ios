@@ -53,6 +53,7 @@
 -(bool) isConnected:(CBPeripheral*) peripheral;
 -(NSDictionary*) getParams;
 
+-(void) syncParameters;
 -(void) subscription:(UInt16) suuid withCUUID:(UInt16) cuuid onOff:(BOOL)enable;
 -(void) subscribeBatt;
 -(void) subscribeXYZ8;
@@ -64,6 +65,7 @@
 
 -(void) unsubscribeBatt;
 -(void) unsubscribeXYZ8;
+-(void) unsubscribeXYZ14;
 -(void) unsubscribeTap;
 
 -(void) modifyRange:(UInt8) value;

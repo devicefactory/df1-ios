@@ -22,7 +22,6 @@
 		C56A3F2418DF77B700DB2A5C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C56A3F2218DF77B700DB2A5C /* InfoPlist.strings */; };
 		C56A3F2618DF77B700DB2A5C /* df1_iosdemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C56A3F2518DF77B700DB2A5C /* df1_iosdemoTests.m */; };
 		C56A3F9B18DF839200DB2A5C /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56A3F9A18DF839200DB2A5C /* CoreBluetooth.framework */; };
-		C56A3F9D18DF839A00DB2A5C /* libdf1-ioslib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C56A3F9C18DF839A00DB2A5C /* libdf1-ioslib.a */; };
 		C56C08991901A4E9001FF641 /* DF1DevListController.m in Sources */ = {isa = PBXBuildFile; fileRef = C56C08981901A4E9001FF641 /* DF1DevListController.m */; };
 		C56C089E1901C1B0001FF641 /* DF1DevCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C56C089B1901C1B0001FF641 /* DF1DevCell.m */; };
 		C56C089F1901C1B0001FF641 /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = C56C089D1901C1B0001FF641 /* Utility.m */; };
@@ -38,6 +37,7 @@
 		C5A71BF5194D51ED0074B087 /* DF1CellBatt.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A71BF1194D51ED0074B087 /* DF1CellBatt.m */; };
 		C5A71BFA195222630074B087 /* DF1CfgCells.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A71BF7195222630074B087 /* DF1CfgCells.m */; };
 		C5A71BFB195222630074B087 /* DF1CfgController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A71BF9195222630074B087 /* DF1CfgController.m */; };
+		C5AACD341A92D51300A57F1C /* libdf1-ioslib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5AACD331A92D51300A57F1C /* libdf1-ioslib.a */; };
 		C5CA41E9191AC9C000C29D76 /* F3PlotStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = C5CA41E8191AC9C000C29D76 /* F3PlotStrip.m */; };
 		C5CACDE819297B5F00A2DD7B /* green-in.png in Resources */ = {isa = PBXBuildFile; fileRef = C5CACDE419297B5F00A2DD7B /* green-in.png */; };
 		C5CACDE919297B5F00A2DD7B /* green-out.png in Resources */ = {isa = PBXBuildFile; fileRef = C5CACDE519297B5F00A2DD7B /* green-out.png */; };
@@ -103,6 +103,7 @@
 		C5A71BF7195222630074B087 /* DF1CfgCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1CfgCells.m; sourceTree = "<group>"; };
 		C5A71BF8195222630074B087 /* DF1CfgController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1CfgController.h; sourceTree = "<group>"; };
 		C5A71BF9195222630074B087 /* DF1CfgController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1CfgController.m; sourceTree = "<group>"; };
+		C5AACD331A92D51300A57F1C /* libdf1-ioslib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdf1-ioslib.a"; path = "../../../../Library/Developer/Xcode/DerivedData/df1-ios-workgroup-aqwizxqvuasohrgftdlcdfpbpzvj/Build/Products/Debug-iphoneos/libdf1-ioslib.a"; sourceTree = "<group>"; };
 		C5CA41E7191AC9C000C29D76 /* F3PlotStrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = F3PlotStrip.h; sourceTree = "<group>"; };
 		C5CA41E8191AC9C000C29D76 /* F3PlotStrip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = F3PlotStrip.m; sourceTree = "<group>"; };
 		C5CACDE419297B5F00A2DD7B /* green-in.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "green-in.png"; path = "df1-iosdemo/assets/green-in.png"; sourceTree = "<group>"; };
@@ -117,7 +118,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C56A3F9D18DF839A00DB2A5C /* libdf1-ioslib.a in Frameworks */,
+				C5AACD341A92D51300A57F1C /* libdf1-ioslib.a in Frameworks */,
 				C56A3F9B18DF839200DB2A5C /* CoreBluetooth.framework in Frameworks */,
 				C56A3EFA18DF77B700DB2A5C /* CoreGraphics.framework in Frameworks */,
 				C56A3EFC18DF77B700DB2A5C /* UIKit.framework in Frameworks */,
@@ -161,6 +162,7 @@
 		C56A3EF618DF77B700DB2A5C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C5AACD331A92D51300A57F1C /* libdf1-ioslib.a */,
 				C56A3F9C18DF839A00DB2A5C /* libdf1-ioslib.a */,
 				C56A3F9A18DF839200DB2A5C /* CoreBluetooth.framework */,
 				C56A3EF718DF77B700DB2A5C /* Foundation.framework */,
@@ -517,9 +519,11 @@
 					"../df1-ioslib/**",
 				);
 				INFOPLIST_FILE = "df1-iosdemo/df1-iosdemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/jbkim/Development/df/df1-ios/df1-ioslib/build/Debug-iphoneos",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/df1-ios-workgroup-aqwizxqvuasohrgftdlcdfpbpzvj/Build/Products/Debug-iphoneos",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -540,9 +544,11 @@
 					"../df1-ioslib/**",
 				);
 				INFOPLIST_FILE = "df1-iosdemo/df1-iosdemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/jbkim/Development/df/df1-ios/df1-ioslib/build/Debug-iphoneos",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/df1-ios-workgroup-aqwizxqvuasohrgftdlcdfpbpzvj/Build/Products/Debug-iphoneos",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;

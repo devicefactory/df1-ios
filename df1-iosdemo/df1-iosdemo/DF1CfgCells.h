@@ -33,6 +33,12 @@
 -(IBAction) accSliderChanged:(UISlider*)sender;
 @end
 
+@interface DF1CfgCellRes : DF1CfgCell
+@property (nonatomic,retain) UILabel *accResLabel;
+@property (nonatomic,retain) UISwitch *accResSwitch;
+-(void) modifyChange:(NSMutableDictionary*) c;
+@end
+
 
 @interface DF1CfgCellAuto : DF1CfgCell
 -(void) modifyChange:(NSMutableDictionary*) c;

@@ -25,7 +25,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if(!self) return self;
     self.parent = parent;
-    self.height = 200;
+    self.height = 160;
 
     // self.accBarX = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, 170, 25)];
     // self.accBarX.progress = 0.0f;
@@ -89,17 +89,17 @@
     self.accZStrip.labelFormat = @"Accelerometer Z value: (%0.02f)";
     self.accZStrip.label = self.accZStripLabel;
     
-    self.accRangeLabel = [[UILabel alloc] init];
-    self.accRangeLabel.font = [UIFont systemFontOfSize:14];
-    self.accRangeLabel.text = @"Range 2G";
-    self.accRangeSlider = [[UISlider alloc] init];
-    self.accRangeSlider.continuous = true;
-    [self.accRangeSlider setMinimumValue:2];
-    [self.accRangeSlider setMaximumValue:8];
-    
-    [self.accRangeSlider addTarget:self action:@selector(accSliderChanged:)
-               forControlEvents:UIControlEventValueChanged];
-    accSliderValuePrevious = 2;
+//    self.accRangeLabel = [[UILabel alloc] init];
+//    self.accRangeLabel.font = [UIFont systemFontOfSize:14];
+//    self.accRangeLabel.text = @"Range 2G";
+//    self.accRangeSlider = [[UISlider alloc] init];
+//    self.accRangeSlider.continuous = true;
+//    [self.accRangeSlider setMinimumValue:2];
+//    [self.accRangeSlider setMaximumValue:8];
+//    
+//    [self.accRangeSlider addTarget:self action:@selector(accSliderChanged:)
+//               forControlEvents:UIControlEventValueChanged];
+//    accSliderValuePrevious = 2;
 
     [self.contentView addSubview:self.accIcon];
     [self.contentView addSubview:self.accLabel];
@@ -109,8 +109,8 @@
     [self.contentView addSubview:self.accXStrip];
     [self.contentView addSubview:self.accYStrip];
     [self.contentView addSubview:self.accZStrip];
-    [self.contentView addSubview:self.accRangeLabel];
-    [self.contentView addSubview:self.accRangeSlider];
+    // [self.contentView addSubview:self.accRangeLabel];
+    // [self.contentView addSubview:self.accRangeSlider];
     // [self.contentView addSubview:self.accBarHolder];
     return self;
 }
@@ -143,10 +143,10 @@
     fr = CGRectMake(boundsX + 120, 35+35+35, 180,30);
     self.accZStrip.frame = fr;
     
-    fr = CGRectMake(boundsX + 15, 35+35+35+35, 70,40);
-    self.accRangeLabel.frame = fr;
-    fr = CGRectMake(boundsX + 120, 35+35+35+35, 180,40);
-    self.accRangeSlider.frame = fr;
+//    fr = CGRectMake(boundsX + 15, 35+35+35+35, 70,40);
+//    self.accRangeLabel.frame = fr;
+//    fr = CGRectMake(boundsX + 120, 35+35+35+35, 180,40);
+//    self.accRangeSlider.frame = fr;
     // fr = CGRectMake((contentRect.origin.x + (contentRect.size.width / 2 ) - 75), 80,95,50);
     // fr = CGRectMake(boundsX + 130, 35, 170,25);
     // self.accBarHolder.frame = fr;
@@ -155,18 +155,18 @@
 
 -(IBAction) accSliderChanged:(UISlider*)sender
 {
-    NSUInteger index = (NSUInteger)(self.accRangeSlider.value + 0.5); // Round the number.
-    if(2<index && index<3)       { index = 2; }
-    else if(3<=index && index<6) { index = 4; }
-    else if(6<=index)            { index = 8; }
-    
-    if(accSliderValuePrevious != index)
-    {
-        [self.parent.df modifyRange:index];
-    }
-    [self.accRangeSlider setValue:index animated:NO];
-    self.accRangeLabel.text = [[NSString alloc] initWithFormat:@"Range %dG",index];
-    accSliderValuePrevious = index;
+//    NSUInteger index = (NSUInteger)(self.accRangeSlider.value + 0.5); // Round the number.
+//    if(2<index && index<3)       { index = 2; }
+//    else if(3<=index && index<6) { index = 4; }
+//    else if(6<=index)            { index = 8; }
+//    
+//    if(accSliderValuePrevious != index)
+//    {
+//        [self.parent.df modifyRange:index];
+//    }
+//    [self.accRangeSlider setValue:index animated:NO];
+//    self.accRangeLabel.text = [[NSString alloc] initWithFormat:@"Range %dG",index];
+//    accSliderValuePrevious = index;
 }
 @end
 

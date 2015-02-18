@@ -296,6 +296,12 @@
  * Helper functions against NSUserDefaults
  */
 
++(void) clearUserDefaults
+{
+    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
+}
+
 // retrieves the user default dictionary for peripheral : assumes we store the dict by the uuid
 +(NSDictionary*) getUserCfgDict:(CBPeripheral*) p
 {
@@ -303,27 +309,33 @@
     return [[NSUserDefaults standardUserDefaults] dictionaryForKey:uuid];
 }
 
+
 +(NSString*) getUserCfgName:(CBPeripheral*) p
 {
     NSDictionary *dict = [DF1LibUtil getUserCfgDict:p];
     if(dict==nil)
         return p.name;
-    NSString *defaultName = (NSString*)[dict valueForKey:CFG_NAME];
-    return defaultName;
+    NSString *cfgName = (NSString*)[dict valueForKey:CFG_NAME];
+    return cfgName;
 }
 
 +(NSDictionary*) mergeUserCfgDict:(CBPeripheral*) p withDict:(NSDictionary*) dict
 {
-    NSDictionary *udict = [DF1LibUtil getUserCfgDict:p];
-    // merge the dict with udict (existing) here 
-    return dict;
+    // NSMutableDictionary *udict = [[DF1LibUtil getUserCfgDict:p] mutableCopy];
+    NSMutableDictionary *udict = [NSMutableDictionary
+                                  dictionaryWithDictionary:[DF1LibUtil getUserCfgDict:p]];
+    // merge the dict with udict (existing) here
+    for (NSString* key in dict) {
+        [udict setObject:[dict objectForKey:key] forKey:key];
+    }
+    return (NSDictionary*) dict;
 }
 
 +(NSDictionary*) saveUserCfgDict:(CBPeripheral*) p withDict:(NSDictionary*) dict
 {
     NSString *uuid = [p.identifier UUIDString];
     NSDictionary* mdict = [DF1LibUtil mergeUserCfgDict:p withDict:dict];
-    // do some validation to make sure you required keys are filled in
+    // do some validation to make sure your required keys are filled in
     [[NSUserDefaults standardUserDefaults] setValue:mdict forKey:uuid];
     [[NSUserDefaults standardUserDefaults] synchronize];
     return dict;
