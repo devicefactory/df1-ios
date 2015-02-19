@@ -27,6 +27,7 @@
     NSArray *classNames = [NSArray arrayWithObjects:
         [NSArray arrayWithObjects: SECTION1],
         [NSArray arrayWithObjects: SECTION2],
+        [NSArray arrayWithObjects: SECTION3],
         nil
     ];
     // initialize
@@ -55,6 +56,11 @@
             Class cl = NSClassFromString(className);
             DF1CfgCell *cell = [[cl alloc] initWithStyle:UITableViewCellStyleDefault
                                               reuseIdentifier:className withCfg:self.cfg];
+            if([className isEqual:@"DF1CfgCellOADTrigger"]) {
+                // we explicitly set the handle to df object into this cell.
+                DF1CfgCellOADTrigger *oadcell = (DF1CfgCellOADTrigger*) cell;
+                oadcell.delegate = self;
+            }
             // MyClass *myClass = [[cl alloc] init];
             [self.tableView registerClass:cl forCellReuseIdentifier:className];
             [_innerCells addObject:cell];
@@ -292,4 +298,21 @@
 #pragma mark - Table view cell delegate
 
 
+#pragma mark - DF1CfgCellOADTriggerDelegate
+
+
+// JB NOTE: implement OAD here!!
+-(void) triggerOAD
+{
+    uint8_t byte = 0xFF; // uh oh! this is the special hex to trigger OAD mode, and boot into imgA.
+    NSData *data = [NSData dataWithBytes:&byte length:1];
+    if(![self.df isConnected:self.df.p])
+        return;
+    
+    NSString *uuid = [self.df.p.identifier UUIDString];
+    DF_DBG(@"initiating OAD boot and subsequent firmware update for: %@", uuid);
+    [DF1LibUtil writeCharacteristic:self.df.p sUUID:TEST_SERV_UUID cUUID:TEST_CONF_UUID data:data];
+
+    // jump to the viewController that can handle OAD update with the peripheral ID as the arg.
+}
 @end

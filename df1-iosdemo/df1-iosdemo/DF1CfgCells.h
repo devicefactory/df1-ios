@@ -66,3 +66,17 @@
 -(IBAction) accThsChanged:(UISlider*)sender;
 -(IBAction) accTmltChanged:(UISlider*)sender;
 @end
+
+
+@protocol DF1CfgCellOADTriggerDelegate
+@optional
+-(void) triggerOAD;
+@end
+
+@interface DF1CfgCellOADTrigger : DF1CfgCell<UIAlertViewDelegate>
+-(void) modifyChange:(NSMutableDictionary*) c;
+@property (nonatomic,assign) id<DF1CfgCellOADTriggerDelegate> delegate;
+@property (nonatomic,retain) UILabel *oadLabel;
+@property (nonatomic,retain) UIButton *oadButton;
+-(void) sendOADBootCmd;
+@end

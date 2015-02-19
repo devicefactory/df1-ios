@@ -8,18 +8,20 @@ DF1CfgController: Configuration Management Controller
 #import "DF1Lib.h"
 #import "DF1CfgCells.h"
 
-#define SECTION_NAMES @"DF1 Config",@"DF1 Features",nil
+#define SECTION_NAMES @"DF1 Config",@"DF1 Features",@"DF1 Firmware",nil
 #define SECTION1 @"DF1CfgCellName",@"DF1CfgCellRange",@"DF1CfgCellRes",nil 
 // #define SECTION2 @"DF1CfgCellBatt",@"DF1CfgCellProx",nil
 #define SECTION2 @"DF1CfgCellBatt",nil
+#define SECTION3 @"DF1CfgCellOADTrigger",nil
 
 
-@interface DF1CfgController : UITableViewController <DF1Delegate,UINavigationControllerDelegate>
+@interface DF1CfgController : UITableViewController <DF1Delegate,DF1CfgCellOADTriggerDelegate,UINavigationControllerDelegate>
 
 @property (strong,nonatomic) DF1 *df;
 @property (strong,nonatomic) NSMutableDictionary *cfg;
 
 -(id) initWithDF:(DF1*) df;
 -(void) saveCfg;
-
+// DF1CfgCellOADTriggerDelegate func
+-(void) triggerOAD;
 @end

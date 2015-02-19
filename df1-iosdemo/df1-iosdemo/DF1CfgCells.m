@@ -430,3 +430,86 @@
     [super layoutSubviews];
 }
 @end
+
+
+
+@implementation DF1CfgCellOADTrigger
+-(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+            withCfg:(NSMutableDictionary*) ucfg
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier withCfg:ucfg];
+    if(self==nil)
+        return self;
+    self.cfg = ucfg;
+    self.height = 50;
+    
+    self.oadLabel = [[UILabel alloc] init];
+    self.oadLabel.font = [UIFont boldSystemFontOfSize:16];
+    self.oadLabel.textAlignment = NSTextAlignmentLeft;
+    self.oadLabel.text = [[NSString alloc] initWithFormat:@"OAD Boot"];
+    
+    self.oadButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.oadButton.frame = CGRectMake(0.0f, 0.0f, 60.0f, 30.0f);
+    self.oadButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    self.oadButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    //[self.oadButton setBackgroundColor:[UIColor colorWithRed:0.5f green:0.5f blue:0.5f alpha:0.2f]];
+    [self.oadButton setTitle:@"trigger" forState:UIControlStateNormal];
+    [self.oadButton setTitle:@"danger!" forState:UIControlStateHighlighted];
+    self.oadButton.titleLabel.font = [UIFont boldSystemFontOfSize:18.0f];
+    //[self.oadButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    //[self.oadButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    [self.oadButton sizeToFit];
+    self.oadButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
+    
+    [self.oadButton addTarget:self action:@selector(doPopUp:)
+             forControlEvents:UIControlEventTouchDown];
+    // [self.oadButton addTarget:self action:@selector(doPopUp:) forControlEvents:UIControlEventTouchUpInside];
+
+    
+    [self.contentView addSubview:self.oadLabel];
+    [self.contentView addSubview:self.oadButton];
+    return self;
+}
+
+-(void) layoutSubviews
+{
+    [super layoutSubviews];
+    self.oadLabel.frame  = CGRectMake(PAD_LEFT,     PAD_TOP, 110, 45);
+    self.oadButton.frame = CGRectMake(PAD_LEFT+100, PAD_TOP, 200, 45);
+}
+
+-(void) modifyChange:(NSMutableDictionary*) c
+{
+}
+
+-(void) doPopUp:(id) sender
+{
+    NSString *msg = @"You will force your DF1 to boot into Over-Air-Update (OAD) mode. This operation cannot be undone!";
+    UIAlertView * alert =[[UIAlertView alloc ] initWithTitle:@"WARNING!"
+                                                     message:msg
+                                                    delegate:self
+                                           cancelButtonTitle:@"Cancel"
+                                           otherButtonTitles: nil];
+    [alert addButtonWithTitle:@"Do it!"];
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"Button Index =%d",buttonIndex);
+    if (buttonIndex == 0)
+    {
+        NSLog(@"You have clicked Cancel");
+        return;
+    }
+    else if(buttonIndex == 1)
+    {
+        NSLog(@"Livin' dangerously!");
+
+        if(self.delegate != nil) {
+            [self.delegate triggerOAD];
+        }
+
+    }
+}
+@end
