@@ -49,7 +49,7 @@
 
     // X - value
     self.accValueX = [[UILabel alloc] init];
-    self.accValueX.font = [UIFont systemFontOfSize:14];
+    self.accValueX.font = [UIFont systemFontOfSize:13];
     // plot strip
     self.accXStripLabel = [[UILabel alloc] init];
     self.accXStrip = [[F3PlotStrip alloc] initWithFrame:CGRectMake(0,0,180,30)];
@@ -63,7 +63,7 @@
     
     // Y - value
     self.accValueY = [[UILabel alloc] init];
-    self.accValueY.font = [UIFont systemFontOfSize:14];
+    self.accValueY.font = [UIFont systemFontOfSize:13];
     // plot strip
     self.accYStripLabel = [[UILabel alloc] init];
     self.accYStrip = [[F3PlotStrip alloc] initWithFrame:CGRectMake(0,0,180,30)];
@@ -77,7 +77,7 @@
 
     // Z - value
     self.accValueZ = [[UILabel alloc] init];
-    self.accValueZ.font = [UIFont systemFontOfSize:14];
+    self.accValueZ.font = [UIFont systemFontOfSize:13];
     // plot strip
     self.accZStripLabel = [[UILabel alloc] init];
     self.accZStrip = [[F3PlotStrip alloc] initWithFrame:CGRectMake(0,0,180,30)];
@@ -128,17 +128,17 @@
     fr = CGRectMake(boundsX + 5, 5, width-50, 25);
     self.accLabel.frame = fr;
 
-    fr = CGRectMake(boundsX + 30, 35, 80, 25);
+    fr = CGRectMake(boundsX + 25, 35, 80, 25);
     self.accValueX.frame = fr;
     fr = CGRectMake(boundsX + 120, 35, 180,30);
     self.accXStrip.frame = fr;
 
-    fr = CGRectMake(boundsX + 30, 35+35, 80, 25);
+    fr = CGRectMake(boundsX + 25, 35+35, 80, 25);
     self.accValueY.frame = fr;
     fr = CGRectMake(boundsX + 120, 35+35, 180,30);
     self.accYStrip.frame = fr;
 
-    fr = CGRectMake(boundsX + 30, 35+35+35, 80, 25);
+    fr = CGRectMake(boundsX + 25, 35+35+35, 80, 25);
     self.accValueZ.frame = fr;
     fr = CGRectMake(boundsX + 120, 35+35+35, 180,30);
     self.accZStrip.frame = fr;

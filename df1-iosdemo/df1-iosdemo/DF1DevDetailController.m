@@ -81,7 +81,8 @@
         self.accXyzCell = [[DF1CellAccXyz alloc] initWithStyle:UITableViewCellStyleDefault
                                               reuseIdentifier:@"AccXYZCell" parentController:self];
         // do other default initialization here
-        self.accXyzCell.accLabel.text =  [[NSString alloc] initWithFormat:@"Acceleration %@", bitres];
+        // self.accXyzCell.accLabel.text =  [[NSString alloc] initWithFormat:@"Acceleration %@", bitres];
+        self.accXyzCell.accLabel.text = @"Acceleration";
         self.accXyzCell.accValueX.text = @"x axis";
         self.accXyzCell.accValueY.text = @"y axis";
         self.accXyzCell.accValueZ.text = @"z axis";
@@ -238,18 +239,36 @@
 }
 
 
--(NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+-(NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
     if (section == 0) {
         return [DF1LibUtil getUserCfgName:self.df.p];
     }
     return @"";
 }
 
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UILabel *myLabel = [[UILabel alloc] init];
+    myLabel.frame = CGRectMake(20, 8, 320, 20);
+    myLabel.font = [UIFont boldSystemFontOfSize:18];
+    myLabel.textColor = [UIColor whiteColor];
+    myLabel.text = [self tableView:tableView titleForHeaderInSection:section];
+    
+    UIView *headerView = [[UIView alloc] init];
+    headerView.backgroundColor = [UIColor darkGrayColor];
+    [headerView addSubview:myLabel];
+    return headerView;
+}
+
+
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 25.0f;
+    return 37.0f;
 }
--(CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+-(CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
     return 0.0f;
 }
 
@@ -395,13 +414,13 @@
     float x = [data[0] floatValue];
     float y = [data[1] floatValue];
     float z = [data[2] floatValue];
-    DF_DBG(@"8bit is coming too??");
+    // DF_DBG(@"8bit is coming too??");
     // self.accXyzCell.accBarX.progress = (x + 2) / 4.0;
-    self.accXyzCell.accValueX.text = [[NSString alloc] initWithFormat:@"X: %.3f", x];
+    self.accXyzCell.accValueX.text = [[NSString alloc] initWithFormat:@"X8 : %.3f", x];
     self.accXyzCell.accXStrip.value = x;
-    self.accXyzCell.accValueY.text = [[NSString alloc] initWithFormat:@"Y: %.3f", y];
+    self.accXyzCell.accValueY.text = [[NSString alloc] initWithFormat:@"Y8 : %.3f", y];
     self.accXyzCell.accYStrip.value = y;
-    self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z: %.3f", z];
+    self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z8 : %.3f", z];
     self.accXyzCell.accZStrip.value = z;
 }
 
@@ -410,13 +429,13 @@
     float x = [data[0] floatValue];
     float y = [data[1] floatValue];
     float z = [data[2] floatValue];
-    DF_DBG(@"14bit coming in: %.2f %.2f %.2f", x, y, z);
+    // DF_DBG(@"14bit coming in: %.2f %.2f %.2f", x, y, z);
     // self.accXyzCell.accBarX.progress = (x + 2) / 4.0;
-    self.accXyzCell.accValueX.text = [[NSString alloc] initWithFormat:@"X: %.4f", x];
+    self.accXyzCell.accValueX.text = [[NSString alloc] initWithFormat:@"X14: %.4f", x];
     self.accXyzCell.accXStrip.value = x;
-    self.accXyzCell.accValueY.text = [[NSString alloc] initWithFormat:@"Y: %.4f", y];
+    self.accXyzCell.accValueY.text = [[NSString alloc] initWithFormat:@"Y14: %.4f", y];
     self.accXyzCell.accYStrip.value = y;
-    self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z: %.4f", z];
+    self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z14: %.4f", z];
     self.accXyzCell.accZStrip.value = z;
 }
 

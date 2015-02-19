@@ -47,6 +47,7 @@
 
 @interface DF1CfgCellBatt : DF1CfgCell
 -(void) modifyChange:(NSMutableDictionary*) c;
+@property (nonatomic,retain) UILabel *battLabel;
 @end
 
 

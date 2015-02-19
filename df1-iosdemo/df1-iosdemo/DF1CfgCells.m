@@ -389,11 +389,27 @@
         return self;
     self.cfg = ucfg;
     self.height = 30;
+    self.battLabel = [[UILabel alloc] init];
+    self.battLabel.textAlignment = NSTextAlignmentCenter;
+    self.battLabel.font = [UIFont systemFontOfSize:16];
+    self.battLabel.textColor = [UIColor grayColor];
+    self.battLabel.backgroundColor = [UIColor clearColor];
+    // JB: when adding more features, change here first
+    self.battLabel.text = @"more features coming soon..";
+    
+    [self.contentView addSubview:self.battLabel];
     return self;
 }
 -(void) layoutSubviews
 {
     [super layoutSubviews];
+    CGRect contentRect = self.contentView.bounds;
+    CGFloat boundsX = contentRect.origin.x;
+    CGFloat width = self.contentView.bounds.size.width;
+    CGRect fr;
+    
+    fr = CGRectMake(boundsX + 5, 5, width-50, 25);
+    self.battLabel.frame = fr;
 }
 @end
 

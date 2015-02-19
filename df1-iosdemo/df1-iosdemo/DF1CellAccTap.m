@@ -39,7 +39,7 @@
     self.accValueTap.font = [UIFont systemFontOfSize:18];
 
     self.accThsLabel = [[UILabel alloc] init];
-    self.accThsLabel.font = [UIFont systemFontOfSize:14];
+    self.accThsLabel.font = [UIFont systemFontOfSize:13];
     self.accThsLabel.text = @"Threshhold";
     self.accThsSlider = [[UISlider alloc] init];
     self.accThsSlider.continuous = true;
@@ -49,7 +49,7 @@
                forControlEvents:UIControlEventValueChanged];
 
     self.accTmltLabel = [[UILabel alloc] init];
-    self.accTmltLabel.font = [UIFont systemFontOfSize:14];
+    self.accTmltLabel.font = [UIFont systemFontOfSize:13];
     self.accTmltLabel.text = @"TimeLimit";
     self.accTmltSlider = [[UISlider alloc] init];
     self.accTmltSlider.continuous = true;

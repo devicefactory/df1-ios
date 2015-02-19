@@ -96,10 +96,10 @@
 
     self.navigationItem.title = @"DF1 Configuration";
     // style related stuff
-    // self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.backgroundColor = [UIColor whiteColor];
     
-    [self.tableView setBackgroundView: [[UIImageView alloc]
-                                        initWithImage: [UIImage imageNamed:@"DFLOGO07_launch_invert.png"]]];
+    // [self.tableView setBackgroundView: [[UIImageView alloc]
+    //                                    initWithImage: [UIImage imageNamed:@"DFLOGO07_launch_invert.png"]]];
 
     self.navigationItem.rightBarButtonItem = BARBUTTON(@"save", @selector(saveCfg));
 }
@@ -237,7 +237,7 @@
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 25.0f;
+    return 37.0f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -253,6 +253,21 @@
 {
     if(_sectionNames.count<=section) section = _sectionNames.count - 1;
     return _sectionNames[section];
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    
+    UILabel *myLabel = [[UILabel alloc] init];
+    myLabel.frame = CGRectMake(20, 8, 320, 20);
+    myLabel.font = [UIFont boldSystemFontOfSize:18];
+    myLabel.textColor = [UIColor whiteColor];
+    myLabel.text = [self tableView:tableView titleForHeaderInSection:section];
+    
+    UIView *headerView = [[UIView alloc] init];
+    headerView.backgroundColor = [UIColor darkGrayColor];
+    if(_sectionNames.count<=section) section = _sectionNames.count - 1;
+    [headerView addSubview:myLabel];
+    return headerView;
 }
 
 -(float) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {

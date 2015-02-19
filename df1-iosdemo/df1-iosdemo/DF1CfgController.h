@@ -10,7 +10,9 @@ DF1CfgController: Configuration Management Controller
 
 #define SECTION_NAMES @"DF1 Config",@"DF1 Features",nil
 #define SECTION1 @"DF1CfgCellName",@"DF1CfgCellRange",@"DF1CfgCellRes",nil 
-#define SECTION2 @"DF1CfgCellBatt",@"DF1CfgCellProx",nil 
+// #define SECTION2 @"DF1CfgCellBatt",@"DF1CfgCellProx",nil
+#define SECTION2 @"DF1CfgCellBatt",nil
+
 
 @interface DF1CfgController : UITableViewController <DF1Delegate,UINavigationControllerDelegate>
 
