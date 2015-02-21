@@ -52,6 +52,7 @@
 
 +(bool) doesPeripheral: (CBPeripheral*) p haveServiceUUID:(CBUUID*) uuid;
 +(bool) isUUID: (CBUUID*) uuid thisInt: (UInt16) intuuid;
++(bool) isPeripheralConnected: (CBPeripheral*) p;
 
 
 // Returns NSDictionary object to be used with NSUserDefaults

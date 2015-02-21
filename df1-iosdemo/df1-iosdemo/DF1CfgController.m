@@ -122,11 +122,10 @@
     // if(self.df==nil) [self initializeMembers:nil];
 }
 
-// so that the timer doesn't hang around
+
 -(void) viewWillDisappear:(BOOL)animated
 {
     // force the save here
-    [self saveCfg];
 }
     
 
@@ -146,9 +145,16 @@
     if ([viewController isEqual:self]) {
         [viewController viewWillAppear:animated];
     } else if ([viewController conformsToProtocol:@protocol(UINavigationControllerDelegate)]){
+        // if we are transitioning to other viewcontrollers other than oad vc, we save the config
+        if(![viewController isMemberOfClass:[DF1OADController class]])
+        {
+            [self saveCfg];
+        }
+        
         // Set the navigation controller delegate to the passed-in view controller and call the UINavigationViewControllerDelegate method on the new delegate.
         [navigationController setDelegate:(id<UINavigationControllerDelegate>)viewController];
         [[navigationController delegate] navigationController:navigationController willShowViewController:viewController animated:YES];
+        
     }
 }
 
@@ -315,7 +321,7 @@
 
     // Writing this characteristic will reboot DF1. We now have to retrigger scanning and connect.
     [DF1LibUtil writeCharacteristic:self.df.p sUUID:TEST_SERV_UUID cUUID:TEST_CONF_UUID data:data];
-
+    [self.df disconnect:self.df.p];
     // jump to the viewController that can reconnect and do OAD update with the peripheral ID as the arg.
     [self showOADController:uuid];
 }
@@ -323,8 +329,9 @@
 -(void) showOADController:(NSString*) uuid
 {
     DF1OADController *vc = [[DF1OADController alloc] initWithPeripheralUUID:uuid];
-    // [self.navigationController pushViewController:vc animated:YES];
-    [self presentViewController:vc animated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:NO];
+    [self.navigationController pushViewController:vc animated:YES];
+    // [self presentViewController:vc animated:YES completion:nil];
 }
 
 

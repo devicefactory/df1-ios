@@ -18,6 +18,8 @@
 
 @implementation DF1OADController
 
+
+
 -(id) initWithPeripheralUUID:(NSString*) uuid
 {
     self = [super init];
@@ -27,7 +29,9 @@
         self.title = @"Firmware Update";
         self.uuid = uuid;
         _alreadyConnected = false;
-        [self triggerScan];
+        [NSTimer scheduledTimerWithTimeInterval:1.0f
+            target:self selector:@selector(triggerScan) userInfo:nil repeats:NO];
+        // [self triggerScan];
     }
     return self;
 }
@@ -64,7 +68,7 @@
 {
     [super viewDidLoad];
     DF_DBG(@"view loaded DF1OADController");
-    self.navigationItem.title = @"DF1 OAD";
+    // self.navigationItem.title = @"DF1 OAD";
 }
 
 -(void) viewDidAppear:(BOOL)animated
@@ -127,7 +131,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-
 - (void) clearScan
 {
     [self.df stopScan:true]; // clear the internal device list
@@ -140,7 +143,7 @@
     self.title = @"Scanning...";
     [self.df scan:30];
     [NSTimer scheduledTimerWithTimeInterval:20.0f
-        target:self selector:@selector(timeoutScan:) userInfo:nil repeats:NO];
+                                     target:self selector:@selector(timeoutScan:) userInfo:nil repeats:NO];
 }
 
 - (void) finishScan
@@ -152,14 +155,15 @@
 // so that we avoid scanning indefinitely
 - (void) timeoutScan: (NSTimer *) timer
 {
-        self.title = @"Select Device";
-        [self.df stopScan:false]; // don't clear the internal device list
-        [self finishScan];
-        // UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Scan Timeout" message:@"Stopped scanning"
-        //                        delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        // [alert show];
-        // [alert release];
+    self.title = @"Select Device";
+    [self.df stopScan:false]; // don't clear the internal device list
+    [self finishScan];
+    // UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Scan Timeout" message:@"Stopped scanning"
+    //                        delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    // [alert show];
+    // [alert release];
 }
+
 
 -(bool) didScan:(NSArray*) devices
 {
@@ -252,12 +256,23 @@
 - (void)navigationController:(UINavigationController *)navigationController
       willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    DF_DBG(@"DF1DevListController calling navigationController:willShowViewController:animated");
+    DF_DBG(@"DF1OADController calling navigationController:willShowViewController:animated");
     if ([viewController isEqual:self]) {
         [viewController viewWillAppear:animated];
     } else if ([viewController conformsToProtocol:@protocol(UINavigationControllerDelegate)]){
         // Set the navigation controller delegate to the passed-in view controller and call the UINavigationViewControllerDelegate method on the new delegate.
         [navigationController setDelegate:(id<UINavigationControllerDelegate>)viewController];
+        
+        if([viewController isMemberOfClass:[DF1DevListController class]])
+        {
+            [self.df unsubscribeBatt];
+            [self.df unsubscribeXYZ8];
+            [self.df unsubscribeXYZ14]; // just in case
+            [self.df unsubscribeTap];
+            DF1DevListController *vc = (DF1DevListController*) viewController;
+            vc.df = self.df;
+            vc.df.delegate = vc;
+        }
         [[navigationController delegate] navigationController:navigationController willShowViewController:viewController animated:YES];
     }
 }

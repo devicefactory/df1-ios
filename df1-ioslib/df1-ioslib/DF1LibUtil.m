@@ -323,6 +323,22 @@
   return ([DF1LibUtil CBUUIDToInt:uuid]==intuuid);
 }
 
+
++(bool) isPeripheralConnected:(CBPeripheral*) p
+{
+    if(p==nil)
+    {
+        DF_ERR(@"peripheral property is nil!");
+        return false;
+    }
+    if(![p respondsToSelector:@selector(state)])
+    {
+        DF_ERR(@"peripheral property self.p does not respond to state!");
+        return false;
+    }
+    return [p state] == CBPeripheralStateConnected;
+}
+
 /*
  * Helper functions against NSUserDefaults
  */
@@ -336,6 +352,10 @@
 // retrieves the user default dictionary for peripheral : assumes we store the dict by the uuid
 +(NSDictionary*) getUserCfgDict:(CBPeripheral*) p
 {
+    if(p==nil)
+        return nil;
+    if(![DF1LibUtil isPeripheralConnected:p])
+        return nil;
     NSString *uuid = [p.identifier UUIDString];
     return [[NSUserDefaults standardUserDefaults] dictionaryForKey:uuid];
 }
