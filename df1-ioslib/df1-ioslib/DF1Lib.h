@@ -111,5 +111,7 @@
 -(void) receivedXYZ8:(NSArray*) data;
 -(void) receivedXYZ14:(NSArray*) data;
 -(void) receivedTap:(NSDictionary*) data;
+// pass through
+-(void) receivedValue:(CBPeripheral*) peripheral forCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error;
 
 @end

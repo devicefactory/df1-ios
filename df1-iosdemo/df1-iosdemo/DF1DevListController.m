@@ -19,6 +19,7 @@ facts need to be considered:
 #import "DF1DevListController.h"
 #import "DF1DevCell.h"
 #import "DF1DevDetailController.h"
+#import "DF1OADController.h"
 #import "Utility.h"
 #import "NSData+Conversion.h"
 
@@ -216,11 +217,6 @@ facts need to be considered:
 -(void) didConnect:(CBPeripheral *) peripheral
 {
     DF_DBG(@"did connect peripheral: %@", peripheral.name);
-    for (CBService *s in peripheral.services)
-    {
-        NSString *cname = [DF1LibUtil CBUUIDToString:s.UUID];
-        DF_DBG(@"contains service: %@",cname);
-    }
 
     if([[peripheral.name lowercaseString] hasPrefix:@"df1"])
     {
@@ -229,6 +225,26 @@ facts need to be considered:
             DF1DevCell *cell = (DF1DevCell*)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow: i inSection:0]];
             // cell.ledButton2.userInteractionEnabled = YES;
             cell.ledButton.hidden = NO;
+            bool hasAccUUID = false;
+            bool hasOADUUID = false;
+            for (CBService *s in peripheral.services)
+            {
+                NSString *cname = [DF1LibUtil CBUUIDToString:s.UUID];
+                DF_DBG(@"contains service: %@",cname);
+                //F000FFC0-0451-4000-B000-000000000000
+                if([s.UUID isEqual:[CBUUID UUIDWithString:@"0xF000FFC0-0451-4000-B000-000000000000"]]) {
+                    DF_DBG(@"found OAD service!");
+                    hasOADUUID = true;
+                }
+                if([cname isEqual:@"aa10"]) {
+                    hasAccUUID = true;
+                }
+            }
+            if(!hasAccUUID && hasOADUUID) {
+                cell.isOAD = [NSNumber numberWithBool:YES];
+                NSString *name = [DF1LibUtil getUserCfgName:peripheral];
+                cell.nameLabel.text = [NSString stringWithFormat:@"%@ (OAD)",name];
+            }
         }
     }
 }
@@ -290,6 +306,8 @@ facts need to be considered:
 
         BOOL foundService = NO;
         for(CBService* s in p.services) {
+            // DF_DBG(@"print service %@", [DF1LibUtil CBUUIDToString:s.UUID]);
+
             if([DF1LibUtil isUUID:s.UUID thisInt:TEST_SERV_UUID]) {
                 foundService = YES;
                 break;
@@ -303,7 +321,8 @@ facts need to be considered:
         CBUUID *bserv = [DF1LibUtil IntToCBUUID:BATT_SERVICE_UUID];
         CBUUID *tserv = [DF1LibUtil IntToCBUUID:TEST_SERV_UUID];
         NSArray *services = [NSArray arrayWithObjects: bserv, tserv, nil];
-        [self.df connect:p withServices:services];
+        // [self.df connect:p withServices:services];
+        [self.df connect:p];
         return cell;
     } else {
         UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell"
@@ -377,12 +396,18 @@ facts need to be considered:
     NSLog(@"setting peripheral to selectedPeripheral: row %d section %d", indexPath.row, indexPath.section);
     // self.selectedPeripheral = p;
     CBPeripheral *p = [self.nDevices objectAtIndex:indexPath.row];
-
+    DF1DevCell *cell = (DF1DevCell *)[self.tableView cellForRowAtIndexPath:indexPath];
     self.df.p = p;
-
-    DF1DevDetailController *vc = [[DF1DevDetailController alloc] initWithDF:self.df];
-    // vc.previousVC = self;
-    [self.navigationController pushViewController:vc animated:YES];
+    if([cell.isOAD boolValue]) {
+        NSString *uuid = [p.identifier UUIDString];
+        DF1OADController *vc = [[DF1OADController alloc] initWithDF:self.df];
+        // vc.previousVC = self;
+        [self.navigationController pushViewController:vc animated:YES];
+    } else {
+        DF1DevDetailController *vc = [[DF1DevDetailController alloc] initWithDF:self.df];
+        // vc.previousVC = self;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 

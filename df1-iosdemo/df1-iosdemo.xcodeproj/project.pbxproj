@@ -38,6 +38,14 @@
 		C5A71BFA195222630074B087 /* DF1CfgCells.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A71BF7195222630074B087 /* DF1CfgCells.m */; };
 		C5A71BFB195222630074B087 /* DF1CfgController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A71BF9195222630074B087 /* DF1CfgController.m */; };
 		C5AACD341A92D51300A57F1C /* libdf1-ioslib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5AACD331A92D51300A57F1C /* libdf1-ioslib.a */; };
+		C5AACD401A98289500A57F1C /* BLEDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AACD371A98289500A57F1C /* BLEDevice.m */; };
+		C5AACD411A98289500A57F1C /* BLETIOADProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AACD391A98289500A57F1C /* BLETIOADProfile.m */; };
+		C5AACD421A98289500A57F1C /* BLETIOADProgressDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AACD3B1A98289500A57F1C /* BLETIOADProgressDialog.m */; };
+		C5AACD431A98289500A57F1C /* BLETIOADProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AACD3D1A98289500A57F1C /* BLETIOADProgressViewController.m */; };
+		C5AACD441A98289500A57F1C /* BLEUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AACD3F1A98289500A57F1C /* BLEUtility.m */; };
+		C5AACD481A982B0A00A57F1C /* DF1_rangefix.bin in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD471A982B0A00A57F1C /* DF1_rangefix.bin */; };
+		C5AACD4A1A982B2600A57F1C /* DF1_hires_v0.1.bin in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD491A982B2600A57F1C /* DF1_hires_v0.1.bin */; };
+		C5AACD4D1A9835E700A57F1C /* DF1OADController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AACD4C1A9835E700A57F1C /* DF1OADController.m */; };
 		C5CA41E9191AC9C000C29D76 /* F3PlotStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = C5CA41E8191AC9C000C29D76 /* F3PlotStrip.m */; };
 		C5CACDE819297B5F00A2DD7B /* green-in.png in Resources */ = {isa = PBXBuildFile; fileRef = C5CACDE419297B5F00A2DD7B /* green-in.png */; };
 		C5CACDE919297B5F00A2DD7B /* green-out.png in Resources */ = {isa = PBXBuildFile; fileRef = C5CACDE519297B5F00A2DD7B /* green-out.png */; };
@@ -104,6 +112,21 @@
 		C5A71BF8195222630074B087 /* DF1CfgController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1CfgController.h; sourceTree = "<group>"; };
 		C5A71BF9195222630074B087 /* DF1CfgController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1CfgController.m; sourceTree = "<group>"; };
 		C5AACD331A92D51300A57F1C /* libdf1-ioslib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libdf1-ioslib.a"; path = "../../../../Library/Developer/Xcode/DerivedData/df1-ios-workgroup-aqwizxqvuasohrgftdlcdfpbpzvj/Build/Products/Debug-iphoneos/libdf1-ioslib.a"; sourceTree = "<group>"; };
+		C5AACD361A98289500A57F1C /* BLEDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BLEDevice.h; path = "df1-iosdemo/OAD/BLEDevice.h"; sourceTree = "<group>"; };
+		C5AACD371A98289500A57F1C /* BLEDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BLEDevice.m; path = "df1-iosdemo/OAD/BLEDevice.m"; sourceTree = "<group>"; };
+		C5AACD381A98289500A57F1C /* BLETIOADProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BLETIOADProfile.h; path = "df1-iosdemo/OAD/BLETIOADProfile.h"; sourceTree = "<group>"; };
+		C5AACD391A98289500A57F1C /* BLETIOADProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BLETIOADProfile.m; path = "df1-iosdemo/OAD/BLETIOADProfile.m"; sourceTree = "<group>"; };
+		C5AACD3A1A98289500A57F1C /* BLETIOADProgressDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BLETIOADProgressDialog.h; path = "df1-iosdemo/OAD/BLETIOADProgressDialog.h"; sourceTree = "<group>"; };
+		C5AACD3B1A98289500A57F1C /* BLETIOADProgressDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BLETIOADProgressDialog.m; path = "df1-iosdemo/OAD/BLETIOADProgressDialog.m"; sourceTree = "<group>"; };
+		C5AACD3C1A98289500A57F1C /* BLETIOADProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BLETIOADProgressViewController.h; path = "df1-iosdemo/OAD/BLETIOADProgressViewController.h"; sourceTree = "<group>"; };
+		C5AACD3D1A98289500A57F1C /* BLETIOADProgressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BLETIOADProgressViewController.m; path = "df1-iosdemo/OAD/BLETIOADProgressViewController.m"; sourceTree = "<group>"; };
+		C5AACD3E1A98289500A57F1C /* BLEUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BLEUtility.h; path = "df1-iosdemo/OAD/BLEUtility.h"; sourceTree = "<group>"; };
+		C5AACD3F1A98289500A57F1C /* BLEUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BLEUtility.m; path = "df1-iosdemo/OAD/BLEUtility.m"; sourceTree = "<group>"; };
+		C5AACD451A98293900A57F1C /* oad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oad.h; path = "df1-iosdemo/OAD/oad.h"; sourceTree = "<group>"; };
+		C5AACD471A982B0A00A57F1C /* DF1_rangefix.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = DF1_rangefix.bin; path = "../../df1-fw/hexfiles/DF1_rangefix.bin"; sourceTree = "<group>"; };
+		C5AACD491A982B2600A57F1C /* DF1_hires_v0.1.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = DF1_hires_v0.1.bin; path = "../../df1-fw/hexfiles/DF1_hires_v0.1.bin"; sourceTree = "<group>"; };
+		C5AACD4B1A9835E700A57F1C /* DF1OADController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1OADController.h; sourceTree = "<group>"; };
+		C5AACD4C1A9835E700A57F1C /* DF1OADController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1OADController.m; sourceTree = "<group>"; };
 		C5CA41E7191AC9C000C29D76 /* F3PlotStrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = F3PlotStrip.h; sourceTree = "<group>"; };
 		C5CA41E8191AC9C000C29D76 /* F3PlotStrip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = F3PlotStrip.m; sourceTree = "<group>"; };
 		C5CACDE419297B5F00A2DD7B /* green-in.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "green-in.png"; path = "df1-iosdemo/assets/green-in.png"; sourceTree = "<group>"; };
@@ -142,7 +165,9 @@
 		C56A3EEB18DF77B700DB2A5C = {
 			isa = PBXGroup;
 			children = (
+				C5AACD461A982AB900A57F1C /* firmware */,
 				C56C08A31904A95F001FF641 /* assets */,
+				C5AACD351A98286E00A57F1C /* oad */,
 				C56A3EFD18DF77B700DB2A5C /* df1-iosdemo */,
 				C56A3F1F18DF77B700DB2A5C /* df1-iosdemoTests */,
 				C56A3EF618DF77B700DB2A5C /* Frameworks */,
@@ -176,6 +201,8 @@
 		C56A3EFD18DF77B700DB2A5C /* df1-iosdemo */ = {
 			isa = PBXGroup;
 			children = (
+				C5AACD4B1A9835E700A57F1C /* DF1OADController.h */,
+				C5AACD4C1A9835E700A57F1C /* DF1OADController.m */,
 				C5A71BF6195222630074B087 /* DF1CfgCells.h */,
 				C5A71BF7195222630074B087 /* DF1CfgCells.m */,
 				C5A71BF8195222630074B087 /* DF1CfgController.h */,
@@ -253,6 +280,33 @@
 				C56C08A41904A971001FF641 /* DFLOGO07_58x58.png */,
 			);
 			name = assets;
+			sourceTree = "<group>";
+		};
+		C5AACD351A98286E00A57F1C /* oad */ = {
+			isa = PBXGroup;
+			children = (
+				C5AACD451A98293900A57F1C /* oad.h */,
+				C5AACD361A98289500A57F1C /* BLEDevice.h */,
+				C5AACD371A98289500A57F1C /* BLEDevice.m */,
+				C5AACD381A98289500A57F1C /* BLETIOADProfile.h */,
+				C5AACD391A98289500A57F1C /* BLETIOADProfile.m */,
+				C5AACD3A1A98289500A57F1C /* BLETIOADProgressDialog.h */,
+				C5AACD3B1A98289500A57F1C /* BLETIOADProgressDialog.m */,
+				C5AACD3C1A98289500A57F1C /* BLETIOADProgressViewController.h */,
+				C5AACD3D1A98289500A57F1C /* BLETIOADProgressViewController.m */,
+				C5AACD3E1A98289500A57F1C /* BLEUtility.h */,
+				C5AACD3F1A98289500A57F1C /* BLEUtility.m */,
+			);
+			name = oad;
+			sourceTree = "<group>";
+		};
+		C5AACD461A982AB900A57F1C /* firmware */ = {
+			isa = PBXGroup;
+			children = (
+				C5AACD491A982B2600A57F1C /* DF1_hires_v0.1.bin */,
+				C5AACD471A982B0A00A57F1C /* DF1_rangefix.bin */,
+			);
+			name = firmware;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -344,7 +398,9 @@
 				C5CACDE919297B5F00A2DD7B /* green-out.png in Resources */,
 				C5CACDE819297B5F00A2DD7B /* green-in.png in Resources */,
 				C56C08A71904AA14001FF641 /* DFLOGO07_launch_2.png in Resources */,
+				C5AACD4A1A982B2600A57F1C /* DF1_hires_v0.1.bin in Resources */,
 				C56C08A91904ACD4001FF641 /* DFLOGO07_launch_invert.png in Resources */,
+				C5AACD481A982B0A00A57F1C /* DF1_rangefix.bin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,13 +419,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5AACD4D1A9835E700A57F1C /* DF1OADController.m in Sources */,
+				C5AACD441A98289500A57F1C /* BLEUtility.m in Sources */,
 				C56C08991901A4E9001FF641 /* DF1DevListController.m in Sources */,
+				C5AACD411A98289500A57F1C /* BLETIOADProfile.m in Sources */,
 				C56C089E1901C1B0001FF641 /* DF1DevCell.m in Sources */,
 				C5CA41E9191AC9C000C29D76 /* F3PlotStrip.m in Sources */,
 				C5A71BF3194D51ED0074B087 /* DF1CellAccTap.m in Sources */,
 				C5A71BFB195222630074B087 /* DF1CfgController.m in Sources */,
 				C5A71BE9194D48360074B087 /* MBProgressHUD.m in Sources */,
+				C5AACD401A98289500A57F1C /* BLEDevice.m in Sources */,
+				C5AACD431A98289500A57F1C /* BLETIOADProgressViewController.m in Sources */,
 				C56C089F1901C1B0001FF641 /* Utility.m in Sources */,
+				C5AACD421A98289500A57F1C /* BLETIOADProgressDialog.m in Sources */,
 				C5A71BF4194D51ED0074B087 /* DF1CellAccXyz.m in Sources */,
 				C579DD48190EFB2A0029B92D /* DF1DevDetailController.m in Sources */,
 				C5A71BF5194D51ED0074B087 /* DF1CellBatt.m in Sources */,

@@ -87,7 +87,7 @@
         DF_ERR(@"CBCentralManager does not exist!");
     }
     g_deviceCountMax = maxCount;
-    if(!self.delegate)
+    if(self.delegate==nil)
     {
         DF_ERR(@"set the delegate first"); 
         return;
@@ -293,7 +293,8 @@
     
     NSArray *services = [self.devices objectForKey:peripheral];
     // if this peripheral is the one we were trying to connect to
-    [peripheral discoverServices:services];
+    // [peripheral discoverServices:services];
+    [peripheral discoverServices:nil];
 }
 
 -(void) centralManager:(CBCentralManager*) central didFailToConnectPeripheral:(CBPeripheral*) peripheral
@@ -555,7 +556,12 @@
         case ACC_TRAN_DEB_UUID:
         case ACC_TRAN_HPF_UUID:
         case TEST_CONF_UUID:
-            [self _updateParameters:characteristic]; 
+            [self _updateParameters:characteristic];
+            break;
+    }
+    //receivedValue:(CBPeripheral*) peripheral forCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
+    if([self.delegate respondsToSelector:@selector(receivedValue:forCharacteristic:error:)]) {
+        [self.delegate receivedValue:peripheral forCharacteristic:characteristic error:error];
     }
 }
 

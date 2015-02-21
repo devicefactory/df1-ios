@@ -5,8 +5,9 @@
 //  Created by JB Kim on 12/16/13.
 //  Copyright (c) 2013 JB Kim. All rights reserved.
 //
-#import "DF1LibUtil.h"
 #import "DF1LibDefs.h"
+#import "DF1LibUtil.h"
+
 
 @implementation DF1LibUtil
 
@@ -37,6 +38,7 @@
         [peripheral writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
 }
 
+
 +(void)writeCharacteristic:(CBPeripheral *)peripheral sStrUUID:(NSString *)sUUID cStrUUID:(NSString *)cUUID data:(NSData *)data
 { 
     CBUUID* cb_suuid = [CBUUID UUIDWithString:sUUID];
@@ -56,6 +58,35 @@
     // [DF1LibUtil writeCharacteristic:peripheral sUUID:sUUID cUUID:cUUID data:[NSData dataWithBytes:&byte length:1]];
     [DF1LibUtil writeCharacteristic:peripheral sUUID:sUUID cUUID:cUUID data:[[NSData alloc] initWithBytes:&byte length:1]];
 }
+
+
++(void)writeNoResponseCharacteristic:(CBPeripheral*)peripheral sCBUUID:(CBUUID *)sCBUUID cCBUUID:(CBUUID *)cCBUUID data:(NSData *)data
+{
+    CBCharacteristic* characteristic = [DF1LibUtil findCharacteristic:peripheral sCBUUID:sCBUUID cCBUUID:cCBUUID];
+    if(characteristic != nil)
+        [peripheral writeValue:data forCharacteristic:characteristic type:CBCharacteristicWriteWithoutResponse];
+}
+
++(void)writeNoResponseCharacteristic:(CBPeripheral *)peripheral sStrUUID:(NSString *)sUUID cStrUUID:(NSString *)cUUID data:(NSData *)data
+{
+    CBUUID* cb_suuid = [CBUUID UUIDWithString:sUUID];
+    CBUUID* cb_cuuid = [CBUUID UUIDWithString:cUUID];
+    [DF1LibUtil writeNoResponseCharacteristic:peripheral sCBUUID:cb_suuid cCBUUID:cb_cuuid data:data];
+}
+
++(void)writeNoResponseCharacteristic:(CBPeripheral *)peripheral sUUID:(UInt16)sUUID cUUID:(UInt16)cUUID data:(NSData *)data
+{
+    CBUUID* cb_suuid = [DF1LibUtil IntToCBUUID:sUUID];
+    CBUUID* cb_cuuid = [DF1LibUtil IntToCBUUID:cUUID];
+    [DF1LibUtil writeNoResponseCharacteristic:peripheral sCBUUID:cb_suuid cCBUUID:cb_cuuid data:data];
+}
+
++(void)writeNoResponseCharacteristic:(CBPeripheral *)peripheral sUUID:(UInt16)sUUID cUUID:(UInt16)cUUID withByte:(uint8_t)byte
+{
+    // [DF1LibUtil writeCharacteristic:peripheral sUUID:sUUID cUUID:cUUID data:[NSData dataWithBytes:&byte length:1]];
+    [DF1LibUtil writeNoResponseCharacteristic:peripheral sUUID:sUUID cUUID:cUUID data:[[NSData alloc] initWithBytes:&byte length:1]];
+}
+
 
 //
 // readCharacteristic
@@ -341,5 +372,10 @@
     return dict;
 }
 
++(BOOL) runningiOSSeven
+{
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) return YES;
+    else return NO;
+}
 
 @end

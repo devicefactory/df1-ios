@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreBluetooth/CoreBluetooth.h>
+#import <UIKit/UIKit.h>
 
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 @interface DF1LibUtil : NSObject
 
@@ -17,6 +19,11 @@
 +(void) writeCharacteristic:(CBPeripheral*)peripheral sStrUUID:(NSString*)sUUID cStrUUID:(NSString*)cUUID data:(NSData*)data;
 +(void) writeCharacteristic:(CBPeripheral*)peripheral sUUID:  (UInt16)sUUID     cUUID:  (UInt16)cUUID     data:(NSData*)data;
 +(void) writeCharacteristic:(CBPeripheral*)peripheral sUUID:  (UInt16)sUUID     cUUID:  (UInt16)cUUID     withByte:(uint8_t) byte;
++(void) writeNoResponseCharacteristic:(CBPeripheral*)peripheral sCBUUID:(CBUUID *)sCBUUID cCBUUID:(CBUUID *)cCBUUID data:(NSData *)data;
++(void) writeNoResponseCharacteristic:(CBPeripheral *)peripheral sStrUUID:(NSString *)sUUID cStrUUID:(NSString *)cUUID data:(NSData *)data;
++(void) writeNoResponseCharacteristic:(CBPeripheral *)peripheral sUUID:(UInt16)sUUID cUUID:(UInt16)cUUID data:(NSData *)data;
++(void) writeNoResponseCharacteristic:(CBPeripheral *)peripheral sUUID:(UInt16)sUUID cUUID:(UInt16)cUUID withByte:(uint8_t)byte;
+
 // readCharacteristic with overloaded args
 +(void) readCharacteristic:(CBPeripheral*)peripheral  sCBUUID:(CBUUID *)sUUID    cCBUUID:(CBUUID *)cUUID;
 +(void) readCharacteristic:(CBPeripheral*)peripheral  sStrUUID:(NSString*) sUUID cStrUUID:(NSString *)cUUID;
@@ -29,6 +36,8 @@
 +(bool) isCharacteristicNotifiable:(CBPeripheral*)peripheral sCBUUID:(CBUUID*)sUUID     cCBUUID:(CBUUID*) cUUID;
 +(bool) isCharacteristicNotifiable:(CBPeripheral*)peripheral sStrUUID:(NSString*)sUUID  cStrUUID:(NSString*) cUUID;
 +(bool) isCharacteristicNotifiable:(CBPeripheral*)peripheral sUUID:(UInt16)sUUID        cUUID:(UInt16) cUUID;
+
++(BOOL) runningiOSSeven;
 
 /// Function to expand a TI 16-bit UUID to TI 128-bit UUID
 +(CBUUID*) expandToTIUUID:(CBUUID *)sourceUUID;

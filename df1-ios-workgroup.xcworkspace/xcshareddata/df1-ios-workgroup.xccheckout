@@ -12,6 +12,8 @@
 	<dict>
 		<key>2F2B05EE67C7E86F82F2236E92B61CBC95C16A3E</key>
 		<string>ssh://github.com/devicefactory/df1-ios.git</string>
+		<key>6412586EFBF5D30100A0BA160FCFFBD781EBCA7B</key>
+		<string>github.com:devicefactory/df1-fw.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>df1-ios-workgroup.xcworkspace</string>
@@ -19,6 +21,8 @@
 	<dict>
 		<key>2F2B05EE67C7E86F82F2236E92B61CBC95C16A3E</key>
 		<string>..</string>
+		<key>6412586EFBF5D30100A0BA160FCFFBD781EBCA7B</key>
+		<string>../../df1-fw</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>ssh://github.com/devicefactory/df1-ios.git</string>
@@ -28,6 +32,14 @@
 	<string>2F2B05EE67C7E86F82F2236E92B61CBC95C16A3E</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>6412586EFBF5D30100A0BA160FCFFBD781EBCA7B</string>
+			<key>IDESourceControlWCCName</key>
+			<string>df1-fw</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>

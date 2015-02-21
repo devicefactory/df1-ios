@@ -7,6 +7,7 @@
 #import "Utility.h"
 #import "NSData+Conversion.h"
 #import "MBProgressHUD.h"
+#import "DF1OADController.h"
 
 
 @interface DF1CfgController ()
@@ -311,8 +312,20 @@
     
     NSString *uuid = [self.df.p.identifier UUIDString];
     DF_DBG(@"initiating OAD boot and subsequent firmware update for: %@", uuid);
+
+    // Writing this characteristic will reboot DF1. We now have to retrigger scanning and connect.
     [DF1LibUtil writeCharacteristic:self.df.p sUUID:TEST_SERV_UUID cUUID:TEST_CONF_UUID data:data];
 
-    // jump to the viewController that can handle OAD update with the peripheral ID as the arg.
+    // jump to the viewController that can reconnect and do OAD update with the peripheral ID as the arg.
+    [self showOADController:uuid];
 }
+
+-(void) showOADController:(NSString*) uuid
+{
+    DF1OADController *vc = [[DF1OADController alloc] initWithPeripheralUUID:uuid];
+    // [self.navigationController pushViewController:vc animated:YES];
+    [self presentViewController:vc animated:YES completion:nil];
+}
+
+
 @end

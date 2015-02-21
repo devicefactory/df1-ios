@@ -26,6 +26,7 @@
 @property (nonatomic,weak) IBOutlet UIButton *ledButton;
 @property (nonatomic,retain) UIProgressView *signalBar;
 @property (nonatomic,retain) UIView *barHolder;
+@property (nonatomic,retain) NSNumber *isOAD;
 
 - (IBAction)ledButtonUp:(UIButton*)sender;
 - (IBAction)ledButtonDn:(UIButton*)sender;

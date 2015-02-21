@@ -86,6 +86,7 @@
     // [self _imageButton];
     [self _genericButton];
 
+    self.isOAD = [NSNumber numberWithBool:false];
     // Initialization code
     self.nameLabel = [[UILabel alloc] init];
     self.nameLabel.textAlignment = NSTextAlignmentLeft;
