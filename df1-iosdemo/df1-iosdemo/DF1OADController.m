@@ -1,18 +1,17 @@
 #define DF_LEVEL 0
 
-#define PAD_LEFT 50
-#define PAD_TOP 200
-
 #import "DF1Lib.h"
 #import "DF1DevListController.h"
 #import "DF1DevCell.h"
 #import "DF1DevDetailController.h"
 #import "Utility.h"
 #import "DF1OADController.h"
+#import "MBProgressHUD.h"
 
 @interface DF1OADController ()
 {
     bool _alreadyConnected;
+    MBProgressHUD *_hud;
 }
 @end
 
@@ -29,7 +28,7 @@
         self.title = @"Firmware Update";
         self.uuid = uuid;
         _alreadyConnected = false;
-        [NSTimer scheduledTimerWithTimeInterval:1.0f
+        [NSTimer scheduledTimerWithTimeInterval:1.5f
             target:self selector:@selector(triggerScan) userInfo:nil repeats:NO];
         // [self triggerScan];
     }
@@ -75,18 +74,20 @@
 {
     DF_DBG(@"entering viewDidAppear");
     [[UINavigationBar appearance] setTintColor:[UIColor blackColor]];
-    
+    self.title = @"Firmware Update";
     self.oadLabel = [[UILabel alloc] init];
-    self.oadLabel.font = [UIFont boldSystemFontOfSize:11];
-    self.oadLabel.textAlignment = NSTextAlignmentLeft;
-    self.oadLabel.text = [[NSString alloc] initWithFormat:@"OAD for: %@", self.uuid];
+    self.oadLabel.font = [UIFont boldSystemFontOfSize:18];
+    self.oadLabel.textAlignment = NSTextAlignmentCenter;
+    self.oadLabel.textColor = [UIColor whiteColor];
+    self.oadLabel.backgroundColor = [UIColor darkGrayColor];
+    self.oadLabel.text = [[NSString alloc] initWithFormat:@"Upgrading: %@", [self.uuid substringToIndex:10]];
     
     self.connButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.connButton.frame = CGRectMake(0.0f, 0.0f, 60.0f, 30.0f);
     self.connButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     self.connButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [self.connButton setTitle:@"connect" forState:UIControlStateNormal];
-    self.connButton.titleLabel.font = [UIFont boldSystemFontOfSize:18.0f];
+    [self.connButton setTitle:@"[manual connect]" forState:UIControlStateNormal];
+    self.connButton.titleLabel.font = [UIFont boldSystemFontOfSize:16.0f];
     [self.connButton sizeToFit];
     self.connButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
     [self.connButton addTarget:self action:@selector(triggerScan) forControlEvents:UIControlEventTouchDown];
@@ -95,7 +96,7 @@
     self.oadButton.frame = CGRectMake(0.0f, 0.0f, 60.0f, 30.0f);
     self.oadButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     self.oadButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [self.oadButton setTitle:@"select firmware" forState:UIControlStateNormal];
+    [self.oadButton setTitle:@"<select firmware>" forState:UIControlStateNormal];
     self.oadButton.titleLabel.font = [UIFont boldSystemFontOfSize:18.0f];
     [self.oadButton sizeToFit];
     self.oadButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
@@ -106,9 +107,17 @@
     [self.view addSubview:self.oadButton];
     [self.view addSubview:self.connButton];
     
-    self.oadLabel.frame   = CGRectMake(PAD_LEFT,  PAD_TOP,     300, 45);
-    self.oadButton.frame  = CGRectMake(PAD_LEFT,  PAD_TOP+50,  300, 45);
-    self.connButton.frame = CGRectMake(PAD_LEFT,  PAD_TOP+200, 300, 45);
+    CGFloat boundsX = self.view.bounds.origin.x;
+    CGFloat boundsY = self.view.bounds.origin.y;
+    CGFloat width = self.view.bounds.size.width;
+    CGFloat height = self.view.bounds.size.height;
+    CGRect fr;
+    DF_DBG(@"boundsX=%f boundsY=%f width=%f height=%f", boundsX, boundsY, width, height);
+    
+    fr = CGRectMake(boundsX + 5, 5, width-50, 25);
+    self.oadLabel.frame   = CGRectMake(boundsX/2,  60,  width, 45);
+    self.oadButton.frame  = CGRectMake(boundsX/2,  120, width, 45);
+    self.connButton.frame = CGRectMake(boundsX/2,  200, width, 45);
     
     if(_alreadyConnected)
         [self showFirmwareOption];
@@ -140,22 +149,24 @@
 - (void) triggerScan
 {
     DF_DBG(@"triggerScan: scanning for peripherals");
-    self.title = @"Scanning...";
     [self.df scan:30];
     [NSTimer scheduledTimerWithTimeInterval:20.0f
                                      target:self selector:@selector(timeoutScan:) userInfo:nil repeats:NO];
+    _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    _hud.labelText = @"scanning for your df1";
 }
 
 - (void) finishScan
 {
     DF_DBG(@"finishScan");
-    self.title = @"Found Device";
+    // self.title = @"Found Device";
 }
 
 // so that we avoid scanning indefinitely
 - (void) timeoutScan: (NSTimer *) timer
 {
-    self.title = @"Select Device";
+    // self.title = @"Select Device";
+    _hud.labelText = @"scanning timeout";
     [self.df stopScan:false]; // don't clear the internal device list
     [self finishScan];
     // UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Scan Timeout" message:@"Stopped scanning"
@@ -165,6 +176,18 @@
 }
 
 
+#pragma mark - DF1Delegate
+
+-(void) hasCentralErrors:(CBCentralManager*) central
+{
+    if (central.state != CBCentralManagerStatePoweredOn)
+    {
+        // let's trigger scan again
+        [NSTimer scheduledTimerWithTimeInterval:1.5f
+                                         target:self selector:@selector(triggerScan) userInfo:nil repeats:NO];
+    }
+}
+
 -(bool) didScan:(NSArray*) devices
 {
     // simply set the pointer to the internal one : is this dangerous?
@@ -172,6 +195,7 @@
       if([[p.identifier UUIDString] isEqual:self.uuid]) {
         DF_DBG(@"target UUID %@ found!", self.uuid);
         self.oadLabel.text = @"desired peripheral found!";
+        _hud.labelText = @"found your df1";
         [self.df connect:p];
         return false;
       }
@@ -187,20 +211,21 @@
 -(void) showFirmwareOption
 {
     [self.oadButton setEnabled:YES];
-    [self.oadButton setTitle:@"Select file" forState:UIControlStateNormal];
+    [self.oadButton setTitle:@"<select firmware>" forState:UIControlStateNormal];
+    [MBProgressHUD hideHUDForView:self.view animated:true];
 }
 
 -(void) didConnect:(CBPeripheral *) peripheral
 {
     DF_DBG(@"did connect peripheral: %@", peripheral.name);
-    self.oadLabel.text = @"connected to peripheral";
+    self.oadLabel.text = @"please select the firmware";
     for (CBService *service in peripheral.services)
     {
       NSString *cname = [DF1LibUtil CBUUIDToString:service.UUID];
       DF_DBG(@"contains service: %@",cname);
       if ([service.UUID isEqual:[CBUUID UUIDWithString:@"0xF000FFC0-0451-4000-B000-000000000000"]]) {
+        _hud.labelText = @"connected and ready for upgrade";
         [self showFirmwareOption];
-        [self.oadButton setTitle:@"Select file" forState:UIControlStateNormal];
         return;
       }
     }

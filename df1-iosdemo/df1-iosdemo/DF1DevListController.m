@@ -303,6 +303,7 @@ facts need to be considered:
         // we set these attributes so that the cell can trigger action back to this controller
         cell.p = p;
         cell.delegate = self;
+        cell.isOAD = [NSNumber numberWithBool:NO]; // always start off assuming there's no OAD
 
         BOOL foundService = NO;
         for(CBService* s in p.services) {

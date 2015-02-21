@@ -14,6 +14,7 @@
 {
     NSMutableArray *_cells;
     NSMutableArray *_sectionNames;
+    bool _saveOnExit;
 }
 @end
 
@@ -85,6 +86,7 @@
         
         [self initializeCells];
         DF_DBG(@"loaded DF1CfgController");
+        _saveOnExit = true;
     }
     return self;
 }
@@ -126,6 +128,8 @@
 -(void) viewWillDisappear:(BOOL)animated
 {
     // force the save here
+    if(_saveOnExit)
+        [self saveCfg];
 }
     
 
@@ -146,10 +150,12 @@
         [viewController viewWillAppear:animated];
     } else if ([viewController conformsToProtocol:@protocol(UINavigationControllerDelegate)]){
         // if we are transitioning to other viewcontrollers other than oad vc, we save the config
+        /*
         if(![viewController isMemberOfClass:[DF1OADController class]])
         {
             [self saveCfg];
         }
+        */
         
         // Set the navigation controller delegate to the passed-in view controller and call the UINavigationViewControllerDelegate method on the new delegate.
         [navigationController setDelegate:(id<UINavigationControllerDelegate>)viewController];
@@ -302,7 +308,22 @@
 }
 
 
-#pragma mark - Table view cell delegate
+#pragma mark - Alert view cell delegate
+
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0)
+    {
+        DF_DBG(@"You have clicked Cancel");
+        return;
+    }
+    else if(buttonIndex == 1)
+    {
+        DF_DBG(@"Retrying triggerOAD");
+        [self triggerOAD];
+    }
+}
 
 
 #pragma mark - DF1CfgCellOADTriggerDelegate
@@ -311,25 +332,29 @@
 // JB NOTE: implement OAD here!!
 -(void) triggerOAD
 {
-    uint8_t byte = 0xFF; // uh oh! this is the special hex to trigger OAD mode, and boot into imgA.
-    NSData *data = [NSData dataWithBytes:&byte length:1];
-    if(![self.df isConnected:self.df.p])
+    if(![self.df isConnected:self.df.p]) {
+        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"OAD Trigger Failed!"
+                                    message:@"Device is not connected?" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView addButtonWithTitle:@"retry"];
+        [alertView show];
         return;
+    }
     
     NSString *uuid = [self.df.p.identifier UUIDString];
     DF_DBG(@"initiating OAD boot and subsequent firmware update for: %@", uuid);
-
+    uint8_t byte = 0xFF; // uh oh! this is the special hex to trigger OAD mode, and boot into imgA.
+    NSData *data = [NSData dataWithBytes:&byte length:1];
     // Writing this characteristic will reboot DF1. We now have to retrigger scanning and connect.
     [DF1LibUtil writeCharacteristic:self.df.p sUUID:TEST_SERV_UUID cUUID:TEST_CONF_UUID data:data];
-    [self.df disconnect:self.df.p];
     // jump to the viewController that can reconnect and do OAD update with the peripheral ID as the arg.
     [self showOADController:uuid];
 }
 
 -(void) showOADController:(NSString*) uuid
 {
+    _saveOnExit = false;
     DF1OADController *vc = [[DF1OADController alloc] initWithPeripheralUUID:uuid];
-    [self.navigationController popViewControllerAnimated:NO];
+    // [self.navigationController popViewControllerAnimated:NO];
     [self.navigationController pushViewController:vc animated:YES];
     // [self presentViewController:vc animated:YES completion:nil];
 }

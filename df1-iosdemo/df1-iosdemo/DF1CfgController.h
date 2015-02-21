@@ -15,7 +15,7 @@ DF1CfgController: Configuration Management Controller
 #define SECTION3 @"DF1CfgCellOADTrigger",nil
 
 
-@interface DF1CfgController : UITableViewController <DF1Delegate,DF1CfgCellOADTriggerDelegate,UINavigationControllerDelegate>
+@interface DF1CfgController : UITableViewController <DF1Delegate,DF1CfgCellOADTriggerDelegate,UINavigationControllerDelegate,UIAlertViewDelegate>
 
 @property (strong,nonatomic) DF1 *df;
 @property (strong,nonatomic) NSMutableDictionary *cfg;

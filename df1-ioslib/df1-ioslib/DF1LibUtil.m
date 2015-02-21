@@ -354,8 +354,7 @@
 {
     if(p==nil)
         return nil;
-    if(![DF1LibUtil isPeripheralConnected:p])
-        return nil;
+    // if(![DF1LibUtil isPeripheralConnected:p]) return nil;
     NSString *uuid = [p.identifier UUIDString];
     return [[NSUserDefaults standardUserDefaults] dictionaryForKey:uuid];
 }

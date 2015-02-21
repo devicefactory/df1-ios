@@ -211,6 +211,19 @@
 
 #pragma mark - CBCentralManager delegate
 
+/*!
+ *  @enum CBCentralManagerState
+ *
+ *  @discussion Represents the current state of a CBCentralManager.
+ *
+ *  @constant CBCentralManagerStateUnknown       State unknown, update imminent.
+ *  @constant CBCentralManagerStateResetting     The connection with the system service was momentarily lost, update imminent.
+ *  @constant CBCentralManagerStateUnsupported   The platform doesn't support the Bluetooth Low Energy Central/Client role.
+ *  @constant CBCentralManagerStateUnauthorized  The application is not authorized to use the Bluetooth Low Energy Central/Client role.
+ *  @constant CBCentralManagerStatePoweredOff    Bluetooth is currently powered off.
+ *  @constant CBCentralManagerStatePoweredOn     Bluetooth is currently powered on and available to use.
+ *
+ */
 -(void) centralManagerDidUpdateState:(CBCentralManager*) central
 {
     DF_DBG(@"centralManagerDidUpdateState with state: %d", central.state);
@@ -230,7 +243,10 @@
     else
     {
         self.m = central;
-        
+        if(self.delegate && [self.delegate respondsToSelector:@selector(hasCentralErrors:)])
+        {
+            [self.delegate hasCentralErrors:central];
+        }
         // NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES],
         //                                      CBCentralManagerScanOptionAllowDuplicatesKey, nil];
         // [self.m scanForPeripheralsWithServices:nil options:options];

@@ -12,6 +12,11 @@
 // #import "BLEUtility.h"
 #import "DF1LibUtil.h"
 
+@interface BLETIOADProfile()
+{
+    float _tickInterval;
+}
+@end
 
 @implementation BLETIOADProfile
 
@@ -26,6 +31,7 @@
         self.canceled = FALSE;
         self.inProgramming = FALSE;
         self.start = YES;
+        _tickInterval = 0.045;
     }
     return self;
 }
@@ -230,12 +236,15 @@
             return;
         }
         else {
-            if (ii == 3)[NSTimer scheduledTimerWithTimeInterval:0.09 target:self selector:@selector(programmingTimerTick:) userInfo:nil repeats:NO];
+            // if (ii == 3)[NSTimer scheduledTimerWithTimeInterval:0.09 target:self selector:@selector(programmingTimerTick:) userInfo:nil repeats:NO];
+            // should be double the speed?
+            if (ii == 3)
+                [NSTimer scheduledTimerWithTimeInterval:_tickInterval target:self selector:@selector(programmingTimerTick:) userInfo:nil repeats:NO];
         }
     }
     self.progressDialog.progressBar.progress = (float)((float)self.iBlocks / (float)self.nBlocks);
     self.progressDialog.label1.text = [NSString stringWithFormat:@"%0.1f%%",(float)((float)self.iBlocks / (float)self.nBlocks) * 100.0f];
-    float secondsPerBlock = 0.09 / 4;
+    float secondsPerBlock = _tickInterval / 4;
     float secondsLeft = (float)(self.nBlocks - self.iBlocks) * secondsPerBlock;
     
     if ([DF1LibUtil runningiOSSeven]) {
