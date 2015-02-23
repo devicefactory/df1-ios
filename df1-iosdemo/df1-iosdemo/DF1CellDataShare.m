@@ -16,6 +16,7 @@
     NSUInteger accSliderValuePrevious;
     // https://developer.apple.com/library/ios/documentation/Cocoa/Reference/Foundation/Classes/NSFileHandle_Class/index.html#//apple_ref/occ/clm/NSFileHandle/fileHandleForWritingAtPath:
     NSFileHandle *_fh;
+    NSDateFormatter *_formatter;
 }
 @end
 
@@ -28,8 +29,13 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if(!self) return self;
     self.parent = parent;
-    self.height = 100;
+    self.height = 90;
     _fh = nil;
+    
+    _formatter = [[NSDateFormatter alloc] init];
+    NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    [_formatter setLocale:enUSPOSIXLocale];
+    [_formatter setDateFormat:@"yyyyMMdd'T'HH':'mm':'ss.SSS"];
 
     // Initialization code
     self.mainLabel = [[UILabel alloc] init];
@@ -70,7 +76,7 @@
     CGFloat width = self.contentView.bounds.size.width;
 
     self.mainLabel.frame     = CGRectMake(boundsX + 5,   5, width-50, 25);
-    self.fileNameField.frame = CGRectMake(boundsX + 20,  35, 200, 25);
+    self.fileNameField.frame = CGRectMake(boundsX + 30,  35, 200, 25);
     self.recordButton.frame  = CGRectMake(boundsX + 180, 35, 40, 40);
     self.shareButton.frame   = CGRectMake(boundsX + 240, 35, 40, 40);
 }
@@ -202,14 +208,9 @@ http://mobile.antonio081014.com/2013/06/create-rename-delete-read-and-write.html
         DF_DBG(@"filehandle is invalid");
         return;
     }
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-    [formatter setLocale:enUSPOSIXLocale];
-    [formatter setDateFormat:@"yyyyMMdd'T'HH':'mm':'ss.SSS"];
-    
-    NSString *ts = [formatter stringFromDate:[NSDate date]];
-    // NSString *timestamp = [NSString stringWithFormat:@"%f",[[NSDate date] timeIntervalSince1970] * 1000];
 
+    NSString *ts = [_formatter stringFromDate:[NSDate date]];
+    // NSString *timestamp = [NSString stringWithFormat:@"%f",[[NSDate date] timeIntervalSince1970] * 1000];
     // convert the data into string so we can make it into ascii byte stream.
     NSString *line = [NSString stringWithFormat:@"%@,%f,%f,%f\n", ts,x,y,z];
     NSData *bytes = [line dataUsingEncoding:NSUTF8StringEncoding];
