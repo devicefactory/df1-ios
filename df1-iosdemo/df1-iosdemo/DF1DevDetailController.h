@@ -11,6 +11,7 @@
 #import "DF1Data.h"
 #import "DF1CellAccXyz.h"
 #import "DF1CellAccTap.h"
+#import "DF1CellDataShare.h"
 #import "DF1CellBatt.h"
 
 /*
@@ -28,6 +29,7 @@
 @property (strong,nonatomic) DF1CellAccXyz *accXyzCell;
 @property (strong,nonatomic) DF1CellAccTap *accTapCell;
 @property (strong,nonatomic) DF1CellBatt   *battCell;
+@property (strong,nonatomic) DF1CellDataShare *dataCell;
 // @property (strong,nonatomic) DF1CellBatt   *rssiCell;
 @property (nonatomic) DF1Data *df1data;
 

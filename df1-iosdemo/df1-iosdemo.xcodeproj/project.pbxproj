@@ -48,6 +48,10 @@
 		C5AACD521A985E5F00A57F1C /* DF1_rangefix.bin in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD4F1A985E5F00A57F1C /* DF1_rangefix.bin */; };
 		C5AACD531A985E5F00A57F1C /* DFMove_ImgB.bin in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD501A985E5F00A57F1C /* DFMove_ImgB.bin */; };
 		C5AACD551A985EF900A57F1C /* DF1_hires_v0.1.bin in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD541A985EF900A57F1C /* DF1_hires_v0.1.bin */; };
+		C5AACD581A99857100A57F1C /* DF1CellDataShare.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AACD571A99857100A57F1C /* DF1CellDataShare.m */; };
+		C5AACD611A9A716300A57F1C /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD5F1A9A716300A57F1C /* play.png */; };
+		C5AACD621A9A716300A57F1C /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD601A9A716300A57F1C /* stop.png */; };
+		C5AACD641A9A815A00A57F1C /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD631A9A815A00A57F1C /* share.png */; };
 		C5CA41E9191AC9C000C29D76 /* F3PlotStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = C5CA41E8191AC9C000C29D76 /* F3PlotStrip.m */; };
 		C5CACDE819297B5F00A2DD7B /* green-in.png in Resources */ = {isa = PBXBuildFile; fileRef = C5CACDE419297B5F00A2DD7B /* green-in.png */; };
 		C5CACDE919297B5F00A2DD7B /* green-out.png in Resources */ = {isa = PBXBuildFile; fileRef = C5CACDE519297B5F00A2DD7B /* green-out.png */; };
@@ -131,6 +135,11 @@
 		C5AACD4F1A985E5F00A57F1C /* DF1_rangefix.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = DF1_rangefix.bin; path = "df1-iosdemo/firmware/DF1_rangefix.bin"; sourceTree = "<group>"; };
 		C5AACD501A985E5F00A57F1C /* DFMove_ImgB.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = DFMove_ImgB.bin; path = "df1-iosdemo/firmware/DFMove_ImgB.bin"; sourceTree = "<group>"; };
 		C5AACD541A985EF900A57F1C /* DF1_hires_v0.1.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; name = DF1_hires_v0.1.bin; path = "df1-iosdemo/firmware/DF1_hires_v0.1.bin"; sourceTree = "<group>"; };
+		C5AACD561A99857100A57F1C /* DF1CellDataShare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1CellDataShare.h; sourceTree = "<group>"; };
+		C5AACD571A99857100A57F1C /* DF1CellDataShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1CellDataShare.m; sourceTree = "<group>"; };
+		C5AACD5F1A9A716300A57F1C /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = play.png; path = "df1-iosdemo/assets/play.png"; sourceTree = "<group>"; };
+		C5AACD601A9A716300A57F1C /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stop.png; path = "df1-iosdemo/assets/stop.png"; sourceTree = "<group>"; };
+		C5AACD631A9A815A00A57F1C /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = share.png; path = "df1-iosdemo/assets/share.png"; sourceTree = "<group>"; };
 		C5CA41E7191AC9C000C29D76 /* F3PlotStrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = F3PlotStrip.h; sourceTree = "<group>"; };
 		C5CA41E8191AC9C000C29D76 /* F3PlotStrip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = F3PlotStrip.m; sourceTree = "<group>"; };
 		C5CACDE419297B5F00A2DD7B /* green-in.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "green-in.png"; path = "df1-iosdemo/assets/green-in.png"; sourceTree = "<group>"; };
@@ -213,6 +222,8 @@
 				C5A71BF9195222630074B087 /* DF1CfgController.m */,
 				C5A71BEA194D51ED0074B087 /* DF1Cell.h */,
 				C5A71BEB194D51ED0074B087 /* DF1Cell.m */,
+				C5AACD561A99857100A57F1C /* DF1CellDataShare.h */,
+				C5AACD571A99857100A57F1C /* DF1CellDataShare.m */,
 				C5A71BEC194D51ED0074B087 /* DF1CellAccTap.h */,
 				C5A71BED194D51ED0074B087 /* DF1CellAccTap.m */,
 				C5A71BEE194D51ED0074B087 /* DF1CellAccXyz.h */,
@@ -273,6 +284,9 @@
 		C56C08A31904A95F001FF641 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				C5AACD631A9A815A00A57F1C /* share.png */,
+				C5AACD5F1A9A716300A57F1C /* play.png */,
+				C5AACD601A9A716300A57F1C /* stop.png */,
 				C5CACDEC192982AD00A2DD7B /* red-out-dark.png */,
 				C5CACDE419297B5F00A2DD7B /* green-in.png */,
 				C5CACDE519297B5F00A2DD7B /* green-out.png */,
@@ -363,6 +377,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "JB Kim";
 				TargetAttributes = {
+					C56A3EF318DF77B700DB2A5C = {
+						DevelopmentTeam = 8ASLJ26VD9;
+					};
 					C56A3F1718DF77B700DB2A5C = {
 						TestTargetID = C56A3EF318DF77B700DB2A5C;
 					};
@@ -399,10 +416,13 @@
 				C5CACDEA19297B5F00A2DD7B /* red-in.png in Resources */,
 				C5AACD531A985E5F00A57F1C /* DFMove_ImgB.bin in Resources */,
 				C5AACD521A985E5F00A57F1C /* DF1_rangefix.bin in Resources */,
+				C5AACD641A9A815A00A57F1C /* share.png in Resources */,
 				C56C08AB1904BA2D001FF641 /* oem-front1-icon.png in Resources */,
 				C5CACDED192982AD00A2DD7B /* red-out-dark.png in Resources */,
 				C5CACDEB19297B5F00A2DD7B /* red-out.png in Resources */,
 				C56A3F0218DF77B700DB2A5C /* InfoPlist.strings in Resources */,
+				C5AACD611A9A716300A57F1C /* play.png in Resources */,
+				C5AACD621A9A716300A57F1C /* stop.png in Resources */,
 				C5AACD511A985E5F00A57F1C /* DF1_joystick_v0.2.bin in Resources */,
 				C5AACD551A985EF900A57F1C /* DF1_hires_v0.1.bin in Resources */,
 				C5CACDE919297B5F00A2DD7B /* green-out.png in Resources */,
@@ -445,6 +465,7 @@
 				C5A71BF5194D51ED0074B087 /* DF1CellBatt.m in Sources */,
 				C5A71BF2194D51ED0074B087 /* DF1Cell.m in Sources */,
 				C5A71BFA195222630074B087 /* DF1CfgCells.m in Sources */,
+				C5AACD581A99857100A57F1C /* DF1CellDataShare.m in Sources */,
 				C56A3F0818DF77B700DB2A5C /* DF1AppDelegate.m in Sources */,
 				C56A3F0418DF77B700DB2A5C /* main.m in Sources */,
 			);
@@ -581,6 +602,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "df1-iosdemo/df1-iosdemo-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -596,6 +619,7 @@
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/df1-ios-workgroup-aqwizxqvuasohrgftdlcdfpbpzvj/Build/Products/Debug-iphoneos",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -606,6 +630,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "df1-iosdemo/df1-iosdemo-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -621,6 +647,7 @@
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/df1-ios-workgroup-aqwizxqvuasohrgftdlcdfpbpzvj/Build/Products/Debug-iphoneos",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

@@ -41,6 +41,7 @@
         _defaultCells = [NSDictionary dictionaryWithObjectsAndKeys:
                          [NSNumber numberWithBool:TRUE],   @"DF1CellAccXyz",  // class names
                          [NSNumber numberWithBool:TRUE],   @"DF1CellAccTap",  // and boolean
+                         [NSNumber numberWithBool:TRUE],   @"DF1CellDataShare",
                          [NSNumber numberWithBool:TRUE],   @"DF1CellBatt",
                          nil];
         [self initializeCells];
@@ -51,10 +52,10 @@
 // here, we create a dictionary we want to save under NSUserDefault library
 -(void) saveUserDefaultsForDevice
 {
-    NSDictionary *cellList = _defaultCells;
+    // NSDictionary *cellList = _defaultCells;
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
                           self.df.p.name, CFG_NAME,
-                          cellList,       CFG_CELLS,
+                          _defaultCells,  CFG_CELLS,
                           nil];
 
     dict = [DF1LibUtil saveUserCfgDict:self.df.p withDict:dict];
@@ -65,6 +66,7 @@
     // check the userdefaults uuid -> dict -> cellList and instantiate accordingly
     NSDictionary *dict = [DF1LibUtil getUserCfgDict:self.df.p];
     NSDictionary *cells;
+    /*
     NSString *bitres = @"8bit";
     if(dict==nil)
     {
@@ -74,6 +76,8 @@
         cells = (NSDictionary*) [dict objectForKey:CFG_CELLS];
         bitres = ([[dict objectForKey:CFG_XYZ14_ON] boolValue]) ? @"14bit" : @"8bit";
     }
+    */
+    cells = _defaultCells;
     
     if([[cells objectForKey:@"DF1CellAccXyz"] boolValue] &&
        !self.accXyzCell)
@@ -94,6 +98,13 @@
                                             reuseIdentifier:@"AccTapCell" parentController:self];
         self.accTapCell.accLabel.text = @"Tap Event";
         self.accTapCell.accValueTap.text = @"no events";
+    }
+    if([[cells objectForKey:@"DF1CellDataShare"] boolValue] &&
+       !self.dataCell)
+    {
+        self.dataCell = [[DF1CellDataShare alloc] initWithStyle:UITableViewCellStyleDefault
+                                                reuseIdentifier:@"DataCell" parentController:self];
+        self.dataCell.mainLabel.text = @"Record Data";
     }
     if([[cells objectForKey:@"DF1CellBatt"] boolValue] &&
        !self.battCell)
@@ -191,7 +202,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return 4;
     // int count = 1; // by default we need the signal strength
     // if([self.d isEnabled:@"Accelerometer service active"])
     //   count += 2;
@@ -214,6 +225,10 @@
         return self.accTapCell;
     }
     if(indexPath.row==2) {
+        DF_DBG(@"returning dataCell!!");
+        return self.dataCell;
+    }
+    if(indexPath.row==3) {
         return self.battCell;
     }
     // if (indexPath.row==0 && [self.d isEnabled:@"Accelerometer service active"]) {
@@ -221,7 +236,7 @@
     //     return self.babyCell;
     // }
     // // Something has gone wrong, because we should never get here, return empty cell
-    return [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Unkown Cell"];
+    return [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Unknown Cell"];
 }
 
 
@@ -229,7 +244,8 @@
 {
     if(indexPath.row==0) return self.accXyzCell.height;
     if(indexPath.row==1) return self.accTapCell.height;
-    if(indexPath.row==2) return self.battCell.height;
+    if(indexPath.row==2) return self.dataCell.height;
+    if(indexPath.row==3) return self.battCell.height;
     return 100;
 }
 
@@ -346,7 +362,6 @@
 {
     NSDictionary *dict = [DF1LibUtil getUserCfgDict:self.df.p];
     
-    
     NSData *data; uint8_t byte;
     data = [params objectForKey:[DF1LibUtil IntToCBUUID:ACC_TAP_THSZ_UUID]]; 
     [data getBytes:&byte length:1];
@@ -375,20 +390,42 @@
     }
     else
     {
-        NSDictionary *cells = (NSDictionary*) [dict objectForKey:CFG_CELLS];
-        if([[cells objectForKey:@"DF1CellAccXyz"] boolValue]) {
-          if([[dict objectForKey:CFG_XYZ14_ON] boolValue]) {
-            [self.df unsubscribeXYZ8];
-            [self.df subscribeXYZ14];
-          } else {
-            [self.df unsubscribeXYZ14];
-            [self.df subscribeXYZ8];
-          } 
+        DF_DBG(@"user dict: %@", dict);
+        // NSDictionary *cells = (NSDictionary*) [dict objectForKey:CFG_CELLS];
+        NSMutableDictionary *cells;
+        if([[dict objectForKey:CFG_CELLS] isKindOfClass:[NSArray class]]) {
+            DF_DBG(@"wtf, I saved dict, not array!!!");
+            cells = [[NSMutableDictionary alloc] init];
+            for(NSString *key in [dict objectForKey:CFG_CELLS]) {
+                [cells setObject:[NSNumber numberWithBool:YES] forKey:key];
+            }
         }
-        if([[cells objectForKey:@"DF1CellAccTap"] boolValue]) {  [self.df subscribeTap]; }
-        if([[cells objectForKey:@"DF1CellBatt"] boolValue])   {  [self.df subscribeBatt]; }
+        else if([[dict objectForKey:CFG_CELLS] isKindOfClass:[NSDictionary class]]) {
+            cells =[dict objectForKey:CFG_CELLS];
+        }
+        
+        if(cells==nil) {
+            [self.df subscribeXYZ8];
+            [self.df subscribeTap];
+            [self.df subscribeBatt];
+        } else {
+            DF_DBG(@"cell dict: %@", cells);
+            if([cells objectForKey:@"DF1CellAccXyz"]!=nil &&
+               [[cells objectForKey:@"DF1CellAccXyz"] boolValue]) {
+                if([[dict objectForKey:CFG_XYZ14_ON] boolValue]) {
+                    [self.df unsubscribeXYZ8];
+                    [self.df subscribeXYZ14];
+                } else {
+                    [self.df unsubscribeXYZ14];
+                    [self.df subscribeXYZ8];
+                }
+            }
+            if([cells objectForKey:@"DF1CellAccTap"]!=nil &&
+               [[cells objectForKey:@"DF1CellAccTap"] boolValue]) {  [self.df subscribeTap]; }
+            if([cells objectForKey:@"DF1CellBatt"]!=nil &&
+               [[cells objectForKey:@"DF1CellBatt"] boolValue])   {  [self.df subscribeBatt]; }
+        }
     }
-    
     [self _setParamToUIControl:params];
     [MBProgressHUD hideHUDForView:self.view animated:true];
     _needResyncDF1Parameters = FALSE;
@@ -422,6 +459,10 @@
     self.accXyzCell.accYStrip.value = y;
     self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z8 : %.3f", z];
     self.accXyzCell.accZStrip.value = z;
+    
+    if(self.dataCell!=nil && [self.dataCell isFileReady]) {
+        [self.dataCell recordX:x Y:y Z:z];
+    }
 }
 
 -(void) receivedXYZ14:(NSArray*) data
@@ -437,6 +478,10 @@
     self.accXyzCell.accYStrip.value = y;
     self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z14: %.4f", z];
     self.accXyzCell.accZStrip.value = z;
+    
+    if(self.dataCell!=nil && [self.dataCell isFileReady]) {
+        [self.dataCell recordX:x Y:y Z:z];
+    }
 }
 
 -(void) _resetTap
