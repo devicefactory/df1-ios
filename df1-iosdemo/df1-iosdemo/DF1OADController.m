@@ -131,7 +131,12 @@
 // so that the timer doesn't hang around
 -(void) viewWillDisappear:(BOOL)animated
 {
-
+    if([DF1LibUtil isPeripheralConnected:self.dev.p]) {
+        if(self.dev.manager!=nil) {
+            DF_DBG(@"closing connection with peripheral after fw upgrade");
+            [self.dev.manager cancelPeripheralConnection:self.dev.p];
+        }
+    }
 }
     
 -(void)didReceiveMemoryWarning

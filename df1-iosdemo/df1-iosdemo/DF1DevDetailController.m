@@ -21,6 +21,7 @@
     BOOL _needResyncDF1Parameters;
     int subscriptionRetries;
     NSDictionary *_defaultCells;
+    MBProgressHUD *_hud;
 }
 @end
 
@@ -126,7 +127,8 @@
 -(void) viewDidLoad
 {
     [super viewDidLoad];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    _hud.labelText = @"initializing";
     self.navigationItem.rightBarButtonItem = BARBUTTON(@"Config", @selector(showCfgController));
 }
 
@@ -141,6 +143,7 @@
     if(_needResyncDF1Parameters)
     {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        _hud.labelText = @"sync parameters";
         [self _modifyDF1Parameters];  // contents of user cfg might have changed
         [self.df syncParameters];  // will incur callback didSyncParameters
         [self.tableView reloadData];
@@ -354,6 +357,7 @@
 // this function gets called when services and characteristics are all discovered
 -(void) didConnect:(CBPeripheral*) peripheral
 {
+    _hud.labelText = @"connected to peripheral";
     [self _modifyDF1Parameters];
     [self.df syncParameters];
 }
@@ -426,6 +430,7 @@
                [[cells objectForKey:@"DF1CellBatt"] boolValue])   {  [self.df subscribeBatt]; }
         }
     }
+    _hud.labelText = @"successfully sync-ed";
     [self _setParamToUIControl:params];
     [MBProgressHUD hideHUDForView:self.view animated:true];
     _needResyncDF1Parameters = FALSE;
