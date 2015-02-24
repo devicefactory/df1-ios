@@ -21,7 +21,7 @@
 
 // INSERTS expands out the button image
 #define CAPWIDTH    10.0f
-#define INSETS      (UIEdgeInsets){0.0f, CAPWIDTH, 0.0f, CAPWIDTH}
+#define INSETS      (UIEdgeInsets){10.0f, CAPWIDTH, 10.0f, CAPWIDTH}
 #define BASEGREEN   [[UIImage imageNamed:@"green-out.png"] resizableImageWithCapInsets:INSETS]
 #define PUSHGREEN   [[UIImage imageNamed:@"green-in.png"] resizableImageWithCapInsets:INSETS]
 #define BASERED     [[UIImage imageNamed:@"red-out-dark.png"] resizableImageWithCapInsets:INSETS]
@@ -30,22 +30,26 @@
 #define PUSHGREEN2  [UIImage imageNamed:@"green-in.png"]
 #define BASERED2    [UIImage imageNamed:@"red-out-dark.png"]
 #define PUSHRED2    [UIImage imageNamed:@"red-in.png"]
+#define BASEBLACK     [[UIImage imageNamed:@"blackButton@2x.png"] resizableImageWithCapInsets:INSETS]
+#define PUSHBLACK     [[UIImage imageNamed:@"blackButtonHighlight@2x.png"] resizableImageWithCapInsets:INSETS]
+#define BASEWHITE     [[UIImage imageNamed:@"whiteButton@2x.png"] resizableImageWithCapInsets:INSETS]
+#define PUSHWHITE     [[UIImage imageNamed:@"whiteButtonHighlight@2x.png"] resizableImageWithCapInsets:INSETS]
 
 -(void) _imageButton
 {
     // self.ledButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.ledButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.ledButton.frame = CGRectMake(0.0f, 0.0f, 70.0f, 50.0f);
+    // self.ledButton.frame = CGRectMake(0.0f, 0.0f, 70.0f, 50.0f);
     self.ledButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     self.ledButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [self.ledButton setBackgroundImage:BASERED2 forState:UIControlStateNormal];
-    [self.ledButton setBackgroundImage:PUSHRED2 forState:UIControlStateHighlighted];
+    [self.ledButton setBackgroundImage:BASEWHITE forState:UIControlStateNormal];
+    [self.ledButton setBackgroundImage:PUSHWHITE forState:UIControlStateHighlighted];
     // [self.ledButton setBackgroundColor:[UIColor colorWithRed:0.5f green:0.5f blue:0.5f alpha:0.2f]];
     [self.ledButton setTitle:@"led" forState:UIControlStateNormal];
     [self.ledButton setTitle:@"on!" forState:UIControlStateHighlighted];
     self.ledButton.titleLabel.font = [UIFont boldSystemFontOfSize:16.0f];
-    [self.ledButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.ledButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    [self.ledButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [self.ledButton setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
     [self.ledButton sizeToFit];
     self.ledButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
     
@@ -59,22 +63,23 @@
 -(void) _genericButton
 {
     self.ledButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    self.ledButton.frame = CGRectMake(0.0f, 0.0f, 70.0f, 30.0f);
+    // self.ledButton.frame = CGRectMake(0.0f, 0.0f, 70.0f, 45.0f);
     self.ledButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     self.ledButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     [self.ledButton setBackgroundColor:[UIColor colorWithRed:0.5f green:0.5f blue:0.5f alpha:0.2f]];
     [self.ledButton setTitle:@"led" forState:UIControlStateNormal];
     [self.ledButton setTitle:@"on!" forState:UIControlStateHighlighted];
     self.ledButton.titleLabel.font = [UIFont boldSystemFontOfSize:18.0f];
-    [self.ledButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [self.ledButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
     [self.ledButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    // [self.ledButton.titleLabel setFont:[UIFont fontWithName:@"Zapfino" size:20.0]];
+    // [self.ledButton.titleLabel setTextColor:[UIColor blueColor]];
+    // [self.ledButton layoutIfNeeded];
     [self.ledButton sizeToFit];
-    self.ledButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
+    // self.ledButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
     
-    [self.ledButton addTarget:self action:@selector(ledButtonDn:)
-             forControlEvents:UIControlEventTouchDown];
-    [self.ledButton addTarget:self action:@selector(ledButtonUp:)
-             forControlEvents:UIControlEventTouchUpInside];
+    [self.ledButton addTarget:self action:@selector(ledButtonDn:) forControlEvents:UIControlEventTouchDown];
+    [self.ledButton addTarget:self action:@selector(ledButtonUp:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -83,8 +88,8 @@
     DF_DBG(@"initWithStyle for DF1DevCell");
     self.accessoryType = UITableViewCellAccessoryNone; // UITableViewCellAccessoryDetailDisclosureButton
 
-    // [self _imageButton];
-    [self _genericButton];
+    [self _imageButton];
+    // [self _genericButton];
 
     self.isOAD = [NSNumber numberWithBool:false];
     // Initialization code
@@ -130,7 +135,6 @@
     [super layoutSubviews];
     CGRect contentRect = self.contentView.bounds;
     CGFloat boundsX = contentRect.origin.x;
-    // CGRect fr;
 
     self.deviceIcon.frame = CGRectMake(boundsX+11, 12, 60, 60);
     
@@ -141,7 +145,7 @@
     self.subLabel.frame = CGRectMake(boundsX+85, 35, 100, 30);
     self.barHolder.frame = CGRectMake(boundsX+85, 60, 100, 30);
     
-    self.ledButton.frame = CGRectMake(contentRect.size.width-110, 25, 80, 30);
+    self.ledButton.frame = CGRectMake(contentRect.size.width-100, 25, 80, 35);
 
     DF_DBG(@"calling layoutSubview in DF1DevCell");
     // fr = CGRectMake(boundsX + contentRect.size.width - 90, 10, 100, 30);

@@ -26,6 +26,7 @@ facts need to be considered:
 @interface DF1DevListController ()
 {
   NSTimer *rssiTimer;
+    bool _isScanning;
 }
 @end
 
@@ -54,6 +55,7 @@ facts need to be considered:
         [self initializeMembers:nil];
         self.title = @"DF1 Demo1";
         DF_DBG(@"loaded DF1DevListController");
+        _isScanning = false;
     }
     return self;
 }
@@ -97,7 +99,8 @@ facts need to be considered:
     rssiTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
         target:self selector:@selector(triggerReadRSSI:) userInfo:nil repeats:YES];
     
-    [self triggerScan];
+    [NSTimer scheduledTimerWithTimeInterval:1.5f
+                                     target:self selector:@selector(triggerScan) userInfo:nil repeats:NO];
 }
 
 -(void) viewWillAppear:(BOOL)animated
@@ -144,6 +147,7 @@ facts need to be considered:
 - (void) clearScan
 {
     [self.df stopScan:true]; // clear the internal device list
+    _isScanning = false;
     [self finishScan];
     [self.tableView reloadData];
 }
@@ -155,8 +159,9 @@ facts need to be considered:
     // self.navigationItem.rightBarButtonItem.enabled = NO;
     [self.refreshControl beginRefreshing];
     [self.df scan:30];
-    [NSTimer scheduledTimerWithTimeInterval:6.0f
+    [NSTimer scheduledTimerWithTimeInterval:12.0f
         target:self selector:@selector(timeoutScan:) userInfo:nil repeats:NO];
+    _isScanning = true;
 }
 
 - (void) finishScan
@@ -214,6 +219,21 @@ facts need to be considered:
     DF_DBG(@"stopped scanning");    
 }
 
+
+-(void) hasCentralErrors:(CBCentralManager *)central
+{
+    if(central.state == CBCentralManagerStatePoweredOff)
+    {
+        // initiate rescan?
+        if(_isScanning) {
+            DF_DBG(@"rescanning due to central errors!!");
+            [self clearScan];
+            [self triggerScan];
+        }
+        
+    }
+}
+
 -(void) didConnect:(CBPeripheral *) peripheral
 {
     DF_DBG(@"did connect peripheral: %@", peripheral.name);
@@ -225,6 +245,7 @@ facts need to be considered:
             DF1DevCell *cell = (DF1DevCell*)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow: i inSection:0]];
             // cell.ledButton2.userInteractionEnabled = YES;
             cell.ledButton.hidden = NO;
+            // cell.ledButton.userInteractionEnabled = YES;
             bool hasAccUUID = false;
             bool hasOADUUID = false;
             for (CBService *s in peripheral.services)

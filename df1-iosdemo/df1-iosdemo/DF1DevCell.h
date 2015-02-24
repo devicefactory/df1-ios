@@ -23,7 +23,7 @@
 @property (nonatomic,strong) IBOutlet UILabel *detailLabel;
 @property (nonatomic,strong) IBOutlet UIImageView *deviceIcon;
 @property (nonatomic,assign) CBPeripheral *p;
-@property (nonatomic,weak) IBOutlet UIButton *ledButton;
+@property (nonatomic,retain) UIButton *ledButton;
 @property (nonatomic,retain) UIProgressView *signalBar;
 @property (nonatomic,retain) UIView *barHolder;
 @property (nonatomic,retain) NSNumber *isOAD;

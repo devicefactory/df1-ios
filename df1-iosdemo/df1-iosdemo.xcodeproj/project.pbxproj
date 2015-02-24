@@ -52,6 +52,10 @@
 		C5AACD611A9A716300A57F1C /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD5F1A9A716300A57F1C /* play.png */; };
 		C5AACD621A9A716300A57F1C /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD601A9A716300A57F1C /* stop.png */; };
 		C5AACD641A9A815A00A57F1C /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD631A9A815A00A57F1C /* share.png */; };
+		C5AACD691A9C256200A57F1C /* blackButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD651A9C256200A57F1C /* blackButton@2x.png */; };
+		C5AACD6A1A9C256200A57F1C /* blackButtonHighlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD661A9C256200A57F1C /* blackButtonHighlight@2x.png */; };
+		C5AACD6B1A9C256200A57F1C /* whiteButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD671A9C256200A57F1C /* whiteButton@2x.png */; };
+		C5AACD6C1A9C256200A57F1C /* whiteButtonHighlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD681A9C256200A57F1C /* whiteButtonHighlight@2x.png */; };
 		C5CA41E9191AC9C000C29D76 /* F3PlotStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = C5CA41E8191AC9C000C29D76 /* F3PlotStrip.m */; };
 		C5CACDE819297B5F00A2DD7B /* green-in.png in Resources */ = {isa = PBXBuildFile; fileRef = C5CACDE419297B5F00A2DD7B /* green-in.png */; };
 		C5CACDE919297B5F00A2DD7B /* green-out.png in Resources */ = {isa = PBXBuildFile; fileRef = C5CACDE519297B5F00A2DD7B /* green-out.png */; };
@@ -140,6 +144,10 @@
 		C5AACD5F1A9A716300A57F1C /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = play.png; path = "df1-iosdemo/assets/play.png"; sourceTree = "<group>"; };
 		C5AACD601A9A716300A57F1C /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stop.png; path = "df1-iosdemo/assets/stop.png"; sourceTree = "<group>"; };
 		C5AACD631A9A815A00A57F1C /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = share.png; path = "df1-iosdemo/assets/share.png"; sourceTree = "<group>"; };
+		C5AACD651A9C256200A57F1C /* blackButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blackButton@2x.png"; path = "df1-iosdemo/assets/buttons/blackButton@2x.png"; sourceTree = "<group>"; };
+		C5AACD661A9C256200A57F1C /* blackButtonHighlight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blackButtonHighlight@2x.png"; path = "df1-iosdemo/assets/buttons/blackButtonHighlight@2x.png"; sourceTree = "<group>"; };
+		C5AACD671A9C256200A57F1C /* whiteButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "whiteButton@2x.png"; path = "df1-iosdemo/assets/buttons/whiteButton@2x.png"; sourceTree = "<group>"; };
+		C5AACD681A9C256200A57F1C /* whiteButtonHighlight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "whiteButtonHighlight@2x.png"; path = "df1-iosdemo/assets/buttons/whiteButtonHighlight@2x.png"; sourceTree = "<group>"; };
 		C5CA41E7191AC9C000C29D76 /* F3PlotStrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = F3PlotStrip.h; sourceTree = "<group>"; };
 		C5CA41E8191AC9C000C29D76 /* F3PlotStrip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = F3PlotStrip.m; sourceTree = "<group>"; };
 		C5CACDE419297B5F00A2DD7B /* green-in.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "green-in.png"; path = "df1-iosdemo/assets/green-in.png"; sourceTree = "<group>"; };
@@ -284,6 +292,10 @@
 		C56C08A31904A95F001FF641 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				C5AACD651A9C256200A57F1C /* blackButton@2x.png */,
+				C5AACD661A9C256200A57F1C /* blackButtonHighlight@2x.png */,
+				C5AACD671A9C256200A57F1C /* whiteButton@2x.png */,
+				C5AACD681A9C256200A57F1C /* whiteButtonHighlight@2x.png */,
 				C5AACD631A9A815A00A57F1C /* share.png */,
 				C5AACD5F1A9A716300A57F1C /* play.png */,
 				C5AACD601A9A716300A57F1C /* stop.png */,
@@ -417,16 +429,20 @@
 				C5AACD531A985E5F00A57F1C /* DFMove_ImgB.bin in Resources */,
 				C5AACD521A985E5F00A57F1C /* DF1_rangefix.bin in Resources */,
 				C5AACD641A9A815A00A57F1C /* share.png in Resources */,
+				C5AACD691A9C256200A57F1C /* blackButton@2x.png in Resources */,
 				C56C08AB1904BA2D001FF641 /* oem-front1-icon.png in Resources */,
 				C5CACDED192982AD00A2DD7B /* red-out-dark.png in Resources */,
 				C5CACDEB19297B5F00A2DD7B /* red-out.png in Resources */,
 				C56A3F0218DF77B700DB2A5C /* InfoPlist.strings in Resources */,
+				C5AACD6C1A9C256200A57F1C /* whiteButtonHighlight@2x.png in Resources */,
+				C5AACD6A1A9C256200A57F1C /* blackButtonHighlight@2x.png in Resources */,
 				C5AACD611A9A716300A57F1C /* play.png in Resources */,
 				C5AACD621A9A716300A57F1C /* stop.png in Resources */,
 				C5AACD511A985E5F00A57F1C /* DF1_joystick_v0.2.bin in Resources */,
 				C5AACD551A985EF900A57F1C /* DF1_hires_v0.1.bin in Resources */,
 				C5CACDE919297B5F00A2DD7B /* green-out.png in Resources */,
 				C5CACDE819297B5F00A2DD7B /* green-in.png in Resources */,
+				C5AACD6B1A9C256200A57F1C /* whiteButton@2x.png in Resources */,
 				C56C08A71904AA14001FF641 /* DFLOGO07_launch_2.png in Resources */,
 				C56C08A91904ACD4001FF641 /* DFLOGO07_launch_invert.png in Resources */,
 			);
