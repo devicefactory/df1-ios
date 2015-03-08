@@ -299,7 +299,7 @@
 
 -(void) accSliderChanged:(UITextField*) sender
 {
-    NSUInteger currentAccFreqValue = (NSUInteger)(self.accRangeSlider.value+0.5); // Round the number.
+    NSUInteger currentAccFreqValue = (NSUInteger)(self.accRangeSlider.value); // Round the number.
 
     if(currentAccFreqValue != accFreqValue)
     {
