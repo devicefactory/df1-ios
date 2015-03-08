@@ -94,7 +94,8 @@
         case 0: {
             switch(buttonIndex) {
                 case 0: {
-                    UIActionSheet *selectInternalFirmwareSheet = [[UIActionSheet alloc]initWithTitle:@"Select Firmware image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"DF1_rangefix.bin",@"DF1_hires_v0.1.bin", nil];
+                    UIActionSheet *selectInternalFirmwareSheet = [[UIActionSheet alloc]initWithTitle:@"Select Firmware image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:
+                            @"DF1_rangefix.bin",@"DF1_hires_v0.1.bin",@"DF1_varfreq.bin", nil];
                     selectInternalFirmwareSheet.tag = 1;
                     [selectInternalFirmwareSheet showInView:self.view];
                     break;
@@ -130,6 +131,13 @@
                     NSMutableString *path= [[NSMutableString  alloc] initWithString: [[NSBundle mainBundle] resourcePath]];
                     [path appendString:@"/"] ;
                     [path appendString:@"DF1_hires_v0.1.bin"];
+                    [self validateImage:path];
+                    break;
+                }
+                case 2: {
+                    NSMutableString *path= [[NSMutableString  alloc] initWithString: [[NSBundle mainBundle] resourcePath]];
+                    [path appendString:@"/"] ;
+                    [path appendString:@"DF1_varfreq.bin"];
                     [self validateImage:path];
                     break;
                 }

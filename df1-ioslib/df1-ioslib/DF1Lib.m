@@ -594,7 +594,8 @@
                                ACC_TAP_THSZ_UUID, ACC_TAP_THSX_UUID, ACC_TAP_THSY_UUID,
                                ACC_TAP_TMLT_UUID, ACC_TAP_LTCY_UUID, ACC_TAP_WIND_UUID,
                                ACC_FF_THS_UUID,   ACC_MO_THS_UUID,   ACC_FFMO_DEB_UUID,
-                               ACC_TRAN_THS_UUID, ACC_TRAN_DEB_UUID, ACC_TRAN_HPF_UUID};
+                               ACC_TRAN_THS_UUID, ACC_TRAN_DEB_UUID, ACC_TRAN_HPF_UUID,
+                               ACC_XYZ_FREQ_UUID};
     // read all the config related characteristics first
     for(int i=0; i<UUID_NUM; i++)
     {
@@ -857,6 +858,15 @@
 
 -(void) modifyShakeHpf:(float) hz
 {
+}
+
+-(void) modifyXyzFreq:(int) hz
+{
+    uint8_t _hz = 5; // 5Hz by default
+    if(hz>0 && hz<=50)
+        _hz = (uint8_t) hz;
+    DF_DBG(@"Xyz freq is %dHz or %f msec period", hz, (float) 1000.0/hz);
+    [self _modifyRegister:ACC_XYZ_FREQ_UUID setValue:_hz];
 }
 
 

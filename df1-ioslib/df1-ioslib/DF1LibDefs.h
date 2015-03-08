@@ -32,6 +32,7 @@
 #define ACC_TRAN_HPF_UUID     0xAA24  // highpass filter for removing gravity, small accelerations
 // Derived Event
 #define ACCD_FALL_DATA_UUID   0xAA25  // Derived Human Fall detection
+#define ACC_XYZ_FREQ_UUID     0xAA26  // notification frequency for XYZ data
 //
 // Battery Service
 //
@@ -115,3 +116,4 @@
 #define CFG_TAP_TMLT   @"tap_tmlt"
 #define CFG_TAP_LTCY   @"tap_ltcy"
 #define CFG_TAP_WIND   @"tap_wind"
+#define CFG_XYZ_FREQ   @"xyz_freq"

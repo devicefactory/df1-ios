@@ -241,6 +241,81 @@
 
 
 
+// 1Hz - 50Hz sampling slider.
+@interface DF1CfgCellFreqRange ()
+{
+    NSUInteger accFreqValue;
+}
+@end
+
+@implementation DF1CfgCellFreqRange
+
+-(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+            withCfg:(NSMutableDictionary*) ucfg
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier withCfg:ucfg];
+    if(self==nil)
+        return self;
+    
+    self.cfg = ucfg;
+    self.height = 50;
+    // Initialization code
+    self.accRangeLabel = [[UILabel alloc] init];
+    self.accRangeLabel.font = [UIFont boldSystemFontOfSize:16];
+    self.accRangeLabel.textAlignment = NSTextAlignmentLeft;
+    
+    // self.accRangeLabel.text = @"G Range";
+    self.accRangeSlider = [[UISlider alloc] init];
+    self.accRangeSlider.continuous = true;
+    [self.accRangeSlider setMinimumValue:1];
+    [self.accRangeSlider setMaximumValue:50];
+    
+    [self.accRangeSlider addTarget:self action:@selector(accSliderChanged:)
+                  forControlEvents:UIControlEventValueChanged];
+    accFreqValue = 5;
+    if ([self.cfg objectForKey:CFG_XYZ_FREQ]!=nil) {
+        NSNumber *n = (NSNumber*) [self.cfg objectForKey:CFG_XYZ_FREQ];
+        accFreqValue = [n intValue];
+    }
+    [self.accRangeSlider setValue:(float)accFreqValue];
+    self.accRangeLabel.text = [[NSString alloc] initWithFormat:@"Freq %dG",accFreqValue];
+    
+    [self.contentView addSubview:self.accRangeLabel];
+    [self.contentView addSubview:self.accRangeSlider];
+    return self;
+}
+
+-(void) layoutSubviews
+{
+    [super layoutSubviews];
+    self.accRangeLabel.frame = CGRectMake(PAD_LEFT,      PAD_TOP, 110, 45);
+    self.accRangeSlider.frame = CGRectMake(PAD_LEFT+130, PAD_TOP, 150, 45);
+}
+
+-(void) modifyChange:(NSMutableDictionary*) c
+{
+    [c setValue:[NSNumber numberWithInteger:accFreqValue] forKey:CFG_XYZ_FREQ];
+}
+
+-(void) accSliderChanged:(UITextField*) sender
+{
+    NSUInteger currentAccFreqValue = (NSUInteger)(self.accRangeSlider.value+0.5); // Round the number.
+
+    if(currentAccFreqValue != accFreqValue)
+    {
+        accFreqValue = currentAccFreqValue;
+        [self modifyChange:self.cfg];
+        [sender resignFirstResponder];
+    }
+    
+    [self.accRangeSlider setValue:currentAccFreqValue animated:NO];
+    self.accRangeLabel.text = [[NSString alloc] initWithFormat:@"Freq %dHz",accFreqValue];
+}
+
+@end
+
+
+
 @interface DF1CfgCellTap ()
 {
     NSUInteger accThsValuePrevious;

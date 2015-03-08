@@ -9,7 +9,7 @@ DF1CfgController: Configuration Management Controller
 #import "DF1CfgCells.h"
 
 #define SECTION_NAMES @"DF1 Config",@"DF1 Features",@"DF1 Firmware",nil
-#define SECTION1 @"DF1CfgCellName",@"DF1CfgCellRange",@"DF1CfgCellRes",nil 
+#define SECTION1 @"DF1CfgCellName",@"DF1CfgCellRange",@"DF1CfgCellRes",@"DF1CfgCellFreqRange",nil 
 // #define SECTION2 @"DF1CfgCellBatt",@"DF1CfgCellProx",nil
 #define SECTION2 @"DF1CfgCellBatt",nil
 #define SECTION3 @"DF1CfgCellOADTrigger",nil

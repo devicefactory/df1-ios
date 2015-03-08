@@ -39,6 +39,12 @@
 -(void) modifyChange:(NSMutableDictionary*) c;
 @end
 
+@interface DF1CfgCellFreqRange : DF1CfgCell
+@property (nonatomic,retain) UILabel *accRangeLabel;
+@property (nonatomic,retain) UISlider *accRangeSlider;
+-(void) modifyChange:(NSMutableDictionary*) c;
+-(IBAction) accSliderChanged:(UISlider*)sender;
+@end
 
 @interface DF1CfgCellAuto : DF1CfgCell
 -(void) modifyChange:(NSMutableDictionary*) c;

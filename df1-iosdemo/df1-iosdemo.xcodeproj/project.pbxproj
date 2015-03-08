@@ -56,6 +56,7 @@
 		C5AACD6A1A9C256200A57F1C /* blackButtonHighlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD661A9C256200A57F1C /* blackButtonHighlight@2x.png */; };
 		C5AACD6B1A9C256200A57F1C /* whiteButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD671A9C256200A57F1C /* whiteButton@2x.png */; };
 		C5AACD6C1A9C256200A57F1C /* whiteButtonHighlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD681A9C256200A57F1C /* whiteButtonHighlight@2x.png */; };
+		C5AACD6E1AACD5BE00A57F1C /* DF1_varfreq.bin in Resources */ = {isa = PBXBuildFile; fileRef = C5AACD6D1AACD5BE00A57F1C /* DF1_varfreq.bin */; };
 		C5CA41E9191AC9C000C29D76 /* F3PlotStrip.m in Sources */ = {isa = PBXBuildFile; fileRef = C5CA41E8191AC9C000C29D76 /* F3PlotStrip.m */; };
 		C5CACDE819297B5F00A2DD7B /* green-in.png in Resources */ = {isa = PBXBuildFile; fileRef = C5CACDE419297B5F00A2DD7B /* green-in.png */; };
 		C5CACDE919297B5F00A2DD7B /* green-out.png in Resources */ = {isa = PBXBuildFile; fileRef = C5CACDE519297B5F00A2DD7B /* green-out.png */; };
@@ -148,6 +149,7 @@
 		C5AACD661A9C256200A57F1C /* blackButtonHighlight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blackButtonHighlight@2x.png"; path = "df1-iosdemo/assets/buttons/blackButtonHighlight@2x.png"; sourceTree = "<group>"; };
 		C5AACD671A9C256200A57F1C /* whiteButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "whiteButton@2x.png"; path = "df1-iosdemo/assets/buttons/whiteButton@2x.png"; sourceTree = "<group>"; };
 		C5AACD681A9C256200A57F1C /* whiteButtonHighlight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "whiteButtonHighlight@2x.png"; path = "df1-iosdemo/assets/buttons/whiteButtonHighlight@2x.png"; sourceTree = "<group>"; };
+		C5AACD6D1AACD5BE00A57F1C /* DF1_varfreq.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = DF1_varfreq.bin; sourceTree = "<group>"; };
 		C5CA41E7191AC9C000C29D76 /* F3PlotStrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = F3PlotStrip.h; sourceTree = "<group>"; };
 		C5CA41E8191AC9C000C29D76 /* F3PlotStrip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = F3PlotStrip.m; sourceTree = "<group>"; };
 		C5CACDE419297B5F00A2DD7B /* green-in.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "green-in.png"; path = "df1-iosdemo/assets/green-in.png"; sourceTree = "<group>"; };
@@ -333,6 +335,7 @@
 		C5AACD461A982AB900A57F1C /* firmware */ = {
 			isa = PBXGroup;
 			children = (
+				C5AACD6D1AACD5BE00A57F1C /* DF1_varfreq.bin */,
 				C5AACD541A985EF900A57F1C /* DF1_hires_v0.1.bin */,
 				C5AACD4E1A985E5F00A57F1C /* DF1_joystick_v0.2.bin */,
 				C5AACD4F1A985E5F00A57F1C /* DF1_rangefix.bin */,
@@ -424,6 +427,7 @@
 				C56A3F0E18DF77B700DB2A5C /* Main_iPad.storyboard in Resources */,
 				C56A3F1318DF77B700DB2A5C /* Images.xcassets in Resources */,
 				C56A3F0B18DF77B700DB2A5C /* Main_iPhone.storyboard in Resources */,
+				C5AACD6E1AACD5BE00A57F1C /* DF1_varfreq.bin in Resources */,
 				C56C08A51904A971001FF641 /* DFLOGO07_58x58.png in Resources */,
 				C5CACDEA19297B5F00A2DD7B /* red-in.png in Resources */,
 				C5AACD531A985E5F00A57F1C /* DFMove_ImgB.bin in Resources */,

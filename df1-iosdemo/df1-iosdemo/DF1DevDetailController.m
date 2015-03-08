@@ -327,6 +327,12 @@
         [self.df modifyRange:range];
         DF_DBG(@"modifying user CFG_XYZ8_RANGE to %d", range);
     }
+    if([dict objectForKey:CFG_XYZ_FREQ]!=nil)
+    {
+        int hz = [[dict objectForKey:CFG_XYZ_FREQ] integerValue];
+        [self.df modifyXyzFreq:hz];
+        DF_DBG(@"modifying user CFG_XYZ_FREQ to %d", hz);
+    }
     if([dict objectForKey:CFG_TAP_TMLT]!=nil)
     {
         float tmlt = [[dict objectForKey:CFG_TAP_TMLT] floatValue];
@@ -382,7 +388,8 @@
 -(void) didSyncParameters:(NSDictionary *)params
 {
     NSLog(@"%@",params);
-
+    _hud.labelText = @"successfully sync-ed";
+    
     NSDictionary *dict = [DF1LibUtil getUserCfgDict:self.df.p];
     if(dict==nil)
     {
@@ -430,7 +437,8 @@
                [[cells objectForKey:@"DF1CellBatt"] boolValue])   {  [self.df subscribeBatt]; }
         }
     }
-    _hud.labelText = @"successfully sync-ed";
+    _hud.labelText = @"subscribing to data";
+    
     [self _setParamToUIControl:params];
     [MBProgressHUD hideHUDForView:self.view animated:true];
     _needResyncDF1Parameters = FALSE;

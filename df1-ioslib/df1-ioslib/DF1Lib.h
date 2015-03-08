@@ -87,6 +87,7 @@
 -(void) modifyShakeDeb:(float) msec;
 -(void) modifyShakeHpf:(float) hz; // 0.063==1, 0.125=2, 0.25=4, 0.5=8, 1=16, 2=32, 4=64
 
+-(void) modifyXyzFreq:(int) hz;
 @end
 
 
