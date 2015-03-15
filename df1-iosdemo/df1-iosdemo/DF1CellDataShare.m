@@ -213,7 +213,8 @@ http://mobile.antonio081014.com/2013/06/create-rename-delete-read-and-write.html
     // NSString *timestamp = [NSString stringWithFormat:@"%f",[[NSDate date] timeIntervalSince1970] * 1000];
     // convert the data into string so we can make it into ascii byte stream.
     NSString *line = [NSString stringWithFormat:@"%@,%f,%f,%f\n", ts,x,y,z];
-    NSData *bytes = [line dataUsingEncoding:NSUTF8StringEncoding];
+    //NSData *bytes = [line dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *bytes = [line dataUsingEncoding:NSASCIIStringEncoding];
     [_fh writeData:bytes];
 }
 

@@ -278,7 +278,7 @@
         accFreqValue = [n intValue];
     }
     [self.accRangeSlider setValue:(float)accFreqValue];
-    self.accRangeLabel.text = [[NSString alloc] initWithFormat:@"Freq %dG",accFreqValue];
+    self.accRangeLabel.text = [[NSString alloc] initWithFormat:@"Freq %dHz",accFreqValue];
     
     [self.contentView addSubview:self.accRangeLabel];
     [self.contentView addSubview:self.accRangeSlider];
