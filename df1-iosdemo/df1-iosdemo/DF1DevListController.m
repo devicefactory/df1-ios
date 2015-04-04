@@ -77,7 +77,7 @@ facts need to be considered:
     // self.tableView.backgroundColor = [UIColor clearColor];
     
     [self.tableView setBackgroundView: [[UIImageView alloc]
-                                        initWithImage: [UIImage imageNamed:@"DFLOGO07_launch_invert.png"]]];
+                                        initWithImage: [UIImage imageNamed:@"Default.png"]]];
 
     self.navigationItem.rightBarButtonItem = BARBUTTON(@"Clear", @selector(clearScan));
     

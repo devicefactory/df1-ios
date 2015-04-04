@@ -38,12 +38,13 @@
         self.df.delegate = self;
         [self.df connect:self.df.p];
         _needResyncDF1Parameters = FALSE;
-        
+        _avgAccCounter = 0;
         _defaultCells = [NSDictionary dictionaryWithObjectsAndKeys:
                          [NSNumber numberWithBool:TRUE],   @"DF1CellAccXyz",  // class names
                          [NSNumber numberWithBool:TRUE],   @"DF1CellAccTap",  // and boolean
                          [NSNumber numberWithBool:TRUE],   @"DF1CellDataShare",
                          [NSNumber numberWithBool:TRUE],   @"DF1CellBatt",
+                         [NSNumber numberWithBool:true],   @"DF1CellMag",
                          nil];
         [self initializeCells];
     }
@@ -115,6 +116,13 @@
         self.battCell.battLabel.text = @"Battery Level";
         self.battCell.battLevel.text = @"NA";
         self.battCell.battBar.progress = 0.0;
+    }
+    if([[cells objectForKey:@"DF1CellMag"] boolValue] && !self.magCell) {
+        _magCell = [[DF1CellAccMagnitude alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AccMagCell" parentController:self];
+        
+        _magCell.magText.text = @"";
+        //_magCell.mag
+        
     }
     // if(!self.rssiCell) {
     //     self.rssiCell = [[RSSICell alloc] initWithStyle:UITableViewCellStyleDefault
@@ -205,7 +213,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 4;
+    return 5;
     // int count = 1; // by default we need the signal strength
     // if([self.d isEnabled:@"Accelerometer service active"])
     //   count += 2;
@@ -234,6 +242,9 @@
     if(indexPath.row==3) {
         return self.battCell;
     }
+    if(indexPath.row==4) {
+        return self.magCell;
+    }
     // if (indexPath.row==0 && [self.d isEnabled:@"Accelerometer service active"]) {
     //     [self.babyCell setPosition:UACellBackgroundViewPositionTop];
     //     return self.babyCell;
@@ -249,6 +260,7 @@
     if(indexPath.row==1) return self.accTapCell.height;
     if(indexPath.row==2) return self.dataCell.height;
     if(indexPath.row==3) return self.battCell.height;
+    if(indexPath.row==4) return _magCell.height;
     return 100;
 }
 
@@ -405,7 +417,7 @@
         // NSDictionary *cells = (NSDictionary*) [dict objectForKey:CFG_CELLS];
         NSMutableDictionary *cells;
         if([[dict objectForKey:CFG_CELLS] isKindOfClass:[NSArray class]]) {
-            DF_DBG(@"wtf, I saved dict, not array!!!");
+            DF_DBG(@"wtf, I saved dict, not array!!!"); //LOL This is awesome debugging.
             cells = [[NSMutableDictionary alloc] init];
             for(NSString *key in [dict objectForKey:CFG_CELLS]) {
                 [cells setObject:[NSNumber numberWithBool:YES] forKey:key];
@@ -473,6 +485,23 @@
     self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z8 : %.3f", z];
     self.accXyzCell.accZStrip.value = z;
     
+    float mag = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
+    if (mag>_maxAcceleration.doubleValue) {
+        _maxAcceleration = [NSNumber numberWithFloat:mag];
+    }
+    _avgAcceleration = [NSNumber numberWithFloat:((_avgAcceleration.floatValue * _avgAccCounter.floatValue)+mag)/(_avgAccCounter.floatValue+1) ];
+    _avgAccCounter = [NSNumber numberWithInt:_avgAccCounter.intValue+1];
+    
+    NSLog(@"Setting mag of: %f", mag);
+    self.magCell.magText.text = [[NSString alloc] initWithFormat:@"%f", mag];
+    self.magCell.avgMagText.text = [[NSString alloc] initWithFormat:@"%@", _avgAcceleration];
+    self.magCell.maxMagText.text = [[NSString alloc] initWithFormat:@"%@", _maxAcceleration];
+    //Present notification if the magnitude exceeds 2G's allow users to change this value and make sure this runs in the background
+    if(mag > 2) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Magnitude Threshold Exceeded!" object:nil];
+    }
+
+    
     if(self.dataCell!=nil && [self.dataCell isFileReady]) {
         [self.dataCell recordX:x Y:y Z:z];
     }
@@ -491,6 +520,23 @@
     self.accXyzCell.accYStrip.value = y;
     self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z14: %.4f", z];
     self.accXyzCell.accZStrip.value = z;
+    
+    float mag = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
+    if (mag>_maxAcceleration.doubleValue) {
+        _maxAcceleration = [NSNumber numberWithFloat:mag];
+    }
+    _avgAcceleration = [NSNumber numberWithFloat:((_avgAcceleration.floatValue * _avgAccCounter.floatValue)+mag)/(_avgAccCounter.floatValue+1) ];
+    _avgAccCounter = [NSNumber numberWithInt:_avgAccCounter.intValue+1];
+    
+    NSLog(@"Setting mag of: %f", mag);
+    self.magCell.magText.text = [[NSString alloc] initWithFormat:@"%f", mag];
+    self.magCell.avgMagText.text = [[NSString alloc] initWithFormat:@"%@", _avgAcceleration];
+    self.magCell.maxMagText.text = [[NSString alloc] initWithFormat:@"%@", _maxAcceleration];
+
+    //Present notification if the magnitude exceeds 2G's allow users to change this value and make sure this runs in the background
+    if(mag > 2) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Magnitude Threshold Exceeded!" object:nil];
+    }
     
     if(self.dataCell!=nil && [self.dataCell isFileReady]) {
         [self.dataCell recordX:x Y:y Z:z];

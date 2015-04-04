@@ -13,6 +13,7 @@
 
 @synthesize nameLabel;
 @synthesize subLabel;
+@synthesize subLabel2;
 @synthesize detailLabel;
 @synthesize deviceIcon;
 @synthesize p;
@@ -103,6 +104,11 @@
     self.subLabel.font = [UIFont boldSystemFontOfSize:8];
     self.subLabel.textColor = [UIColor grayColor];
 
+    self.subLabel2 = [[UILabel alloc] init];
+    self.subLabel2.textAlignment = NSTextAlignmentLeft;
+    self.subLabel2.font = [UIFont boldSystemFontOfSize:8];
+    self.subLabel2.textColor = [UIColor grayColor];
+    
     self.detailLabel = [[UILabel alloc] init];
     self.detailLabel.textAlignment = NSTextAlignmentLeft;
     self.detailLabel.font = [UIFont boldSystemFontOfSize:8];
@@ -115,12 +121,14 @@
     self.barHolder = [[UIView alloc] init];
     [self.barHolder addSubview:self.signalBar];
 
-    self.deviceIcon = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"oem-front1-icon.png"]];
+    //self.deviceIcon = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"oem-front1-icon.png"]];
+    self.deviceIcon = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"DF1_flat_icon.png"]];
     [self.deviceIcon setAutoresizingMask:UIViewAutoresizingNone];
     self.deviceIcon.contentMode = UIViewContentModeScaleAspectFit;
     
     [self.contentView addSubview:self.nameLabel];
     [self.contentView addSubview:self.subLabel];
+    [self.contentView addSubview:self.subLabel2];
     [self.contentView addSubview:self.detailLabel];
     [self.contentView addSubview:self.deviceIcon];
     [self.contentView addSubview:self.ledButton];
@@ -143,6 +151,10 @@
 
     self.subLabel.font = [UIFont boldSystemFontOfSize:12];
     self.subLabel.frame = CGRectMake(boundsX+85, 35, 100, 30);
+    
+    self.subLabel2.font = [UIFont boldSystemFontOfSize:12];
+    self.subLabel2.frame = CGRectMake(boundsX+85, 55, 100, 30);
+    
     self.barHolder.frame = CGRectMake(boundsX+85, 60, 100, 30);
     
     self.ledButton.frame = CGRectMake(contentRect.size.width-100, 25, 80, 35);
@@ -179,7 +191,10 @@
 
 -(void) updateSignalValue:(float)value
 {
+    //Using
     self.subLabel.text = [NSString stringWithFormat:@"RSSI  %.0f dBm", value];
+    double distance = pow(10, (-75-value)/20);//A = -75 dbm, a measured value for 1 meter away in free space. n=2 for free space
+    self.subLabel2.text = [NSString stringWithFormat:@"distance  %.0f m", distance]; //using RSSI(dbm)=-(10n*log10(d)-A) solving for d
     float valuetrunc = (value < -100.0) ? -100.0 :
                        (value > -30.0 ) ? -30.0 : value;
     float strength = exp((30 + valuetrunc) / 50.0);  // in R: plot( exp( (20+seq(-20, -100))/40 ), type='b')
