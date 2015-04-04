@@ -14,6 +14,8 @@
 @property (nonatomic,retain) UILabel *magText;
 @property (nonatomic,retain) UILabel *maxMagText;
 @property (nonatomic,retain) UILabel *avgMagText;
+@property (nonatomic,retain) UILabel *maxMagTitleText;
+@property (nonatomic,retain) UILabel *avgMagTitleText;
 @property (nonatomic,retain) UILabel *magTitleText;
 -(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
   parentController:(DF1DevDetailController*) parent;
