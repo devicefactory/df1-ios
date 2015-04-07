@@ -289,7 +289,7 @@
     return headerView;
 }
 
--(float) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+-(CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     return 0.0f;
 }
 
@@ -299,8 +299,8 @@
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-    NSInteger section = indexPath.section;
-    NSInteger row     = indexPath.row;
+    //NSInteger section = indexPath.section;
+    //NSInteger row     = indexPath.row;
 
     // DF1DevDetailController *vc = [[DF1DevDetailController alloc] initWithDF:self.df];
     // vc.previousVC = self;

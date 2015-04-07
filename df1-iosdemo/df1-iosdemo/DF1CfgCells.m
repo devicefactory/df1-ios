@@ -460,8 +460,9 @@
             withCfg:(NSMutableDictionary*) ucfg
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier withCfg:ucfg];
-    if(self==nil)
+    if(self==nil) {
         return self;
+    }
     self.cfg = ucfg;
     self.height = 30;
     self.battLabel = [[UILabel alloc] init];
@@ -571,7 +572,7 @@
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    NSLog(@"Button Index =%d",buttonIndex);
+    NSLog(@"Button Index =%ld",(long)buttonIndex);
     if (buttonIndex == 0)
     {
         NSLog(@"You have clicked Cancel");

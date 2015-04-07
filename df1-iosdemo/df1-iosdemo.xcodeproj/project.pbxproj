@@ -34,6 +34,7 @@
 		012131FC1ABF9C6300B3BDF3 /* Default@2x~iphone_640x960.png in Resources */ = {isa = PBXBuildFile; fileRef = 012131E11ABF9C6300B3BDF3 /* Default@2x~iphone_640x960.png */; };
 		012131FD1ABF9C6300B3BDF3 /* Default~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 012131E21ABF9C6300B3BDF3 /* Default~ipad.png */; };
 		012131FE1ABF9C6300B3BDF3 /* Default~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 012131E31ABF9C6300B3BDF3 /* Default~iphone.png */; };
+		0159C0591AD34AC7003EF1A5 /* UIColor+DF1Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = 0159C0581AD34AC7003EF1A5 /* UIColor+DF1Colors.m */; };
 		01EA75B11AD05F0B0099FF52 /* Default-568h@2x~iphone_640x1136.png in Resources */ = {isa = PBXBuildFile; fileRef = 01EA75A51AD05F0B0099FF52 /* Default-568h@2x~iphone_640x1136.png */; };
 		01EA75B21AD05F0B0099FF52 /* Default-Landscape@2x~ipad_2048x1496.png in Resources */ = {isa = PBXBuildFile; fileRef = 01EA75A61AD05F0B0099FF52 /* Default-Landscape@2x~ipad_2048x1496.png */; };
 		01EA75B31AD05F0B0099FF52 /* Default-Landscape@2x~ipad_2048x1536.png in Resources */ = {isa = PBXBuildFile; fileRef = 01EA75A71AD05F0B0099FF52 /* Default-Landscape@2x~ipad_2048x1536.png */; };
@@ -145,6 +146,8 @@
 		012131E11ABF9C6300B3BDF3 /* Default@2x~iphone_640x960.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x~iphone_640x960.png"; sourceTree = "<group>"; };
 		012131E21ABF9C6300B3BDF3 /* Default~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default~ipad.png"; sourceTree = "<group>"; };
 		012131E31ABF9C6300B3BDF3 /* Default~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default~iphone.png"; sourceTree = "<group>"; };
+		0159C0571AD34AC7003EF1A5 /* UIColor+DF1Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+DF1Colors.h"; sourceTree = "<group>"; };
+		0159C0581AD34AC7003EF1A5 /* UIColor+DF1Colors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+DF1Colors.m"; sourceTree = "<group>"; };
 		01EA75A51AD05F0B0099FF52 /* Default-568h@2x~iphone_640x1136.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone_640x1136.png"; sourceTree = "<group>"; };
 		01EA75A61AD05F0B0099FF52 /* Default-Landscape@2x~ipad_2048x1496.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad_2048x1496.png"; sourceTree = "<group>"; };
 		01EA75A71AD05F0B0099FF52 /* Default-Landscape@2x~ipad_2048x1536.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad_2048x1536.png"; sourceTree = "<group>"; };
@@ -410,6 +413,8 @@
 				C56C08981901A4E9001FF641 /* DF1DevListController.m */,
 				C56A3F0618DF77B700DB2A5C /* DF1AppDelegate.h */,
 				C56A3F0718DF77B700DB2A5C /* DF1AppDelegate.m */,
+				0159C0571AD34AC7003EF1A5 /* UIColor+DF1Colors.h */,
+				0159C0581AD34AC7003EF1A5 /* UIColor+DF1Colors.m */,
 				C56A3F0918DF77B700DB2A5C /* Main_iPhone.storyboard */,
 				C56A3F0C18DF77B700DB2A5C /* Main_iPad.storyboard */,
 				C56A3F1218DF77B700DB2A5C /* Images.xcassets */,
@@ -677,6 +682,7 @@
 				C5CA41E9191AC9C000C29D76 /* F3PlotStrip.m in Sources */,
 				C5A71BF3194D51ED0074B087 /* DF1CellAccTap.m in Sources */,
 				C5A71BFB195222630074B087 /* DF1CfgController.m in Sources */,
+				0159C0591AD34AC7003EF1A5 /* UIColor+DF1Colors.m in Sources */,
 				C5A71BE9194D48360074B087 /* MBProgressHUD.m in Sources */,
 				C5AACD401A98289500A57F1C /* BLEDevice.m in Sources */,
 				01F826AF1AB4D35B003F8C97 /* DF1CellAccMagnitude.m in Sources */,
