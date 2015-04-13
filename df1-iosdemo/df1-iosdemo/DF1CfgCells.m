@@ -314,23 +314,125 @@
 
 @end
 
+@implementation DF1CfgCellAuto
+-(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+            withCfg:(NSMutableDictionary*) ucfg
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier withCfg:ucfg];
+    if(self==nil)
+        return self;
+    self.cfg = ucfg;
+    self.height = 30;
+    return self;
+}
+-(void) layoutSubviews
+{
+    [super layoutSubviews];
+}
+@end
 
 
-@interface DF1CfgCellTap ()
+@implementation DF1CfgXYZPlotter
+-(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+            withCfg:(NSMutableDictionary*) ucfg
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier withCfg:ucfg];
+    if(self==nil) {
+        return self;
+    }
+    
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgXYZPlotter"] isEqual:nil]){
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgXYZPlotter"]];
+    }
+    self.cfg = ucfg;
+    self.height = 40;
+    self.featureLabel = [[UILabel alloc] init];
+    self.featureLabel.textAlignment = NSTextAlignmentCenter;
+    self.featureLabel.font = [UIFont systemFontOfSize:16];
+    self.featureLabel.textColor = [UIColor grayColor];
+    self.featureLabel.backgroundColor = [UIColor clearColor];
+    // JB: when adding more features, change here first
+    //CHANGE IN CONTROLLER
+    self.featureLabel.text = @"XYZ Plotter";
+    self.featureToggle = [[UIButton alloc]initWithFrame:CGRectMake(5, 5,30,30)];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgXYZPlotter"] boolValue]) {
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+    [self.featureToggle addTarget:self action:@selector(toggleBtnPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView addSubview:self.featureToggle];
+    [self.contentView addSubview:self.featureLabel];
+    return self;
+}
+
+-(void) toggleBtnPressed {
+    if([self.featureToggle.imageView.image isEqual:[UIImage imageNamed:@"off.png"]]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgXYZPlotter"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:[NSString stringWithFormat:@"DF1CfgXYZPlotter"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+}
+
+-(void) layoutSubviews
+{
+    [super layoutSubviews];
+    CGRect contentRect = self.contentView.bounds;
+    CGFloat boundsX = contentRect.origin.x;
+    CGFloat width = self.contentView.bounds.size.width;
+    CGRect fr;
+    
+    fr = CGRectMake(boundsX + 15, 8, width-50, 25);
+    self.featureLabel.frame = fr;
+    fr = CGRectMake(boundsX + 15, -5, 50, 50);
+    self.featureToggle.frame = fr;
+}
+@end
+
+@interface DF1CfgTapDetector ()
 {
     NSUInteger accThsValuePrevious;
     NSUInteger accTmltValuePrevious;
 }
 @end
-@implementation DF1CfgCellTap
-
--(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-  withCfg:(NSMutableDictionary*) ucfg
+@implementation DF1CfgTapDetector
+-(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+withCfg:(NSMutableDictionary*) ucfg
 {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if(!self) return self;
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier withCfg:ucfg];
+    if(self==nil) {
+        return self;
+    }
+    
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTapDetector"] isEqual:nil]){
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgTapDetector"]];
+    }
+    
     self.cfg = ucfg;
     self.height = 140;
+    self.featureLabel = [[UILabel alloc] init];
+    self.featureLabel.textAlignment = NSTextAlignmentCenter;
+    self.featureLabel.font = [UIFont systemFontOfSize:16];
+    self.featureLabel.textColor = [UIColor grayColor];
+    self.featureLabel.backgroundColor = [UIColor clearColor];
+    self.featureLabel.text = @"Tap Detector";
+    self.featureToggle = [[UIButton alloc]initWithFrame:CGRectMake(5, 5,30,30)];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTapDetector"] boolValue]) {
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+    [self.featureToggle addTarget:self action:@selector(toggleFeature) forControlEvents:UIControlEventTouchUpInside];
+    
+    
     accThsValuePrevious = 0;
     
     self.accLabel = [[UILabel alloc] init];
@@ -354,7 +456,7 @@
     
     self.accTmltLabel = [[UILabel alloc] init];
     self.accTmltLabel.font = [UIFont systemFontOfSize:14];
-    self.accTmltLabel.text = @"Tmlt";
+    self.accTmltLabel.text = @"Duration";
     self.accTmltSlider = [[UISlider alloc] init];
     self.accTmltSlider.continuous = true;
     [self.accTmltSlider setMinimumValue:1];
@@ -365,9 +467,9 @@
     {
         float value = [[self.cfg objectForKey:CFG_TAP_TMLT] floatValue];
         [self.accTmltSlider setValue:(NSUInteger)value animated:YES];
-        self.accTmltLabel.text = [[NSString alloc] initWithFormat:@"Tmlt %.0fms",10*value];
+        self.accTmltLabel.text = [[NSString alloc] initWithFormat:@"Duration %.0fms",10*value];
     }
-
+    
     
     [self.contentView addSubview:self.accLabel];
     [self.contentView addSubview:self.accValueTap];
@@ -375,17 +477,31 @@
     [self.contentView addSubview:self.accThsSlider];
     [self.contentView addSubview:self.accTmltLabel];
     [self.contentView addSubview:self.accTmltSlider];
+    [self.contentView addSubview:self.featureToggle];
+    [self.contentView addSubview:self.featureLabel];
     return self;
 }
 
--(void)layoutSubviews
+-(void) toggleFeature {
+    if([self.featureToggle.imageView.image isEqual:[UIImage imageNamed:@"off.png"]]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgTapDetector"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:[NSString stringWithFormat:@"DF1CfgTapDetector"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+}
+
+-(void) layoutSubviews
 {
     [super layoutSubviews];
     CGRect contentRect = self.contentView.bounds;
     CGFloat boundsX = contentRect.origin.x;
     CGFloat width = self.contentView.bounds.size.width;
     CGRect fr;
-    
     fr = CGRectMake(boundsX + 5, 5, width-50, 25);
     self.accLabel.frame = fr;
     
@@ -394,13 +510,16 @@
     
     // self.accRangeLabel.frame = CGRectMake(PAD_LEFT,      PAD_TOP, 110, 45);
     // self.accRangeSlider.frame = CGRectMake(PAD_LEFT+130, PAD_TOP, 150, 45);
-    self.accThsLabel.frame  = CGRectMake(PAD_LEFT,     PAD_TOP,  110, 45);
-    self.accThsSlider.frame = CGRectMake(PAD_LEFT+130, PAD_TOP, 150,45);
+    self.accThsLabel.frame  = CGRectMake(PAD_LEFT,     PAD_TOP+40,  110, 45);
+    self.accThsSlider.frame = CGRectMake(PAD_LEFT+130, PAD_TOP+40, 150,45);
     
-    self.accTmltLabel.frame  = CGRectMake(PAD_LEFT,    PAD_TOP+35,  110, 45);
-    self.accTmltSlider.frame = CGRectMake(PAD_LEFT+130,PAD_TOP+35, 150,45);
+    self.accTmltLabel.frame  = CGRectMake(PAD_LEFT,    PAD_TOP+35+40,  110, 45);
+    self.accTmltSlider.frame = CGRectMake(PAD_LEFT+130,PAD_TOP+35+40, 150,45);
+    fr = CGRectMake(boundsX + 15, 8, width-50, 25);
+    self.featureLabel.frame = fr;
+    fr = CGRectMake(boundsX + 15, -5, 50, 50);
+    self.featureToggle.frame = fr;
 }
-
 -(IBAction) accThsChanged:(UISlider*)sender
 {
     NSUInteger index = (NSUInteger)(self.accThsSlider.value);
@@ -431,31 +550,9 @@
     self.accTmltLabel.text = [[NSString alloc] initWithFormat:@"Tmlt %.0fms",msec];
     accTmltValuePrevious = msec10;
 }
-
 @end
 
-
-
-
-@implementation DF1CfgCellAuto
--(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-            withCfg:(NSMutableDictionary*) ucfg
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier withCfg:ucfg];
-    if(self==nil)
-        return self;
-    self.cfg = ucfg;
-    self.height = 30;
-    return self;
-}
--(void) layoutSubviews
-{
-    [super layoutSubviews];
-}
-@end
-
-
-@implementation DF1CfgCellBatt
+@implementation DF1CfgCSVDataRecorder
 -(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
             withCfg:(NSMutableDictionary*) ucfg
 {
@@ -463,19 +560,46 @@
     if(self==nil) {
         return self;
     }
-    self.cfg = ucfg;
-    self.height = 30;
-    self.battLabel = [[UILabel alloc] init];
-    self.battLabel.textAlignment = NSTextAlignmentCenter;
-    self.battLabel.font = [UIFont systemFontOfSize:16];
-    self.battLabel.textColor = [UIColor grayColor];
-    self.battLabel.backgroundColor = [UIColor clearColor];
-    // JB: when adding more features, change here first
-    self.battLabel.text = @"more features coming soon..";
     
-    [self.contentView addSubview:self.battLabel];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgCSVDataRecorder"] isEqual:nil]){
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgCSVDataRecorder"]];
+    }
+    
+    self.cfg = ucfg;
+    self.height = 40;
+    self.featureLabel = [[UILabel alloc] init];
+    self.featureLabel.textAlignment = NSTextAlignmentCenter;
+    self.featureLabel.font = [UIFont systemFontOfSize:16];
+    self.featureLabel.textColor = [UIColor grayColor];
+    self.featureLabel.backgroundColor = [UIColor clearColor];
+    self.featureLabel.text = @"CSV Recorder";
+    self.featureToggle = [[UIButton alloc]initWithFrame:CGRectMake(5, 5,30,30)];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgCSVDataRecorder"] boolValue]) {
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+    [self.featureToggle addTarget:self action:@selector(toggleFeature) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView addSubview:self.featureToggle];
+    [self.contentView addSubview:self.featureLabel];
     return self;
 }
+
+-(void) toggleFeature {
+    if([self.featureToggle.imageView.image isEqual:[UIImage imageNamed:@"off.png"]]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgCSVDataRecorder"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:[NSString stringWithFormat:@"DF1CfgCSVDataRecorder"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+}
+
 -(void) layoutSubviews
 {
     [super layoutSubviews];
@@ -484,11 +608,138 @@
     CGFloat width = self.contentView.bounds.size.width;
     CGRect fr;
     
-    fr = CGRectMake(boundsX + 5, 5, width-50, 25);
-    self.battLabel.frame = fr;
+    fr = CGRectMake(boundsX + 15, 8, width-50, 25);
+    self.featureLabel.frame = fr;
+    fr = CGRectMake(boundsX + 15, -5, 50, 50);
+    self.featureToggle.frame = fr;
 }
 @end
 
+@implementation DF1CfgBatteryLevel
+-(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+            withCfg:(NSMutableDictionary*) ucfg
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier withCfg:ucfg];
+    if(self==nil) {
+        return self;
+    }
+    
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgBatteryLevel"] isEqual:nil]){
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgBatteryLevel"]];
+    }
+    
+    self.cfg = ucfg;
+    self.height = 40;
+    self.featureLabel = [[UILabel alloc] init];
+    self.featureLabel.textAlignment = NSTextAlignmentCenter;
+    self.featureLabel.font = [UIFont systemFontOfSize:16];
+    self.featureLabel.textColor = [UIColor grayColor];
+    self.featureLabel.backgroundColor = [UIColor clearColor];
+    self.featureLabel.text = @"Battery Level";
+    self.featureToggle = [[UIButton alloc]initWithFrame:CGRectMake(5, 5,30,30)];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgBatteryLevel"] boolValue]) {
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+    [self.featureToggle addTarget:self action:@selector(toggleFeature) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView addSubview:self.featureToggle];
+    [self.contentView addSubview:self.featureLabel];
+    return self;
+}
+
+-(void) toggleFeature {
+    if([self.featureToggle.imageView.image isEqual:[UIImage imageNamed:@"off.png"]]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgBatteryLevel"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:[NSString stringWithFormat:@"DF1CfgBatteryLevel"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+}
+
+-(void) layoutSubviews
+{
+    [super layoutSubviews];
+    CGRect contentRect = self.contentView.bounds;
+    CGFloat boundsX = contentRect.origin.x;
+    CGFloat width = self.contentView.bounds.size.width;
+    CGRect fr;
+    
+    fr = CGRectMake(boundsX + 15, 8, width-50, 25);
+    self.featureLabel.frame = fr;
+    fr = CGRectMake(boundsX + 15, -5, 50, 50);
+    self.featureToggle.frame = fr;
+}
+@end
+
+@implementation DF1CfgMagnitudeValues
+-(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+            withCfg:(NSMutableDictionary*) ucfg
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier withCfg:ucfg];
+    if(self==nil) {
+        return self;
+    }
+    
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgMagnitudeValues"] isEqual:nil]){
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgMagnitudeValues"]];
+    }
+    
+    self.cfg = ucfg;
+    self.height = 40;
+    self.featureLabel = [[UILabel alloc] init];
+    self.featureLabel.textAlignment = NSTextAlignmentCenter;
+    self.featureLabel.font = [UIFont systemFontOfSize:16];
+    self.featureLabel.textColor = [UIColor grayColor];
+    self.featureLabel.backgroundColor = [UIColor clearColor];
+    self.featureLabel.text = @"Magnitudes";
+    self.featureToggle = [[UIButton alloc]initWithFrame:CGRectMake(5, 5,30,30)];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgMagnitudeValues"] boolValue]) {
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+    [self.featureToggle addTarget:self action:@selector(toggleFeature) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView addSubview:self.featureToggle];
+    [self.contentView addSubview:self.featureLabel];
+    return self;
+}
+
+-(void) toggleFeature {
+    if([self.featureToggle.imageView.image isEqual:[UIImage imageNamed:@"off.png"]]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgMagnitudeValues"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:[NSString stringWithFormat:@"DF1CfgMagnitudeValues"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+}
+
+-(void) layoutSubviews
+{
+    [super layoutSubviews];
+    CGRect contentRect = self.contentView.bounds;
+    CGFloat boundsX = contentRect.origin.x;
+    CGFloat width = self.contentView.bounds.size.width;
+    CGRect fr;
+    
+    fr = CGRectMake(boundsX + 15, 8, width-50, 25);
+    self.featureLabel.frame = fr;
+    fr = CGRectMake(boundsX + 15, -5, 50, 50);
+    self.featureToggle.frame = fr;
+}
+@end
 
 @implementation DF1CfgCellProx
 -(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier

@@ -39,15 +39,17 @@
         [self.df connect:self.df.p];
         _needResyncDF1Parameters = FALSE;
         _avgAccCounter = 0;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         _defaultCells = [NSDictionary dictionaryWithObjectsAndKeys:
-                         [NSNumber numberWithBool:TRUE],   @"DF1CellAccXyz",  // class names
-                         [NSNumber numberWithBool:TRUE],   @"DF1CellAccTap",  // and boolean
-                         [NSNumber numberWithBool:TRUE],   @"DF1CellDataShare",
-                         [NSNumber numberWithBool:TRUE],   @"DF1CellBatt",
-                         [NSNumber numberWithBool:true],   @"DF1CellMag",
+                         [defaults valueForKey:@"DF1CfgXYZPlotter"],   @"DF1CellAccXyz",  // class names
+                         [defaults valueForKey:@"DF1CfgTapDetector"],   @"DF1CellAccTap",  // and boolean
+                         [defaults valueForKey:@"DF1CfgCSVDataRecorder"],   @"DF1CellDataShare",
+                         [defaults valueForKey:@"DF1CfgBatteryLevel"],   @"DF1CellBatt",
+                         [defaults valueForKey:@"DF1CfgMagnitudeValues"],   @"DF1CellMag",
                          nil];
         [self initializeCells];
     }
+    NSLog(@"the def cells, %@", _defaultCells);
     return self;
 }
 
@@ -148,6 +150,7 @@
                                                                 green:0.4 blue:0.9 alpha:0.5];
     }
     */
+    
     if(_needResyncDF1Parameters)
     {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -156,6 +159,18 @@
         [self.df syncParameters];  // will incur callback didSyncParameters
         [self.tableView reloadData];
     }
+    
+    //reload what cells should be in the table
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    _defaultCells = [NSDictionary dictionaryWithObjectsAndKeys:
+                     [defaults valueForKey:@"DF1CfgXYZPlotter"],   @"DF1CellAccXyz",  // class names
+                     [defaults valueForKey:@"DF1CfgTapDetector"],   @"DF1CellAccTap",  // and boolean
+                     [defaults valueForKey:@"DF1CfgCSVDataRecorder"],   @"DF1CellDataShare",
+                     [defaults valueForKey:@"DF1CfgBatteryLevel"],   @"DF1CellBatt",
+                     [defaults valueForKey:@"DF1CfgMagnitudeValues"],   @"DF1CellMag",
+                     nil];
+    [self initializeCells];
+
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -213,7 +228,10 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;
+    //check the bools for cell initialization and sum them as integers
+    NSInteger cellsCount = [[_defaultCells valueForKey:@"DF1CellAccXyz"] integerValue] + [[_defaultCells valueForKey:@"DF1CellAccTap"] integerValue] + [[_defaultCells valueForKey:@"DF1CellDataShare"] integerValue] + [[_defaultCells valueForKey:@"DF1CellBatt"] integerValue] + [[_defaultCells valueForKey:@"DF1CellMag"] integerValue];
+    NSLog(@"cells count is %ld", cellsCount);
+    return cellsCount;
     // int count = 1; // by default we need the signal strength
     // if([self.d isEnabled:@"Accelerometer service active"])
     //   count += 2;
@@ -225,26 +243,44 @@
     // return count;
 }
 
-
+#pragma mark cellForRow
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    int cellIndexer = 0;
     DF_DBG(@"indexpath row: %ld", (long)indexPath.row);
-    if(indexPath.row==0) {
-        return self.accXyzCell;
+    
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgXYZPlotter"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.accXyzCell;
+        }
     }
-    if(indexPath.row==1) {
-        return self.accTapCell;
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTapDetector"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.accTapCell;
+        }
     }
-    if(indexPath.row==2) {
-        DF_DBG(@"returning dataCell!!");
-        return self.dataCell;
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgCSVDataRecorder"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.dataCell;
+        }
     }
-    if(indexPath.row==3) {
-        return self.battCell;
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgBatteryLevel"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.battCell;
+        }
     }
-    if(indexPath.row==4) {
-        return self.magCell;
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgMagnitudeValues"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.magCell;
+        }
     }
+
+    
     // if (indexPath.row==0 && [self.d isEnabled:@"Accelerometer service active"]) {
     //     [self.babyCell setPosition:UACellBackgroundViewPositionTop];
     //     return self.babyCell;
@@ -256,11 +292,40 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.row==0) return self.accXyzCell.height;
-    if(indexPath.row==1) return self.accTapCell.height;
-    if(indexPath.row==2) return self.dataCell.height;
-    if(indexPath.row==3) return self.battCell.height;
-    if(indexPath.row==4) return _magCell.height;
+    int cellIndexer = 0;
+    DF_DBG(@"indexpath row: %ld", (long)indexPath.row);
+    
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgXYZPlotter"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.accXyzCell.height;
+        }
+    }
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTapDetector"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.accTapCell.height;
+        }
+    }
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgCSVDataRecorder"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.dataCell.height;
+        }
+    }
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgBatteryLevel"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.battCell.height;
+        }
+    }
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgMagnitudeValues"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return _magCell.height;
+        }
+    }
+
     return 100;
 }
 

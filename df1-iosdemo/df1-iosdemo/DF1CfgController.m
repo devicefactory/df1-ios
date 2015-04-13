@@ -32,6 +32,7 @@
         [NSArray arrayWithObjects: SECTION3],
         nil
     ];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(featureNotif) name:@"DF1CfgXYZPlotter" object:nil];
     // initialize
     if(_cells==nil)
     {
@@ -55,17 +56,18 @@
         {
             NSString *className = [inner objectAtIndex:j];
             DF_DBG(@"initializing class %@", className);
-            Class cl = NSClassFromString(className);
-            DF1CfgCell *cell = [[cl alloc] initWithStyle:UITableViewCellStyleDefault
-                                              reuseIdentifier:className withCfg:self.cfg];
-            if([className isEqual:@"DF1CfgCellOADTrigger"]) {
-                // we explicitly set the handle to df object into this cell.
-                DF1CfgCellOADTrigger *oadcell = (DF1CfgCellOADTrigger*) cell;
-                oadcell.delegate = self;
-            }
-            // MyClass *myClass = [[cl alloc] init];
-            [self.tableView registerClass:cl forCellReuseIdentifier:className];
-            [_innerCells addObject:cell];
+
+                Class cl = NSClassFromString(className);
+                DF1CfgCell *cell = [[cl alloc] initWithStyle:UITableViewCellStyleDefault
+                                                  reuseIdentifier:className withCfg:self.cfg];
+                if([className isEqual:@"DF1CfgCellOADTrigger"]) {
+                    // we explicitly set the handle to df object into this cell.
+                    DF1CfgCellOADTrigger *oadcell = (DF1CfgCellOADTrigger*) cell;
+                    oadcell.delegate = self;
+                }
+                // MyClass *myClass = [[cl alloc] init];
+                [self.tableView registerClass:cl forCellReuseIdentifier:className];
+                [_innerCells addObject:cell];
         }
     }
 }

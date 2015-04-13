@@ -195,6 +195,7 @@
 
 -(bool) didScan:(NSArray*) devices
 {
+    
     // simply set the pointer to the internal one : is this dangerous?
     for(CBPeripheral *p in devices) {
       if([[p.identifier UUIDString] isEqual:self.uuid]) {
