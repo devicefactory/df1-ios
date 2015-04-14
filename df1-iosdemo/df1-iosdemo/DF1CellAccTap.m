@@ -26,9 +26,10 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if(!self) return self;
     self.parent = parent;
-    self.height = 140;
-    accThsValuePrevious = 0;
-
+    self.height = 45;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    accThsValuePrevious = [[defaults valueForKey:@"tapThs"] integerValue];
+    accTmltValuePrevious = [[defaults valueForKey:@"tapTmlt"] integerValue];
     self.accLabel = [[UILabel alloc] init];
     self.accLabel.textAlignment = NSTextAlignmentRight;
     self.accLabel.font = [UIFont systemFontOfSize:16];
@@ -37,7 +38,7 @@
 
     self.accValueTap = [[UILabel alloc] init];
     self.accValueTap.font = [UIFont systemFontOfSize:18];
-
+/*
     self.accThsLabel = [[UILabel alloc] init];
     self.accThsLabel.font = [UIFont systemFontOfSize:13];
     self.accThsLabel.text = @"Threshhold";
@@ -57,13 +58,13 @@
     [self.accTmltSlider setMaximumValue:20];
     [self.accTmltSlider addTarget:self action:@selector(accTmltChanged:)
                forControlEvents:UIControlEventValueChanged];
-
+*/
     [self.contentView addSubview:self.accLabel];
     [self.contentView addSubview:self.accValueTap];
-    [self.contentView addSubview:self.accThsLabel];
-    [self.contentView addSubview:self.accThsSlider];
-    [self.contentView addSubview:self.accTmltLabel];
-    [self.contentView addSubview:self.accTmltSlider];
+    //[self.contentView addSubview:self.accThsLabel];
+    //[self.contentView addSubview:self.accThsSlider];
+    //[self.contentView addSubview:self.accTmltLabel];
+    //[self.contentView addSubview:self.accTmltSlider];
     return self;
 }
 
@@ -75,19 +76,20 @@
     CGFloat width = self.contentView.bounds.size.width;
     CGRect fr;
 
-    fr = CGRectMake(boundsX + 5, 5, width-50, 25);
+    fr = CGRectMake(boundsX + 5, 8, width-50, 25);
     self.accLabel.frame = fr;
 
-    fr = CGRectMake(boundsX + 30, 5, 100, 25);
+    fr = CGRectMake(boundsX + 30, 8, 100, 25);
     self.accValueTap.frame = fr;
-
+/*
     self.accThsLabel.frame  = CGRectMake(boundsX + 15, 35,  110,40);
     self.accThsSlider.frame = CGRectMake(boundsX + 120, 35, 180,40);
 
     self.accTmltLabel.frame  = CGRectMake(boundsX + 15,  35+35,  110,40);
     self.accTmltSlider.frame = CGRectMake(boundsX + 120, 35+35, 180,40);
+ */
 }
-
+/*
 -(IBAction) accThsChanged:(UISlider*)sender
 {
     NSUInteger index = (NSUInteger)(self.accThsSlider.value);
@@ -117,6 +119,6 @@
     }
     self.accTmltLabel.text = [[NSString alloc] initWithFormat:@"Tmlt %.0fms",msec];
     accTmltValuePrevious = msec10;
-}
+}*/
 @end
 

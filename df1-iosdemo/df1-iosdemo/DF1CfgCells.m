@@ -432,8 +432,12 @@ withCfg:(NSMutableDictionary*) ucfg
     }
     [self.featureToggle addTarget:self action:@selector(toggleFeature) forControlEvents:UIControlEventTouchUpInside];
     
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    accThsValuePrevious = 0;
+    //Nick: JB was zeroing accThsValuePrevious. Was there a reason for this? I am persisting the value with NSUserDefaults.
+    accThsValuePrevious = [[defaults valueForKey:@"tapThs"] integerValue];
+    accTmltValuePrevious = [[defaults valueForKey:@"tapTmlt"] integerValue];
+    
     
     self.accLabel = [[UILabel alloc] init];
     self.accLabel.textAlignment = NSTextAlignmentRight;
@@ -446,17 +450,23 @@ withCfg:(NSMutableDictionary*) ucfg
     
     self.accThsLabel = [[UILabel alloc] init];
     self.accThsLabel.font = [UIFont systemFontOfSize:14];
-    self.accThsLabel.text = @"Threshhold";
+    self.accThsLabel.text = @"Mag";
     self.accThsSlider = [[UISlider alloc] init];
     self.accThsSlider.continuous = true;
     [self.accThsSlider setMinimumValue:0];
     [self.accThsSlider setMaximumValue:31];
     [self.accThsSlider addTarget:self action:@selector(accThsChanged:)
                 forControlEvents:UIControlEventValueChanged];
+    if([self.cfg objectForKey:CFG_TAP_THSZ]){
+        float value = [[self.cfg objectForKey:CFG_TAP_THSZ] floatValue];
+        //Nick: SOMETHING IS WRONG WITH THIS VALUE SETTING. I am unsure where the constants are coming from in this threshold.
+        [self.accThsSlider setValue:(NSUInteger)value/0.063f animated:YES];
+        self.accThsLabel.text = [[NSString alloc] initWithFormat:@"Mag %.3fG",value];
+    }
     
     self.accTmltLabel = [[UILabel alloc] init];
     self.accTmltLabel.font = [UIFont systemFontOfSize:14];
-    self.accTmltLabel.text = @"Duration";
+    self.accTmltLabel.text = @"Time";
     self.accTmltSlider = [[UISlider alloc] init];
     self.accTmltSlider.continuous = true;
     [self.accTmltSlider setMinimumValue:1];
@@ -533,8 +543,10 @@ withCfg:(NSMutableDictionary*) ucfg
         [self.cfg setValue:[NSNumber numberWithFloat:gvalue] forKey:CFG_TAP_THSX];
     }
     // [self.accRangeSlider setValue:index animated:YES];
-    self.accThsLabel.text = [[NSString alloc] initWithFormat:@"Thresh %.3fG",gvalue];
+    self.accThsLabel.text = [[NSString alloc] initWithFormat:@"Mag %.3fG",gvalue];
     accThsValuePrevious = index;
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:accThsValuePrevious] forKey:@"tapThs"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 -(IBAction) accTmltChanged:(UISlider*)sender
@@ -547,8 +559,10 @@ withCfg:(NSMutableDictionary*) ucfg
         // notice we are changing all 3 threshholds
         [self.cfg setValue:[NSNumber numberWithFloat:msec10] forKey:CFG_TAP_TMLT];
     }
-    self.accTmltLabel.text = [[NSString alloc] initWithFormat:@"Tmlt %.0fms",msec];
+    self.accTmltLabel.text = [[NSString alloc] initWithFormat:@"Time %.0fms",msec];
     accTmltValuePrevious = msec10;
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:accTmltValuePrevious] forKey:@"tapTmlt"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 @end
 
