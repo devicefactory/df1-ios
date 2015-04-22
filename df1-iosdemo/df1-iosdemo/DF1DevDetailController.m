@@ -38,15 +38,18 @@
         self.df.delegate = self;
         [self.df connect:self.df.p];
         _needResyncDF1Parameters = FALSE;
-        
+        _avgAccCounter = 0;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         _defaultCells = [NSDictionary dictionaryWithObjectsAndKeys:
-                         [NSNumber numberWithBool:TRUE],   @"DF1CellAccXyz",  // class names
-                         [NSNumber numberWithBool:TRUE],   @"DF1CellAccTap",  // and boolean
-                         [NSNumber numberWithBool:TRUE],   @"DF1CellDataShare",
-                         [NSNumber numberWithBool:TRUE],   @"DF1CellBatt",
+                         [defaults valueForKey:@"DF1CfgXYZPlotter"],   @"DF1CellAccXyz",  // class names
+                         [defaults valueForKey:@"DF1CfgTapDetector"],   @"DF1CellAccTap",  // and boolean
+                         [defaults valueForKey:@"DF1CfgCSVDataRecorder"],   @"DF1CellDataShare",
+                         [defaults valueForKey:@"DF1CfgBatteryLevel"],   @"DF1CellBatt",
+                         [defaults valueForKey:@"DF1CfgMagnitudeValues"],   @"DF1CellMag",
                          nil];
         [self initializeCells];
     }
+    NSLog(@"the def cells, %@", _defaultCells);
     return self;
 }
 
@@ -116,6 +119,13 @@
         self.battCell.battLevel.text = @"NA";
         self.battCell.battBar.progress = 0.0;
     }
+    if([[cells objectForKey:@"DF1CellMag"] boolValue] && !self.magCell) {
+        _magCell = [[DF1CellAccMagnitude alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AccMagCell" parentController:self];
+        
+        _magCell.magText.text = @"";
+        //_magCell.mag
+        
+    }
     // if(!self.rssiCell) {
     //     self.rssiCell = [[RSSICell alloc] initWithStyle:UITableViewCellStyleDefault
     //                                           reuseIdentifier:@"RSSICell"];
@@ -140,6 +150,7 @@
                                                                 green:0.4 blue:0.9 alpha:0.5];
     }
     */
+    
     if(_needResyncDF1Parameters)
     {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -148,6 +159,18 @@
         [self.df syncParameters];  // will incur callback didSyncParameters
         [self.tableView reloadData];
     }
+    
+    //reload what cells should be in the table
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    _defaultCells = [NSDictionary dictionaryWithObjectsAndKeys:
+                     [defaults valueForKey:@"DF1CfgXYZPlotter"],   @"DF1CellAccXyz",  // class names
+                     [defaults valueForKey:@"DF1CfgTapDetector"],   @"DF1CellAccTap",  // and boolean
+                     [defaults valueForKey:@"DF1CfgCSVDataRecorder"],   @"DF1CellDataShare",
+                     [defaults valueForKey:@"DF1CfgBatteryLevel"],   @"DF1CellBatt",
+                     [defaults valueForKey:@"DF1CfgMagnitudeValues"],   @"DF1CellMag",
+                     nil];
+    [self initializeCells];
+
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -205,7 +228,10 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 4;
+    //check the bools for cell initialization and sum them as integers
+    NSInteger cellsCount = [[_defaultCells valueForKey:@"DF1CellAccXyz"] integerValue] + [[_defaultCells valueForKey:@"DF1CellAccTap"] integerValue] + [[_defaultCells valueForKey:@"DF1CellDataShare"] integerValue] + [[_defaultCells valueForKey:@"DF1CellBatt"] integerValue] + [[_defaultCells valueForKey:@"DF1CellMag"] integerValue];
+    NSLog(@"cells count is %ld", cellsCount);
+    return cellsCount;
     // int count = 1; // by default we need the signal strength
     // if([self.d isEnabled:@"Accelerometer service active"])
     //   count += 2;
@@ -217,23 +243,44 @@
     // return count;
 }
 
-
+#pragma mark cellForRow
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    int cellIndexer = 0;
     DF_DBG(@"indexpath row: %ld", (long)indexPath.row);
-    if(indexPath.row==0) {
-        return self.accXyzCell;
+    
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgXYZPlotter"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.accXyzCell;
+        }
     }
-    if(indexPath.row==1) {
-        return self.accTapCell;
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTapDetector"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.accTapCell;
+        }
     }
-    if(indexPath.row==2) {
-        DF_DBG(@"returning dataCell!!");
-        return self.dataCell;
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgCSVDataRecorder"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.dataCell;
+        }
     }
-    if(indexPath.row==3) {
-        return self.battCell;
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgBatteryLevel"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.battCell;
+        }
     }
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgMagnitudeValues"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.magCell;
+        }
+    }
+
+    
     // if (indexPath.row==0 && [self.d isEnabled:@"Accelerometer service active"]) {
     //     [self.babyCell setPosition:UACellBackgroundViewPositionTop];
     //     return self.babyCell;
@@ -245,10 +292,40 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.row==0) return self.accXyzCell.height;
-    if(indexPath.row==1) return self.accTapCell.height;
-    if(indexPath.row==2) return self.dataCell.height;
-    if(indexPath.row==3) return self.battCell.height;
+    int cellIndexer = 0;
+    DF_DBG(@"indexpath row: %ld", (long)indexPath.row);
+    
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgXYZPlotter"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.accXyzCell.height;
+        }
+    }
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTapDetector"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.accTapCell.height;
+        }
+    }
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgCSVDataRecorder"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.dataCell.height;
+        }
+    }
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgBatteryLevel"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.battCell.height;
+        }
+    }
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgMagnitudeValues"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return _magCell.height;
+        }
+    }
+
     return 100;
 }
 
@@ -405,7 +482,7 @@
         // NSDictionary *cells = (NSDictionary*) [dict objectForKey:CFG_CELLS];
         NSMutableDictionary *cells;
         if([[dict objectForKey:CFG_CELLS] isKindOfClass:[NSArray class]]) {
-            DF_DBG(@"wtf, I saved dict, not array!!!");
+            DF_DBG(@"wtf, I saved dict, not array!!!"); //LOL This is awesome debugging.
             cells = [[NSMutableDictionary alloc] init];
             for(NSString *key in [dict objectForKey:CFG_CELLS]) {
                 [cells setObject:[NSNumber numberWithBool:YES] forKey:key];
@@ -473,6 +550,23 @@
     self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z8 : %.3f", z];
     self.accXyzCell.accZStrip.value = z;
     
+    float mag = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
+    if (mag>_maxAcceleration.doubleValue) {
+        _maxAcceleration = [NSNumber numberWithFloat:mag];
+    }
+    _avgAcceleration = [NSNumber numberWithFloat:((_avgAcceleration.floatValue * _avgAccCounter.floatValue)+mag)/(_avgAccCounter.floatValue+1) ];
+    _avgAccCounter = [NSNumber numberWithInt:_avgAccCounter.intValue+1];
+    
+    NSLog(@"Setting mag of: %f", mag);
+    self.magCell.magText.text = [[NSString alloc] initWithFormat:@"%f", mag];
+    self.magCell.avgMagText.text = [[NSString alloc] initWithFormat:@"%@", _avgAcceleration];
+    self.magCell.maxMagText.text = [[NSString alloc] initWithFormat:@"%@", _maxAcceleration];
+    //Present notification if the magnitude exceeds 2G's allow users to change this value and make sure this runs in the background
+    if(mag > 2) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Magnitude Threshold Exceeded!" object:nil];
+    }
+
+    
     if(self.dataCell!=nil && [self.dataCell isFileReady]) {
         [self.dataCell recordX:x Y:y Z:z];
     }
@@ -491,6 +585,23 @@
     self.accXyzCell.accYStrip.value = y;
     self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z14: %.4f", z];
     self.accXyzCell.accZStrip.value = z;
+    
+    float mag = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
+    if (mag>_maxAcceleration.doubleValue) {
+        _maxAcceleration = [NSNumber numberWithFloat:mag];
+    }
+    _avgAcceleration = [NSNumber numberWithFloat:((_avgAcceleration.floatValue * _avgAccCounter.floatValue)+mag)/(_avgAccCounter.floatValue+1) ];
+    _avgAccCounter = [NSNumber numberWithInt:_avgAccCounter.intValue+1];
+    
+    NSLog(@"Setting mag of: %f", mag);
+    self.magCell.magText.text = [[NSString alloc] initWithFormat:@"%f", mag];
+    self.magCell.avgMagText.text = [[NSString alloc] initWithFormat:@"%@", _avgAcceleration];
+    self.magCell.maxMagText.text = [[NSString alloc] initWithFormat:@"%@", _maxAcceleration];
+
+    //Present notification if the magnitude exceeds 2G's allow users to change this value and make sure this runs in the background
+    if(mag > 2) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Magnitude Threshold Exceeded!" object:nil];
+    }
     
     if(self.dataCell!=nil && [self.dataCell isFileReady]) {
         [self.dataCell recordX:x Y:y Z:z];

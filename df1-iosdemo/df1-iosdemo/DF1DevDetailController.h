@@ -13,6 +13,7 @@
 #import "DF1CellAccTap.h"
 #import "DF1CellDataShare.h"
 #import "DF1CellBatt.h"
+#import "DF1CellAccMagnitude.h"
 
 /*
 @protocol DF1DevDetailDelegate <NSObject>
@@ -30,6 +31,11 @@
 @property (strong,nonatomic) DF1CellAccTap *accTapCell;
 @property (strong,nonatomic) DF1CellBatt   *battCell;
 @property (strong,nonatomic) DF1CellDataShare *dataCell;
+@property (strong,nonatomic) DF1CellAccMagnitude *magCell;
+
+@property NSNumber *maxAcceleration;
+@property NSNumber *avgAcceleration;
+@property NSNumber *avgAccCounter;
 // @property (strong,nonatomic) DF1CellBatt   *rssiCell;
 @property (nonatomic) DF1Data *df1data;
 

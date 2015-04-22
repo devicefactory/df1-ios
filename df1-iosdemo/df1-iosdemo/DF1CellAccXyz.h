@@ -10,6 +10,7 @@
 #import "F3PlotStrip.h"
 #import "DF1Lib.h"
 #import "DF1Cell.h"
+#import "UIColor+DF1Colors.h"
 
 @class DF1DevDetailController;
 

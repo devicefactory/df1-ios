@@ -56,7 +56,7 @@
     self.accXStrip.backgroundColor = [UIColor clearColor];
     self.accXStrip.capacity = 180;
     self.accXStrip.baselineValue = 0.0;
-    self.accXStrip.lineColor = [UIColor redColor];
+    self.accXStrip.lineColor = [UIColor DFRed];
     self.accXStrip.showDot = YES;
     self.accXStrip.labelFormat = @"Accelerometer X value: (%0.02f)";
     self.accXStrip.label = self.accXStripLabel;
@@ -70,7 +70,7 @@
     self.accYStrip.backgroundColor = [UIColor clearColor];
     self.accYStrip.capacity = 180;
     self.accYStrip.baselineValue = 0.0;
-    self.accYStrip.lineColor = [UIColor greenColor];
+    self.accYStrip.lineColor = [UIColor DFGreen];
     self.accYStrip.showDot = YES;
     self.accYStrip.labelFormat = @"Accelerometer Y value: (%0.02f)";
     self.accYStrip.label = self.accYStripLabel;
@@ -84,7 +84,7 @@
     self.accZStrip.backgroundColor = [UIColor clearColor];
     self.accZStrip.capacity = 180;
     self.accZStrip.baselineValue = 0.0;
-    self.accZStrip.lineColor = [UIColor blueColor];
+    self.accZStrip.lineColor = [UIColor DFYellow];
     self.accZStrip.showDot = YES;
     self.accZStrip.labelFormat = @"Accelerometer Z value: (%0.02f)";
     self.accZStrip.label = self.accZStripLabel;
@@ -130,18 +130,19 @@
 
     fr = CGRectMake(boundsX + 25, 35, 80, 25);
     self.accValueX.frame = fr;
-    fr = CGRectMake(boundsX + 120, 35, 180,30);
+    fr = CGRectMake(boundsX + 120, 35, width-135,30);
     self.accXStrip.frame = fr;
 
     fr = CGRectMake(boundsX + 25, 35+35, 80, 25);
     self.accValueY.frame = fr;
-    fr = CGRectMake(boundsX + 120, 35+35, 180,30);
+    fr = CGRectMake(boundsX + 120, 35+35, width-135,30);
     self.accYStrip.frame = fr;
 
     fr = CGRectMake(boundsX + 25, 35+35+35, 80, 25);
     self.accValueZ.frame = fr;
-    fr = CGRectMake(boundsX + 120, 35+35+35, 180,30);
+    fr = CGRectMake(boundsX + 120, 35+35+35, width-135,30);
     self.accZStrip.frame = fr;
+    
     
 //    fr = CGRectMake(boundsX + 15, 35+35+35+35, 70,40);
 //    self.accRangeLabel.frame = fr;

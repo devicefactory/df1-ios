@@ -20,6 +20,7 @@
 @property (nonatomic,assign) id<DF1DevCellDelegate> delegate;
 @property (nonatomic,strong) IBOutlet UILabel *nameLabel;
 @property (nonatomic,strong) IBOutlet UILabel *subLabel;
+@property (nonatomic,strong) IBOutlet UILabel *subLabel2;
 @property (nonatomic,strong) IBOutlet UILabel *detailLabel;
 @property (nonatomic,strong) IBOutlet UIImageView *deviceIcon;
 @property (nonatomic,assign) CBPeripheral *p;

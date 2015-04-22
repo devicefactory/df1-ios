@@ -51,18 +51,16 @@
 @end
 
 
-@interface DF1CfgCellBatt : DF1CfgCell
+@interface DF1CfgXYZPlotter : DF1CfgCell
 -(void) modifyChange:(NSMutableDictionary*) c;
-@property (nonatomic,retain) UILabel *battLabel;
+@property (nonatomic,retain) UILabel *featureLabel;
+@property (nonatomic,retain) UIButton *featureToggle;
 @end
 
+@interface DF1CfgTapDetector : DF1CfgCell
+@property (nonatomic,retain) UILabel *featureLabel;
+@property (nonatomic,retain) UIButton *featureToggle;
 
-@interface DF1CfgCellProx : DF1CfgCell
--(void) modifyChange:(NSMutableDictionary*) c;
-@end
-
-
-@interface DF1CfgCellTap : DF1CfgCell
 @property (nonatomic,retain) UILabel *accLabel;
 @property (nonatomic,retain) UILabel *accValueTap;
 @property (nonatomic,retain) UILabel *accThsLabel;
@@ -71,6 +69,25 @@
 @property (nonatomic,retain) UISlider *accTmltSlider;
 -(IBAction) accThsChanged:(UISlider*)sender;
 -(IBAction) accTmltChanged:(UISlider*)sender;
+@end
+
+@interface DF1CfgCSVDataRecorder : DF1CfgCell
+@property (nonatomic,retain) UILabel *featureLabel;
+@property (nonatomic,retain) UIButton *featureToggle;
+@end
+
+@interface DF1CfgBatteryLevel : DF1CfgCell
+@property (nonatomic,retain) UILabel *featureLabel;
+@property (nonatomic,retain) UIButton *featureToggle;
+@end
+
+@interface DF1CfgMagnitudeValues : DF1CfgCell
+@property (nonatomic,retain) UILabel *featureLabel;
+@property (nonatomic,retain) UIButton *featureToggle;
+@end
+
+@interface DF1CfgCellProx : DF1CfgCell
+-(void) modifyChange:(NSMutableDictionary*) c;
 @end
 
 
