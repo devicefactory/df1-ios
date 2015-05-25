@@ -46,6 +46,7 @@
                          [defaults valueForKey:@"DF1CfgCSVDataRecorder"],   @"DF1CellDataShare",
                          [defaults valueForKey:@"DF1CfgBatteryLevel"],   @"DF1CellBatt",
                          [defaults valueForKey:@"DF1CfgMagnitudeValues"],   @"DF1CellMag",
+                         [defaults valueForKey:@"DF1CfgDistance"],   @"DF1CellDistance",
                          nil];
         [self initializeCells];
     }
@@ -126,6 +127,16 @@
         //_magCell.mag
         
     }
+    if([[cells objectForKey:@"DF1CellDistance"] boolValue] && !self.distCell) {
+        _distCell = [[DF1CellDistance alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DistCell" parentController:self];
+        //_magCell.mag
+        NSLog(@"making dist cell");
+        
+        _rssiTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
+                                                     target:self selector:@selector(triggerReadRSSI:) userInfo:nil repeats:YES];
+        
+        
+    }
     // if(!self.rssiCell) {
     //     self.rssiCell = [[RSSICell alloc] initWithStyle:UITableViewCellStyleDefault
     //                                           reuseIdentifier:@"RSSICell"];
@@ -168,6 +179,7 @@
                      [defaults valueForKey:@"DF1CfgCSVDataRecorder"],   @"DF1CellDataShare",
                      [defaults valueForKey:@"DF1CfgBatteryLevel"],   @"DF1CellBatt",
                      [defaults valueForKey:@"DF1CfgMagnitudeValues"],   @"DF1CellMag",
+                     [defaults valueForKey:@"DF1CfgDistance"],   @"DF1CellDistance",
                      nil];
     [self initializeCells];
 
@@ -229,7 +241,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     //check the bools for cell initialization and sum them as integers
-    NSInteger cellsCount = [[_defaultCells valueForKey:@"DF1CellAccXyz"] integerValue] + [[_defaultCells valueForKey:@"DF1CellAccTap"] integerValue] + [[_defaultCells valueForKey:@"DF1CellDataShare"] integerValue] + [[_defaultCells valueForKey:@"DF1CellBatt"] integerValue] + [[_defaultCells valueForKey:@"DF1CellMag"] integerValue];
+    NSInteger cellsCount = [[_defaultCells valueForKey:@"DF1CellAccXyz"] integerValue] + [[_defaultCells valueForKey:@"DF1CellAccTap"] integerValue] + [[_defaultCells valueForKey:@"DF1CellDataShare"] integerValue] + [[_defaultCells valueForKey:@"DF1CellBatt"] integerValue] + [[_defaultCells valueForKey:@"DF1CellMag"] integerValue] + [[_defaultCells valueForKey:@"DF1CellDistance"] integerValue];
     NSLog(@"cells count is %ld", cellsCount);
     return cellsCount;
     // int count = 1; // by default we need the signal strength
@@ -280,7 +292,12 @@
         }
     }
 
-    
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgDistance"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.distCell;
+        }
+    }
     // if (indexPath.row==0 && [self.d isEnabled:@"Accelerometer service active"]) {
     //     [self.babyCell setPosition:UACellBackgroundViewPositionTop];
     //     return self.babyCell;
@@ -323,6 +340,12 @@
         cellIndexer++;
         if(cellIndexer==indexPath.row+1) {
             return _magCell.height;
+        }
+    }
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgDistance"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return _distCell.height;
         }
     }
 
@@ -440,6 +463,7 @@
 // this function gets called when services and characteristics are all discovered
 -(void) didConnect:(CBPeripheral*) peripheral
 {
+    _peripheral = peripheral;
     _hud.labelText = @"connected to peripheral";
     [self _modifyDF1Parameters];
     [self.df syncParameters];
@@ -523,6 +547,10 @@
 
 -(void) didUpdateRSSI:(CBPeripheral*) peripheral withRSSI:(float) rssi
 {
+    self.distCell.RSSIText.text = [NSString stringWithFormat:@"%.2f dBm", rssi];
+    double distance = pow(10, (-75-rssi)/20);
+    self.distCell.distanceText.text = [NSString stringWithFormat:@"%.2f m", distance];
+    
 }
 
 -(void) receivedBatt:(float) battlev
@@ -557,7 +585,6 @@
     _avgAcceleration = [NSNumber numberWithFloat:((_avgAcceleration.floatValue * _avgAccCounter.floatValue)+mag)/(_avgAccCounter.floatValue+1) ];
     _avgAccCounter = [NSNumber numberWithInt:_avgAccCounter.intValue+1];
     
-    NSLog(@"Setting mag of: %f", mag);
     self.magCell.magText.text = [[NSString alloc] initWithFormat:@"%f", mag];
     self.magCell.avgMagText.text = [[NSString alloc] initWithFormat:@"%@", _avgAcceleration];
     self.magCell.maxMagText.text = [[NSString alloc] initWithFormat:@"%@", _maxAcceleration];
@@ -626,9 +653,22 @@
         self.accTapCell.accValueTap.text = [[NSString alloc] initWithFormat:@"Tap!"];
         eventResetTimer = [NSTimer scheduledTimerWithTimeInterval:0.25f target:self selector:@selector(_resetTap)
                                                          userInfo:nil repeats:FALSE];
+        
+        UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+        localNotif.alertBody = @"DF1 Acceleration Threshold Exceeded!";
+        localNotif.alertTitle = @"DF1 Tap Detector";
+        localNotif.soundName = UILocalNotificationDefaultSoundName;
+        [[UIApplication sharedApplication] presentLocalNotificationNow:localNotif];
+        
     } else {
         self.accTapCell.accValueTap.text = @"no event";
     }
+}
+
+- (void)triggerReadRSSI: (NSTimer *) timer
+{
+        [self.df askRSSI:_peripheral];
+    
 }
 
 @end

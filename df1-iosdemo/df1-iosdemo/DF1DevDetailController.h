@@ -14,6 +14,7 @@
 #import "DF1CellDataShare.h"
 #import "DF1CellBatt.h"
 #import "DF1CellAccMagnitude.h"
+#import "DF1CellDistance.h"
 
 /*
 @protocol DF1DevDetailDelegate <NSObject>
@@ -32,12 +33,18 @@
 @property (strong,nonatomic) DF1CellBatt   *battCell;
 @property (strong,nonatomic) DF1CellDataShare *dataCell;
 @property (strong,nonatomic) DF1CellAccMagnitude *magCell;
+@property (strong,nonatomic) DF1CellDistance *distCell;
+
+@property (strong,nonatomic) CBPeripheral *peripheral;
 
 @property NSNumber *maxAcceleration;
 @property NSNumber *avgAcceleration;
 @property NSNumber *avgAccCounter;
 // @property (strong,nonatomic) DF1CellBatt   *rssiCell;
 @property (nonatomic) DF1Data *df1data;
+
+@property NSTimer *rssiTimer;
+@property bool _isScanning;
 
 -(id)initWithDF:(DF1*) df;
 

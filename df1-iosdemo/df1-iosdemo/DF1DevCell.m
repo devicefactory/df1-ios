@@ -147,15 +147,15 @@
     self.deviceIcon.frame = CGRectMake(boundsX+11, 12, 60, 60);
     
     self.nameLabel.font = [UIFont boldSystemFontOfSize:18];
-    self.nameLabel.frame = CGRectMake(boundsX+85, 15, 200, 30);
+    self.nameLabel.frame = CGRectMake(boundsX+85, 8, 200, 30);
 
     self.subLabel.font = [UIFont boldSystemFontOfSize:12];
-    self.subLabel.frame = CGRectMake(boundsX+85, 35, 100, 30);
+    self.subLabel.frame = CGRectMake(boundsX+85, 28, 100, 30);
     
     self.subLabel2.font = [UIFont boldSystemFontOfSize:12];
-    self.subLabel2.frame = CGRectMake(boundsX+85, 55, 100, 30);
+    self.subLabel2.frame = CGRectMake(boundsX+85, 48, 100, 30);
     
-    self.barHolder.frame = CGRectMake(boundsX+85, 60, 100, 30);
+    self.barHolder.frame = CGRectMake(boundsX+85, 53, 100, 30);
     
     self.ledButton.frame = CGRectMake(contentRect.size.width-100, 25, 80, 35);
 

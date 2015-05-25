@@ -90,6 +90,10 @@
 -(void) modifyChange:(NSMutableDictionary*) c;
 @end
 
+@interface DF1CfgDistance : DF1CfgCell
+@property (nonatomic,retain) UILabel *featureLabel;
+@property (nonatomic,retain) UIButton *featureToggle;
+@end
 
 @protocol DF1CfgCellOADTriggerDelegate
 @optional

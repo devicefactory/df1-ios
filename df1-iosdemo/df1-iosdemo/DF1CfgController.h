@@ -10,7 +10,7 @@ DF1CfgController: Configuration Management Controller
 
 #define SECTION_NAMES @"DF1 Config",@"DF1 Features",@"DF1 Firmware",nil
 #define SECTION1 @"DF1CfgCellName",@"DF1CfgCellRange",@"DF1CfgCellRes",@"DF1CfgCellFreqRange",nil
-#define SECTION2 @"DF1CfgXYZPlotter",@"DF1CfgTapDetector",@"DF1CfgCSVDataRecorder",@"DF1CfgBatteryLevel", @"DF1CfgMagnitudeValues", nil
+#define SECTION2 @"DF1CfgXYZPlotter",@"DF1CfgTapDetector",@"DF1CfgCSVDataRecorder",@"DF1CfgBatteryLevel", @"DF1CfgMagnitudeValues",@"DF1CfgDistance", nil
 #define SECTION3 @"DF1CfgCellOADTrigger",nil
 
 @interface DF1CfgController : UITableViewController <DF1Delegate,DF1CfgCellOADTriggerDelegate,UINavigationControllerDelegate,UIAlertViewDelegate>

@@ -34,6 +34,7 @@
 		012131FC1ABF9C6300B3BDF3 /* Default@2x~iphone_640x960.png in Resources */ = {isa = PBXBuildFile; fileRef = 012131E11ABF9C6300B3BDF3 /* Default@2x~iphone_640x960.png */; };
 		012131FD1ABF9C6300B3BDF3 /* Default~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 012131E21ABF9C6300B3BDF3 /* Default~ipad.png */; };
 		012131FE1ABF9C6300B3BDF3 /* Default~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = 012131E31ABF9C6300B3BDF3 /* Default~iphone.png */; };
+		013063061B11460400DDCCFC /* DF1CellDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = 013063051B11460400DDCCFC /* DF1CellDistance.m */; };
 		0131D41B1AD5EBFA00D479F9 /* on.png in Resources */ = {isa = PBXBuildFile; fileRef = 0131D4171AD5EBFA00D479F9 /* on.png */; };
 		0131D41C1AD5EBFA00D479F9 /* off.png in Resources */ = {isa = PBXBuildFile; fileRef = 0131D4181AD5EBFA00D479F9 /* off.png */; };
 		0131D41D1AD5EBFA00D479F9 /* on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0131D4191AD5EBFA00D479F9 /* on@2x.png */; };
@@ -150,6 +151,8 @@
 		012131E11ABF9C6300B3BDF3 /* Default@2x~iphone_640x960.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x~iphone_640x960.png"; sourceTree = "<group>"; };
 		012131E21ABF9C6300B3BDF3 /* Default~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default~ipad.png"; sourceTree = "<group>"; };
 		012131E31ABF9C6300B3BDF3 /* Default~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default~iphone.png"; sourceTree = "<group>"; };
+		013063041B11460400DDCCFC /* DF1CellDistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1CellDistance.h; sourceTree = "<group>"; };
+		013063051B11460400DDCCFC /* DF1CellDistance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1CellDistance.m; sourceTree = "<group>"; };
 		0131D4171AD5EBFA00D479F9 /* on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = on.png; path = "df1-iosdemo/assets/on.png"; sourceTree = "<group>"; };
 		0131D4181AD5EBFA00D479F9 /* off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = off.png; path = "df1-iosdemo/assets/off.png"; sourceTree = "<group>"; };
 		0131D4191AD5EBFA00D479F9 /* on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "on@2x.png"; path = "df1-iosdemo/assets/on@2x.png"; sourceTree = "<group>"; };
@@ -408,6 +411,8 @@
 				C5A71BF9195222630074B087 /* DF1CfgController.m */,
 				C5A71BEA194D51ED0074B087 /* DF1Cell.h */,
 				C5A71BEB194D51ED0074B087 /* DF1Cell.m */,
+				013063041B11460400DDCCFC /* DF1CellDistance.h */,
+				013063051B11460400DDCCFC /* DF1CellDistance.m */,
 				01F826AD1AB4D35B003F8C97 /* DF1CellAccMagnitude.h */,
 				01F826AE1AB4D35B003F8C97 /* DF1CellAccMagnitude.m */,
 				C5AACD561A99857100A57F1C /* DF1CellDataShare.h */,
@@ -579,6 +584,11 @@
 				TargetAttributes = {
 					C56A3EF318DF77B700DB2A5C = {
 						DevelopmentTeam = HPUYV2MCC9;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					C56A3F1718DF77B700DB2A5C = {
 						DevelopmentTeam = HPUYV2MCC9;
@@ -700,6 +710,7 @@
 			files = (
 				C5AACD4D1A9835E700A57F1C /* DF1OADController.m in Sources */,
 				C5AACD441A98289500A57F1C /* BLEUtility.m in Sources */,
+				013063061B11460400DDCCFC /* DF1CellDistance.m in Sources */,
 				C56C08991901A4E9001FF641 /* DF1DevListController.m in Sources */,
 				C5AACD411A98289500A57F1C /* BLETIOADProfile.m in Sources */,
 				C56C089E1901C1B0001FF641 /* DF1DevCell.m in Sources */,
