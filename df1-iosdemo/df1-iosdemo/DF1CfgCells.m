@@ -347,7 +347,7 @@
     self.cfg = ucfg;
     self.height = 40;
     self.featureLabel = [[UILabel alloc] init];
-    self.featureLabel.textAlignment = NSTextAlignmentCenter;
+    self.featureLabel.textAlignment = NSTextAlignmentLeft;
     self.featureLabel.font = [UIFont systemFontOfSize:16];
     self.featureLabel.textColor = [UIColor grayColor];
     self.featureLabel.backgroundColor = [UIColor clearColor];
@@ -389,7 +389,7 @@
     CGFloat width = self.contentView.bounds.size.width;
     CGRect fr;
     
-    fr = CGRectMake(boundsX + 15, 8, width-50, 25);
+    fr = CGRectMake(boundsX + 70, 8, width-50, 25);
     self.featureLabel.frame = fr;
     fr = CGRectMake(boundsX + 15, -5, 50, 50);
     self.featureToggle.frame = fr;
@@ -402,6 +402,7 @@
     NSUInteger accTmltValuePrevious;
 }
 @end
+
 @implementation DF1CfgTapDetector
 -(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 withCfg:(NSMutableDictionary*) ucfg
@@ -418,7 +419,7 @@ withCfg:(NSMutableDictionary*) ucfg
     self.cfg = ucfg;
     self.height = 140;
     self.featureLabel = [[UILabel alloc] init];
-    self.featureLabel.textAlignment = NSTextAlignmentCenter;
+    self.featureLabel.textAlignment = NSTextAlignmentLeft;
     self.featureLabel.font = [UIFont systemFontOfSize:16];
     self.featureLabel.textColor = [UIColor grayColor];
     self.featureLabel.backgroundColor = [UIColor clearColor];
@@ -477,7 +478,7 @@ withCfg:(NSMutableDictionary*) ucfg
     {
         float value = [[self.cfg objectForKey:CFG_TAP_TMLT] floatValue];
         [self.accTmltSlider setValue:(NSUInteger)value animated:YES];
-        self.accTmltLabel.text = [[NSString alloc] initWithFormat:@"Duration %.0fms",10*value];
+        self.accTmltLabel.text = [[NSString alloc] initWithFormat:@"Time %.0fms",10*value];
     }
     
     
@@ -525,11 +526,12 @@ withCfg:(NSMutableDictionary*) ucfg
     
     self.accTmltLabel.frame  = CGRectMake(PAD_LEFT,    PAD_TOP+35+40,  110, 45);
     self.accTmltSlider.frame = CGRectMake(PAD_LEFT+130,PAD_TOP+35+40, 150,45);
-    fr = CGRectMake(boundsX + 15, 8, width-50, 25);
+    fr = CGRectMake(boundsX + 70, 8, width-50, 25);
     self.featureLabel.frame = fr;
     fr = CGRectMake(boundsX + 15, -5, 50, 50);
     self.featureToggle.frame = fr;
 }
+
 -(IBAction) accThsChanged:(UISlider*)sender
 {
     NSUInteger index = (NSUInteger)(self.accThsSlider.value);
@@ -566,6 +568,70 @@ withCfg:(NSMutableDictionary*) ucfg
 }
 @end
 
+@implementation DF1CfgDistance
+-(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+            withCfg:(NSMutableDictionary*) ucfg
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier withCfg:ucfg];
+    if(self==nil) {
+        return self;
+    }
+    
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgDistance"] isEqual:nil]){
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgDistance"]];
+    }
+    self.cfg = ucfg;
+    self.height = 40;
+    self.featureLabel = [[UILabel alloc] init];
+    self.featureLabel.textAlignment = NSTextAlignmentLeft;
+    self.featureLabel.font = [UIFont systemFontOfSize:16];
+    self.featureLabel.textColor = [UIColor grayColor];
+    self.featureLabel.backgroundColor = [UIColor clearColor];
+
+    self.featureLabel.text = @"Signal Strength";
+    self.featureToggle = [[UIButton alloc]initWithFrame:CGRectMake(5, 5,30,30)];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgDistance"] boolValue]) {
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+    [self.featureToggle addTarget:self action:@selector(toggleBtnPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView addSubview:self.featureToggle];
+    [self.contentView addSubview:self.featureLabel];
+    return self;
+}
+
+-(void) toggleBtnPressed {
+    if([self.featureToggle.imageView.image isEqual:[UIImage imageNamed:@"off.png"]]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgDistance"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:[NSString stringWithFormat:@"DF1CfgDistance"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+}
+
+-(void) layoutSubviews
+{
+    [super layoutSubviews];
+    CGRect contentRect = self.contentView.bounds;
+    CGFloat boundsX = contentRect.origin.x;
+    CGFloat width = self.contentView.bounds.size.width;
+    CGRect fr;
+    
+    fr = CGRectMake(boundsX + 70, 8, width-50, 25);
+    self.featureLabel.frame = fr;
+    fr = CGRectMake(boundsX + 15, -5, 50, 50);
+    self.featureToggle.frame = fr;
+}
+@end
+
+
 @implementation DF1CfgCSVDataRecorder
 -(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
             withCfg:(NSMutableDictionary*) ucfg
@@ -582,7 +648,7 @@ withCfg:(NSMutableDictionary*) ucfg
     self.cfg = ucfg;
     self.height = 40;
     self.featureLabel = [[UILabel alloc] init];
-    self.featureLabel.textAlignment = NSTextAlignmentCenter;
+    self.featureLabel.textAlignment = NSTextAlignmentLeft;
     self.featureLabel.font = [UIFont systemFontOfSize:16];
     self.featureLabel.textColor = [UIColor grayColor];
     self.featureLabel.backgroundColor = [UIColor clearColor];
@@ -622,7 +688,7 @@ withCfg:(NSMutableDictionary*) ucfg
     CGFloat width = self.contentView.bounds.size.width;
     CGRect fr;
     
-    fr = CGRectMake(boundsX + 15, 8, width-50, 25);
+    fr = CGRectMake(boundsX + 70, 8, width-50, 25);
     self.featureLabel.frame = fr;
     fr = CGRectMake(boundsX + 15, -5, 50, 50);
     self.featureToggle.frame = fr;
@@ -645,7 +711,7 @@ withCfg:(NSMutableDictionary*) ucfg
     self.cfg = ucfg;
     self.height = 40;
     self.featureLabel = [[UILabel alloc] init];
-    self.featureLabel.textAlignment = NSTextAlignmentCenter;
+    self.featureLabel.textAlignment = NSTextAlignmentLeft;
     self.featureLabel.font = [UIFont systemFontOfSize:16];
     self.featureLabel.textColor = [UIColor grayColor];
     self.featureLabel.backgroundColor = [UIColor clearColor];
@@ -685,7 +751,7 @@ withCfg:(NSMutableDictionary*) ucfg
     CGFloat width = self.contentView.bounds.size.width;
     CGRect fr;
     
-    fr = CGRectMake(boundsX + 15, 8, width-50, 25);
+    fr = CGRectMake(boundsX + 70, 8, width-50, 25);
     self.featureLabel.frame = fr;
     fr = CGRectMake(boundsX + 15, -5, 50, 50);
     self.featureToggle.frame = fr;
@@ -708,7 +774,7 @@ withCfg:(NSMutableDictionary*) ucfg
     self.cfg = ucfg;
     self.height = 40;
     self.featureLabel = [[UILabel alloc] init];
-    self.featureLabel.textAlignment = NSTextAlignmentCenter;
+    self.featureLabel.textAlignment = NSTextAlignmentLeft;
     self.featureLabel.font = [UIFont systemFontOfSize:16];
     self.featureLabel.textColor = [UIColor grayColor];
     self.featureLabel.backgroundColor = [UIColor clearColor];
@@ -748,12 +814,14 @@ withCfg:(NSMutableDictionary*) ucfg
     CGFloat width = self.contentView.bounds.size.width;
     CGRect fr;
     
-    fr = CGRectMake(boundsX + 15, 8, width-50, 25);
+    fr = CGRectMake(boundsX + 70, 8, width-50, 25);
     self.featureLabel.frame = fr;
     fr = CGRectMake(boundsX + 15, -5, 50, 50);
     self.featureToggle.frame = fr;
 }
 @end
+
+
 
 @implementation DF1CfgCellProx
 -(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
