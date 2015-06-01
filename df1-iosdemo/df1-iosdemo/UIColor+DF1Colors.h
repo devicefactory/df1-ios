@@ -13,4 +13,7 @@
 +(UIColor *) DFYellow;
 +(UIColor *) DFRed;
 +(UIColor *) DFBlue;
++(UIColor *) DFBlack;
++(UIColor *) DFGray;
++(UIColor *) DFBarColor;
 @end

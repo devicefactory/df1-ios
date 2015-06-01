@@ -91,27 +91,27 @@
 
     [self _imageButton];
     // [self _genericButton];
-
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.isOAD = [NSNumber numberWithBool:false];
     // Initialization code
     self.nameLabel = [[UILabel alloc] init];
     self.nameLabel.textAlignment = NSTextAlignmentLeft;
     self.nameLabel.font = [UIFont boldSystemFontOfSize:14];
-    self.nameLabel.textColor = [UIColor colorWithRed:0.2 green:0.2 blue:0.5 alpha:1.0];
+    self.nameLabel.textColor = [UIColor whiteColor];
 
     self.subLabel = [[UILabel alloc] init];
     self.subLabel.textAlignment = NSTextAlignmentLeft;
-    self.subLabel.font = [UIFont boldSystemFontOfSize:8];
-    self.subLabel.textColor = [UIColor grayColor];
+    self.subLabel.font = [UIFont systemFontOfSize:10];
+    self.subLabel.textColor = [UIColor whiteColor];
 
     self.subLabel2 = [[UILabel alloc] init];
     self.subLabel2.textAlignment = NSTextAlignmentLeft;
-    self.subLabel2.font = [UIFont boldSystemFontOfSize:8];
-    self.subLabel2.textColor = [UIColor grayColor];
+    self.subLabel2.font = [UIFont systemFontOfSize:10];
+    self.subLabel2.textColor = [UIColor whiteColor];
     
     self.detailLabel = [[UILabel alloc] init];
     self.detailLabel.textAlignment = NSTextAlignmentLeft;
-    self.detailLabel.font = [UIFont boldSystemFontOfSize:8];
+    self.detailLabel.font = [UIFont systemFontOfSize:10];
     
     self.signalBar = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, 85, 20)];
     self.signalBar.progress = 0.0f;
@@ -125,6 +125,8 @@
     self.deviceIcon = [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"DF1_flat_icon.png"]];
     [self.deviceIcon setAutoresizingMask:UIViewAutoresizingNone];
     self.deviceIcon.contentMode = UIViewContentModeScaleAspectFit;
+    
+    self.backgroundColor = [UIColor DFBlack];
     
     [self.contentView addSubview:self.nameLabel];
     [self.contentView addSubview:self.subLabel];
@@ -150,12 +152,12 @@
     self.nameLabel.frame = CGRectMake(boundsX+85, 8, 200, 30);
 
     self.subLabel.font = [UIFont boldSystemFontOfSize:12];
-    self.subLabel.frame = CGRectMake(boundsX+85, 28, 100, 30);
+    self.subLabel.frame = CGRectMake(boundsX+85, 46, 100, 12);
     
     self.subLabel2.font = [UIFont boldSystemFontOfSize:12];
-    self.subLabel2.frame = CGRectMake(boundsX+85, 48, 100, 30);
+    self.subLabel2.frame = CGRectMake(boundsX+85, 32, 100, 12);
     
-    self.barHolder.frame = CGRectMake(boundsX+85, 53, 100, 30);
+    self.barHolder.frame = CGRectMake(boundsX+85, 63, 100, 30);
     
     self.ledButton.frame = CGRectMake(contentRect.size.width-100, 25, 80, 35);
 
@@ -194,7 +196,7 @@
     //Using
     self.subLabel.text = [NSString stringWithFormat:@"RSSI  %.0f dBm", value];
     double distance = pow(10, (-75-value)/20);//A = -75 dbm, a measured value for 1 meter away in free space. n=2 for free space
-    self.subLabel2.text = [NSString stringWithFormat:@"distance  %.0f m", distance]; //using RSSI(dbm)=-(10n*log10(d)-A) solving for d
+    self.subLabel2.text = [NSString stringWithFormat:@"distance  %.1f m", distance]; //using RSSI(dbm)=-(10n*log10(d)-A) solving for d
     float valuetrunc = (value < -100.0) ? -100.0 :
                        (value > -30.0 ) ? -30.0 : value;
     float strength = exp((30 + valuetrunc) / 50.0);  // in R: plot( exp( (20+seq(-20, -100))/40 ), type='b')

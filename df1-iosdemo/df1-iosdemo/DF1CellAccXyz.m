@@ -27,6 +27,7 @@
     self.parent = parent;
     self.height = 160;
 
+
     // self.accBarX = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, 170, 25)];
     // self.accBarX.progress = 0.0f;
     // self.accBarX.transform = CGAffineTransformRotate(self.accBarX.transform, -M_PI/2 .0);

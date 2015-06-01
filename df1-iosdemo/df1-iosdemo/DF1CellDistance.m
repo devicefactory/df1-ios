@@ -57,8 +57,8 @@
     //CGFloat boundsX = self.contentView.bounds.origin.x;
     CGFloat width = self.contentView.bounds.size.width;
     
-    self.distanceTitle.frame = CGRectMake(15, 20, width, 20);
-    self.RSSITitle.frame = CGRectMake(15, 60, width, 20);
+    self.distanceTitle.frame = CGRectMake(30, 20, width, 20);
+    self.RSSITitle.frame = CGRectMake(30, 60, width, 20);
     self.distanceText.frame = CGRectMake(-15, 20, width, 20);
     self.RSSIText.frame = CGRectMake(-15, 60, width, 20);
     

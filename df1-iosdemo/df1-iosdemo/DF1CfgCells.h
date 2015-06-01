@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "DF1Lib.h"
+#import "UIColor+DF1Colors.h"
 
 @interface DF1CfgCell : UITableViewCell
 // will be provided from external source

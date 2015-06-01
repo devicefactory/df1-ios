@@ -53,7 +53,12 @@ facts need to be considered:
     self = [super initWithStyle:style];
     if (self) {
         [self initializeMembers:nil];
-        self.title = @"DF1 Demo1";
+        NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        [UIColor whiteColor],NSForegroundColorAttributeName,
+                                        [UIColor whiteColor],NSBackgroundColorAttributeName,nil];
+        
+        self.navigationController.navigationBar.titleTextAttributes = textAttributes;
+        self.title = @"Device Factory";
         DF_DBG(@"loaded DF1DevListController");
         _isScanning = false;
     }
@@ -70,14 +75,28 @@ facts need to be considered:
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    DF_DBG(@"view loaded DF1DevListController");
-
-    self.navigationItem.title = @"DF1 Demo1";
-    // style related stuff
-    // self.tableView.backgroundColor = [UIColor clearColor];
     
-    [self.tableView setBackgroundView: [[UIImageView alloc]
-                                        initWithImage: [UIImage imageNamed:@"Default.png"]]];
+    //check to see if it is the first time launching the app
+    //if it is, then present the introduction view
+    NSUserDefaults *data = [NSUserDefaults standardUserDefaults];
+    if(![[data valueForKey:@"launchedBefore"] isEqual:[NSNumber numberWithBool:YES]]) {
+        [data setValue:[NSNumber numberWithBool:YES] forKey:@"launchedBefore"];
+        [data synchronize];
+        [self presentTutorial];
+    }
+    
+    [self.tableView setSeparatorColor:[UIColor DFGray]];
+    
+    DF_DBG(@"view loaded DF1DevListController");
+    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [UIColor whiteColor],NSForegroundColorAttributeName,
+                                    [UIColor whiteColor],NSBackgroundColorAttributeName,nil];
+    self.navigationController.navigationBar.titleTextAttributes = textAttributes;
+    self.navigationItem.title = @"DF1";
+    // style related stuff
+    self.tableView.backgroundColor = [UIColor DFGray];
+    
+    //[self.tableView setBackgroundView: [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"Default.png"]]];
 
     self.navigationItem.rightBarButtonItem = BARBUTTON(@"Clear", @selector(clearScan));
     
@@ -85,7 +104,7 @@ facts need to be considered:
     [self.refreshControl addTarget:self action:@selector(triggerScan)
         forControlEvents:UIControlEventValueChanged];
     // [self.refreshControl setBackgroundColor:[UIColor grayColor]];
-    self.refreshControl.tintColor = [UIColor redColor];
+    self.refreshControl.tintColor = [UIColor whiteColor];
     // make sure it's on top of the background
     self.refreshControl.layer.zPosition = self.tableView.backgroundView.layer.zPosition + 1;
 }
@@ -94,7 +113,8 @@ facts need to be considered:
 {
     // self.navigationController.navigationBar.tintColor = [UIColor blackColor];
     // self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.0 alpha:0.7];
-    [[UINavigationBar appearance] setTintColor:[UIColor blackColor]];
+    self.navigationController.navigationBar.barTintColor = [UIColor DFBarColor];
+    self.navigationController.navigationBar.tintColor = [UIColor DFBlue];
     // kick off timer for reading RSSI for connected peripherals
     rssiTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
         target:self selector:@selector(triggerReadRSSI:) userInfo:nil repeats:YES];
@@ -133,6 +153,11 @@ facts need to be considered:
     }
 }
 
+-(void) presentTutorial {
+    DF1TutorialController *vc = [[DF1TutorialController alloc] init];
+    //[self.navigationController pushViewController:vc animated:YES];
+}
+
 /*
 #pragma mark - DF1DevDetailDelegate
 
@@ -155,6 +180,10 @@ facts need to be considered:
 - (void) triggerScan
 {
     DF_DBG(@"triggerScan: scanning for peripherals");
+    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [UIColor whiteColor],NSForegroundColorAttributeName,
+                                    [UIColor whiteColor],NSBackgroundColorAttributeName,nil];
+    self.navigationController.navigationBar.titleTextAttributes = textAttributes;
     self.title = @"Scanning...";
     // self.navigationItem.rightBarButtonItem.enabled = NO;
     [self.refreshControl beginRefreshing];
@@ -168,6 +197,10 @@ facts need to be considered:
 {
     DF_DBG(@"finishScan");
     [self.refreshControl endRefreshing];
+    NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [UIColor whiteColor],NSForegroundColorAttributeName,
+                                    [UIColor whiteColor],NSBackgroundColorAttributeName,nil];
+    self.navigationController.navigationBar.titleTextAttributes = textAttributes;
     self.title = @"Select Device";
     self.navigationItem.rightBarButtonItem.enabled = YES;
 }
@@ -322,6 +355,7 @@ facts need to be considered:
         // cell.detailLabel.text = [NSString stringWithFormat:@"%@",[DF1LibUtil CBUUIDToString:p.UUID]];
         cell.subLabel.text = [NSString stringWithFormat:@"RSSI: NA"];
         // we set these attributes so that the cell can trigger action back to this controller
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.p = p;
         cell.delegate = self;
         cell.isOAD = [NSNumber numberWithBool:NO]; // always start off assuming there's no OAD
@@ -382,14 +416,29 @@ facts need to be considered:
 
 -(NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     // return nil;
-    
     if (section == 0) {
-        if (self.nDevices.count > 0)
-            return [NSString stringWithFormat:@"%d Devices Found",self.nDevices.count];
+        if (self.nDevices.count == 1)
+            return @"1 device found";
+        else if (self.nDevices.count > 1)
+            return [NSString stringWithFormat:@"%lu devices found",(unsigned long)self.nDevices.count];
         else
             return [NSString stringWithFormat:@"swipe down to scan"];
     }
     return @"";
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    
+    UILabel *myLabel = [[UILabel alloc] init];
+    myLabel.frame = CGRectMake(20, 8, 320, 20);
+    //myLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
+    myLabel.text = [self tableView:tableView titleForHeaderInSection:section];
+    myLabel.textColor = [UIColor whiteColor];
+    UIView *headerView = [[UIView alloc] init];
+    headerView.backgroundColor = [UIColor DFGray];
+    [headerView addSubview:myLabel];
+    
+    return headerView;
 }
 
 -(float) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
@@ -413,6 +462,7 @@ facts need to be considered:
 
 -(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     NSLog(@"setting peripheral to selectedPeripheral: row %d section %d", indexPath.row, indexPath.section);

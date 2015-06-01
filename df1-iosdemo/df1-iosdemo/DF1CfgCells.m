@@ -120,7 +120,7 @@
     self.accRangeSlider.continuous = true;
     [self.accRangeSlider setMinimumValue:0];
     [self.accRangeSlider setMaximumValue:2];
-    
+    self.accRangeSlider.tintColor = [UIColor DFBlue];
     [self.accRangeSlider addTarget:self action:@selector(accSliderChanged:)
                forControlEvents:UIControlEventValueChanged];
     accRangeValue = 2;
@@ -197,6 +197,7 @@
     
     // self.accRangeLabel.text = @"G Range";
     self.accResSwitch = [[UISwitch alloc] init];
+    self.accResSwitch.onTintColor = [UIColor DFGreen];
     [self.accResSwitch addTarget:self action:@selector(accSwitchChanged:)
                forControlEvents:UIControlEventValueChanged];
     
@@ -267,6 +268,7 @@
     // self.accRangeLabel.text = @"G Range";
     self.accRangeSlider = [[UISlider alloc] init];
     self.accRangeSlider.continuous = true;
+    self.accRangeSlider.tintColor = [UIColor DFBlue];
     [self.accRangeSlider setMinimumValue:1];
     [self.accRangeSlider setMaximumValue:50];
     
@@ -391,7 +393,7 @@
     
     fr = CGRectMake(boundsX + 70, 8, width-50, 25);
     self.featureLabel.frame = fr;
-    fr = CGRectMake(boundsX + 15, -5, 50, 50);
+    fr = CGRectMake(boundsX + 5, -5, 50, 50);
     self.featureToggle.frame = fr;
 }
 @end
@@ -454,6 +456,7 @@ withCfg:(NSMutableDictionary*) ucfg
     self.accThsLabel.text = @"Mag";
     self.accThsSlider = [[UISlider alloc] init];
     self.accThsSlider.continuous = true;
+    self.accThsSlider.tintColor = [UIColor DFBlue];
     [self.accThsSlider setMinimumValue:0];
     [self.accThsSlider setMaximumValue:31];
     [self.accThsSlider addTarget:self action:@selector(accThsChanged:)
@@ -470,6 +473,7 @@ withCfg:(NSMutableDictionary*) ucfg
     self.accTmltLabel.text = @"Time";
     self.accTmltSlider = [[UISlider alloc] init];
     self.accTmltSlider.continuous = true;
+    self.accTmltSlider.tintColor = [UIColor DFBlue];
     [self.accTmltSlider setMinimumValue:1];
     [self.accTmltSlider setMaximumValue:20];
     [self.accTmltSlider addTarget:self action:@selector(accTmltChanged:)
@@ -523,12 +527,12 @@ withCfg:(NSMutableDictionary*) ucfg
     // self.accRangeSlider.frame = CGRectMake(PAD_LEFT+130, PAD_TOP, 150, 45);
     self.accThsLabel.frame  = CGRectMake(PAD_LEFT,     PAD_TOP+40,  110, 45);
     self.accThsSlider.frame = CGRectMake(PAD_LEFT+130, PAD_TOP+40, 150,45);
-    
+    self.accThsSlider.tintColor = [UIColor DFBlue];
     self.accTmltLabel.frame  = CGRectMake(PAD_LEFT,    PAD_TOP+35+40,  110, 45);
     self.accTmltSlider.frame = CGRectMake(PAD_LEFT+130,PAD_TOP+35+40, 150,45);
     fr = CGRectMake(boundsX + 70, 8, width-50, 25);
     self.featureLabel.frame = fr;
-    fr = CGRectMake(boundsX + 15, -5, 50, 50);
+    fr = CGRectMake(boundsX + 5, -5, 50, 50);
     self.featureToggle.frame = fr;
 }
 
@@ -626,7 +630,7 @@ withCfg:(NSMutableDictionary*) ucfg
     
     fr = CGRectMake(boundsX + 70, 8, width-50, 25);
     self.featureLabel.frame = fr;
-    fr = CGRectMake(boundsX + 15, -5, 50, 50);
+    fr = CGRectMake(boundsX + 5, -5, 50, 50);
     self.featureToggle.frame = fr;
 }
 @end
@@ -690,7 +694,7 @@ withCfg:(NSMutableDictionary*) ucfg
     
     fr = CGRectMake(boundsX + 70, 8, width-50, 25);
     self.featureLabel.frame = fr;
-    fr = CGRectMake(boundsX + 15, -5, 50, 50);
+    fr = CGRectMake(boundsX + 5, -5, 50, 50);
     self.featureToggle.frame = fr;
 }
 @end
@@ -753,7 +757,7 @@ withCfg:(NSMutableDictionary*) ucfg
     
     fr = CGRectMake(boundsX + 70, 8, width-50, 25);
     self.featureLabel.frame = fr;
-    fr = CGRectMake(boundsX + 15, -5, 50, 50);
+    fr = CGRectMake(boundsX + 5, -5, 50, 50);
     self.featureToggle.frame = fr;
 }
 @end
@@ -816,7 +820,7 @@ withCfg:(NSMutableDictionary*) ucfg
     
     fr = CGRectMake(boundsX + 70, 8, width-50, 25);
     self.featureLabel.frame = fr;
-    fr = CGRectMake(boundsX + 15, -5, 50, 50);
+    fr = CGRectMake(boundsX + 5, -5, 50, 50);
     self.featureToggle.frame = fr;
 }
 @end

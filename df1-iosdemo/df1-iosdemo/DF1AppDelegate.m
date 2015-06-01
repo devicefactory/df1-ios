@@ -30,6 +30,7 @@
     [nav setDelegate:(id<UINavigationControllerDelegate>)devlist];
     [[nav delegate] navigationController:nav willShowViewController:devlist animated:YES];
     [self.window makeKeyAndVisible];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     return YES;
 }
 							

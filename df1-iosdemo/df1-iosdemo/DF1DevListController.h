@@ -3,6 +3,7 @@
 #import "DF1Lib.h"
 #import "DF1DevCell.h"
 #import "DF1DevDetailController.h"
+#import "DF1TutorialController.h"
 
 
 @interface DF1DevListController : UITableViewController <DF1Delegate,DF1DevCellDelegate,UINavigationControllerDelegate>

@@ -181,6 +181,7 @@
     hud.yOffset = 50.f;
     hud.removeFromSuperViewOnHide = YES;
     [hud hide:YES afterDelay:2];
+    //[self.navigationController popViewControllerAnimated:true];
 }
 
 

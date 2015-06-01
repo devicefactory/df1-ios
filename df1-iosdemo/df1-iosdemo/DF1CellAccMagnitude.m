@@ -77,9 +77,9 @@
     CGFloat width = self.contentView.bounds.size.width;
     
     self.magText.frame = CGRectMake(0, 50, width, 30);
-    self.avgMagText.frame = CGRectMake(15, 110, width, 30);
+    self.avgMagText.frame = CGRectMake(30, 110, width, 30);
     self.maxMagText.frame = CGRectMake(-15, 110, width, 30);
-    self.avgMagTitleText.frame = CGRectMake(15, 80, width, 30);
+    self.avgMagTitleText.frame = CGRectMake(30, 80, width, 30);
     self.maxMagTitleText.frame = CGRectMake(-15, 80, width, 30);
     self.magTitleText.frame = CGRectMake(0, 15, width, 30);
 

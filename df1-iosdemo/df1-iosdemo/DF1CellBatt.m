@@ -68,7 +68,7 @@
     self.battLabel.textAlignment = NSTextAlignmentRight;
     self.battLabel.frame = fr;
 
-    fr = CGRectMake(boundsX + 55, 15, 60, 25);
+    fr = CGRectMake(boundsX + 30, 15, 60, 25);
     self.battLevel.frame = fr;
 
     // fr = CGRectMake((contentRect.origin.x + (contentRect.size.width / 2 ) - 75), 80,95,50);

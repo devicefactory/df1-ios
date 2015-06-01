@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "DF1Lib.h"
+#import "UIColor+DF1Colors.h"
 
 @protocol DF1DevCellDelegate
 @optional
