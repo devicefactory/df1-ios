@@ -97,7 +97,7 @@
     self.nameLabel = [[UILabel alloc] init];
     self.nameLabel.textAlignment = NSTextAlignmentLeft;
     self.nameLabel.font = [UIFont boldSystemFontOfSize:14];
-    self.nameLabel.textColor = [UIColor whiteColor];
+    self.nameLabel.textColor = [UIColor DFRed];
 
     self.subLabel = [[UILabel alloc] init];
     self.subLabel.textAlignment = NSTextAlignmentLeft;

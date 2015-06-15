@@ -155,7 +155,7 @@ facts need to be considered:
 
 -(void) presentTutorial {
     DF1TutorialController *vc = [[DF1TutorialController alloc] init];
-    //[self.navigationController pushViewController:vc animated:YES];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 /*

@@ -18,7 +18,7 @@
 }
 
 +(UIColor *)DFRed {
-    return [UIColor colorWithRed:211.0f/255.0f green:40.0f/255.0f blue:100.0f/255.0f alpha:1.0];
+    return [UIColor colorWithRed:234.0f/255.0f green:57.0f/255.0f blue:61.0f/255.0f alpha:1.0];
 }
 
 +(UIColor *)DFBlue {
@@ -26,15 +26,15 @@
 }
 
 +(UIColor *)DFBlack {
-    return [UIColor colorWithRed:40.0f/255.0f green:40.0f/255.0f blue:40.0f/255.0f alpha:1];
+    return [UIColor colorWithRed:62.0f/255.0f green:62.0f/255.0f blue:62.0f/255.0f alpha:1];
 }
 
 +(UIColor *)DFBarColor {
-    return [UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:1];
+    return [UIColor colorWithRed:26.0f/255.0f green:26.0f/255.0f blue:26.0f/255.0f alpha:1];
 }
 
 +(UIColor *)DFGray {
-    return [UIColor colorWithRed:55.0f/255.0f green:56.0f/255.0f blue:57.0f/255.0f alpha:1];
+    return [UIColor colorWithRed:148.0f/255.0f green:149.0f/255.0f blue:149.0f/255.0f alpha:1];
 }
 
 @end

@@ -589,9 +589,9 @@
     self.magCell.avgMagText.text = [[NSString alloc] initWithFormat:@"%@", _avgAcceleration];
     self.magCell.maxMagText.text = [[NSString alloc] initWithFormat:@"%@", _maxAcceleration];
     //Present notification if the magnitude exceeds 2G's allow users to change this value and make sure this runs in the background
-    if(mag > 2) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"Magnitude Threshold Exceeded!" object:nil];
-    }
+//    if(mag > 2) {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"Magnitude Threshold Exceeded!" object:nil];
+//    }
 
     
     if(self.dataCell!=nil && [self.dataCell isFileReady]) {
@@ -626,9 +626,9 @@
     self.magCell.maxMagText.text = [[NSString alloc] initWithFormat:@"%@", _maxAcceleration];
 
     //Present notification if the magnitude exceeds 2G's allow users to change this value and make sure this runs in the background
-    if(mag > 2) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"Magnitude Threshold Exceeded!" object:nil];
-    }
+//    if(mag > 2) {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"Magnitude Threshold Exceeded!" object:nil];
+//    }
     
     if(self.dataCell!=nil && [self.dataCell isFileReady]) {
         [self.dataCell recordX:x Y:y Z:z];

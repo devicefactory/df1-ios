@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "IFTTTJazzHands.h"
+#import "UIColor+DF1Colors.h"
 
 @interface DF1TutorialController  : IFTTTAnimatedScrollViewController <IFTTTAnimatedScrollViewControllerDelegate>
 @property (nonatomic, strong) IFTTTAnimator *animator;
