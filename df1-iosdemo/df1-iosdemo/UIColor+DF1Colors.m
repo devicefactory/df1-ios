@@ -37,4 +37,8 @@
     return [UIColor colorWithRed:148.0f/255.0f green:149.0f/255.0f blue:149.0f/255.0f alpha:1];
 }
 
++(UIColor *)DFMenuTextColor {
+    return [UIColor colorWithRed:234.0f/255.0f green:57.0f/255.0f blue:61.0f/255.0f alpha:1];
+}
+
 @end

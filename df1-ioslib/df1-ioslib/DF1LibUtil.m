@@ -363,9 +363,12 @@
 +(NSString*) getUserCfgName:(CBPeripheral*) p
 {
     NSDictionary *dict = [DF1LibUtil getUserCfgDict:p];
-    if(dict==nil)
+    if(dict==nil) {
+        NSLog(@"the name is nil, so using %@", p.name);
         return p.name;
+    }
     NSString *cfgName = (NSString*)[dict valueForKey:CFG_NAME];
+    NSLog(@"the name is %@", cfgName);
     return cfgName;
 }
 

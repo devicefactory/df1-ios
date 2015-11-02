@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "2F2B05EE67C7E86F82F2236E92B61CBC95C16A3E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "6412586EFBF5D30100A0BA160FCFFBD781EBCA7B" : 0,
+    "2F2B05EE67C7E86F82F2236E92B61CBC95C16A3E" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "91A7FEED-DB6D-4FEC-AAA1-AE9EBB289736",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "6412586EFBF5D30100A0BA160FCFFBD781EBCA7B" : "df1-fw",
+    "2F2B05EE67C7E86F82F2236E92B61CBC95C16A3E" : "df1-ios"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "df1-ios-workgroup",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "df1-ios-workgroup.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "ssh:\/\/github.com\/devicefactory\/df1-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2F2B05EE67C7E86F82F2236E92B61CBC95C16A3E"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:devicefactory\/df1-fw.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6412586EFBF5D30100A0BA160FCFFBD781EBCA7B"
+    }
+  ]
+}

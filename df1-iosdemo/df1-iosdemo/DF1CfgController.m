@@ -112,7 +112,7 @@
     // [self.tableView setBackgroundView: [[UIImageView alloc]
     //                                    initWithImage: [UIImage imageNamed:@"DFLOGO07_launch_invert.png"]]];
 
-    self.navigationItem.rightBarButtonItem = BARBUTTON(@"save", @selector(saveCfg));
+    //self.navigationItem.rightBarButtonItem = BARBUTTON(@"save", @selector(saveCfg));
 }
 
 -(void) viewDidAppear:(BOOL)animated
@@ -132,6 +132,7 @@
     // force the save here
     if(_saveOnExit)
         [self saveCfg];
+    
 }
     
 
@@ -171,6 +172,8 @@
 
 -(void) saveCfg
 {
+    //Is the settings cfg dictionary ever being set or updated?
+    NSLog(@"the df old is %@, and the new cfg is %@", self.df.p, self.cfg);
     NSDictionary *dict = [DF1LibUtil saveUserCfgDict:self.df.p withDict:self.cfg];
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     

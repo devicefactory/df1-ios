@@ -94,7 +94,7 @@ facts need to be considered:
     self.navigationController.navigationBar.titleTextAttributes = textAttributes;
     self.navigationItem.title = @"DF1";
     // style related stuff
-    self.tableView.backgroundColor = [UIColor DFGray];
+    self.tableView.backgroundColor = [UIColor whiteColor];
     
     //[self.tableView setBackgroundView: [[UIImageView alloc] initWithImage: [UIImage imageNamed:@"Default.png"]]];
 
@@ -114,7 +114,7 @@ facts need to be considered:
     // self.navigationController.navigationBar.tintColor = [UIColor blackColor];
     // self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.0 alpha:0.7];
     self.navigationController.navigationBar.barTintColor = [UIColor DFBarColor];
-    self.navigationController.navigationBar.tintColor = [UIColor DFBlue];
+    self.navigationController.navigationBar.tintColor = [UIColor DFRed];
     // kick off timer for reading RSSI for connected peripherals
     rssiTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
         target:self selector:@selector(triggerReadRSSI:) userInfo:nil repeats:YES];
@@ -351,6 +351,7 @@ facts need to be considered:
         }
 
         NSString *name = [DF1LibUtil getUserCfgName:p];
+        NSLog(@"the cfg dict on the dev list controller is %@", [DF1LibUtil getUserCfgDict:p]);
         cell.nameLabel.text = [NSString stringWithFormat:@"%@",name];
         // cell.detailLabel.text = [NSString stringWithFormat:@"%@",[DF1LibUtil CBUUIDToString:p.UUID]];
         cell.subLabel.text = [NSString stringWithFormat:@"RSSI: NA"];
@@ -369,9 +370,10 @@ facts need to be considered:
                 break;
             }
         }
-        if(!foundService) {
+        //WHY?
+        /*if(!foundService) {
             cell.ledButton.hidden = YES;
-        }
+        }*/
         [cell updateSignalValue:-100.0f];
         // only discover the battery and test services : accel takes longer
         CBUUID *bserv = [DF1LibUtil IntToCBUUID:BATT_SERVICE_UUID];
@@ -402,7 +404,8 @@ facts need to be considered:
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     // if (section == 0) return 0.0f;
-    return 32.0f;
+    //return 32.0f;
+    return 1.0f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -416,7 +419,7 @@ facts need to be considered:
 
 -(NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     // return nil;
-    if (section == 0) {
+    /*if (section == 0) {
         if (self.nDevices.count == 1)
             return @"1 device found";
         else if (self.nDevices.count > 1)
@@ -424,21 +427,24 @@ facts need to be considered:
         else
             return [NSString stringWithFormat:@"swipe down to scan"];
     }
-    return @"";
+    return @"";*/
+    return nil;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     
-    UILabel *myLabel = [[UILabel alloc] init];
+    /*UILabel *myLabel = [[UILabel alloc] init];
     myLabel.frame = CGRectMake(20, 8, 320, 20);
     //myLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:16.0f];
     myLabel.text = [self tableView:tableView titleForHeaderInSection:section];
     myLabel.textColor = [UIColor whiteColor];
     UIView *headerView = [[UIView alloc] init];
-    headerView.backgroundColor = [UIColor DFGray];
+    //headerView.backgroundColor = [UIColor DFGray];
+    headerView.backgroundColor = [UIColor whiteColor];
     [headerView addSubview:myLabel];
     
-    return headerView;
+    return headerView;*/
+    return nil;
 }
 
 -(float) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {

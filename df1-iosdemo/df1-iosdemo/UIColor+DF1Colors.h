@@ -16,4 +16,5 @@
 +(UIColor *) DFBlack;
 +(UIColor *) DFGray;
 +(UIColor *) DFBarColor;
++(UIColor *) DFMenuTextColor;
 @end

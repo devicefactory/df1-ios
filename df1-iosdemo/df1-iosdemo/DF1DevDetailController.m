@@ -150,7 +150,7 @@
     [super viewDidLoad];
     _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     _hud.labelText = @"initializing";
-    self.navigationItem.rightBarButtonItem = BARBUTTON(@"Config", @selector(showCfgController));
+    self.navigationItem.rightBarButtonItem = BARBUTTON(@"Settings", @selector(showCfgController));
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -196,6 +196,7 @@
     // DF1CfgController *vc = [[DF1CfgController alloc] initWithStyle:UITableViewCellStyleDefault];
     DF1CfgController *vc = [[DF1CfgController alloc] initWithDF:self.df];
     [self.navigationController pushViewController:vc animated:YES];
+    //[self.navigationController presentViewController:vc animated:YES completion:nil];
 }
 
 #pragma mark - UINavigationControllerDelegate
@@ -384,7 +385,8 @@
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 37.0f;
+    //return 37.0f;
+    return 1.0f;
 }
 -(CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
@@ -420,7 +422,7 @@
         DF_DBG(@"no user specific parameters to update");
         return;
     }
-    
+    NSLog(@"The User Config Dict is %@", dict);
     if([dict objectForKey:CFG_XYZ8_RANGE]!=nil)
     {
         int range = [[dict objectForKey:CFG_XYZ8_RANGE] intValue];
@@ -491,6 +493,14 @@
     NSLog(@"%@",params);
     _hud.labelText = @"successfully sync-ed";
     
+   //NOTE: I added the below lines becasue for some reason subscriptions were never being triggered and I am not sure I understand the initial reasoning behind the if statements to set subscriptions. Therefore I moved a set of subscriptions to outside the if statements.
+    
+    [self.df subscribeBatt];
+    [self.df subscribeXYZ8];
+    [self.df subscribeTap];
+    // Every DF1 device we ever connected gets userDefault saved.
+    [self saveUserDefaultsForDevice];
+    
     NSDictionary *dict = [DF1LibUtil getUserCfgDict:self.df.p];
     if(dict==nil)
     {
@@ -559,9 +569,9 @@
     self.battCell.battLevel.text = [[NSString alloc] initWithFormat:@"%.0f%%", battlev*100.0];
     self.battCell.battBar.progress = battlev;
     self.battCell.battBar.progressTintColor =
-        (battlev > 0.75)                   ? [UIColor greenColor] :
-        (battlev > 0.50 & battlev <= 0.75) ? [UIColor orangeColor] :
-        (battlev <= 0.50)                  ? [UIColor redColor] : [UIColor redColor];
+        (battlev > 0.75)                   ? [UIColor DFGreen] :
+        (battlev > 0.50 & battlev <= 0.75) ? [UIColor DFYellow] :
+        (battlev <= 0.50)                  ? [UIColor DFRed] : [UIColor DFRed];
 }
 
 -(void) receivedXYZ8:(NSArray*) data

@@ -61,6 +61,8 @@
     
 }
 
+//Unused - Pending deletion.
+/*
 -(void) _genericButton
 {
     self.ledButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -82,6 +84,7 @@
     [self.ledButton addTarget:self action:@selector(ledButtonDn:) forControlEvents:UIControlEventTouchDown];
     [self.ledButton addTarget:self action:@selector(ledButtonUp:) forControlEvents:UIControlEventTouchUpInside];
 }
+*/
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

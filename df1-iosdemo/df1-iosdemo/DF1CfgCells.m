@@ -74,6 +74,7 @@
 {
     DF_DBG(@"nameField text: %@", self.nameField.text);
     [c setValue:self.nameField.text forKey:CFG_NAME];
+    NSLog(@"the cfg dict is %@", c);
 }
 
 -(void) handleTextFieldEdit:(UITextField*) sender
