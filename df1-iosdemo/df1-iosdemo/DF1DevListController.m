@@ -81,6 +81,10 @@ facts need to be considered:
     NSUserDefaults *data = [NSUserDefaults standardUserDefaults];
     if(![[data valueForKey:@"launchedBefore"] isEqual:[NSNumber numberWithBool:YES]]) {
         [data setValue:[NSNumber numberWithBool:YES] forKey:@"launchedBefore"];
+        
+        //Turn on all features to get the user started
+        [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgFreefall"];
+        
         [data synchronize];
         [self presentTutorial];
     }
@@ -104,7 +108,7 @@ facts need to be considered:
     [self.refreshControl addTarget:self action:@selector(triggerScan)
         forControlEvents:UIControlEventValueChanged];
     // [self.refreshControl setBackgroundColor:[UIColor grayColor]];
-    self.refreshControl.tintColor = [UIColor whiteColor];
+    self.refreshControl.tintColor = [UIColor blackColor];
     // make sure it's on top of the background
     self.refreshControl.layer.zPosition = self.tableView.backgroundView.layer.zPosition + 1;
 }

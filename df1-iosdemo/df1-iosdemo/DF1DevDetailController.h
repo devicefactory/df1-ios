@@ -15,6 +15,7 @@
 #import "DF1CellBatt.h"
 #import "DF1CellAccMagnitude.h"
 #import "DF1CellDistance.h"
+#import "DF1CellFreefall.h"
 
 /*
 @protocol DF1DevDetailDelegate <NSObject>
@@ -34,6 +35,7 @@
 @property (strong,nonatomic) DF1CellDataShare *dataCell;
 @property (strong,nonatomic) DF1CellAccMagnitude *magCell;
 @property (strong,nonatomic) DF1CellDistance *distCell;
+@property (strong,nonatomic) DF1CellFreefall *freeCell;
 
 @property (strong,nonatomic) CBPeripheral *peripheral;
 

@@ -87,6 +87,11 @@
 @property (nonatomic,retain) UIButton *featureToggle;
 @end
 
+@interface DF1CfgFreefall : DF1CfgCell
+@property (nonatomic,retain) UILabel *featureLabel;
+@property (nonatomic,retain) UIButton *featureToggle;
+@end
+
 @interface DF1CfgCellProx : DF1CfgCell
 -(void) modifyChange:(NSMutableDictionary*) c;
 @end

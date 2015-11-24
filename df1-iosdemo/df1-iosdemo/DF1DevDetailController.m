@@ -47,6 +47,7 @@
                          [defaults valueForKey:@"DF1CfgBatteryLevel"],   @"DF1CellBatt",
                          [defaults valueForKey:@"DF1CfgMagnitudeValues"],   @"DF1CellMag",
                          [defaults valueForKey:@"DF1CfgDistance"],   @"DF1CellDistance",
+                         [defaults valueForKey:@"DF1CfgFreefall"],   @"DF1CellFreefall",
                          nil];
         [self initializeCells];
     }
@@ -102,7 +103,7 @@
         self.accTapCell = [[DF1CellAccTap alloc] initWithStyle:UITableViewCellStyleDefault
                                             reuseIdentifier:@"AccTapCell" parentController:self];
         self.accTapCell.accLabel.text = @"Tap Event";
-        self.accTapCell.accValueTap.text = @"no events";
+        self.accTapCell.accValueTap.text = @"no event";
     }
     if([[cells objectForKey:@"DF1CellDataShare"] boolValue] &&
        !self.dataCell)
@@ -135,8 +136,15 @@
         _rssiTimer = [NSTimer scheduledTimerWithTimeInterval:1.0f
                                                      target:self selector:@selector(triggerReadRSSI:) userInfo:nil repeats:YES];
         
-        
     }
+    
+    if([[cells objectForKey:@"DF1CellFreefall"] boolValue] && !self.freeCell) {
+        _freeCell = [[DF1CellFreefall alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"FreeCell" parentController:self];
+        self.freeCell.accLabel.text = @"Freefall Event";
+        self.freeCell.accValueTap.text = @"no event";
+        NSLog(@"making freefall cell");
+        
+        }
     // if(!self.rssiCell) {
     //     self.rssiCell = [[RSSICell alloc] initWithStyle:UITableViewCellStyleDefault
     //                                           reuseIdentifier:@"RSSICell"];
@@ -180,6 +188,7 @@
                      [defaults valueForKey:@"DF1CfgBatteryLevel"],   @"DF1CellBatt",
                      [defaults valueForKey:@"DF1CfgMagnitudeValues"],   @"DF1CellMag",
                      [defaults valueForKey:@"DF1CfgDistance"],   @"DF1CellDistance",
+                     [defaults valueForKey:@"DF1CfgFreefall"],   @"DF1CellFreefall",
                      nil];
     [self initializeCells];
 
@@ -220,6 +229,7 @@
             [self.df unsubscribeXYZ8];
             [self.df unsubscribeXYZ14]; // just in case
             [self.df unsubscribeTap];
+            [self.df unsubscribeFreefall];
             DF1DevListController *vc = (DF1DevListController*) viewController;
             vc.df = self.df;
             vc.df.delegate = vc;
@@ -242,7 +252,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     //check the bools for cell initialization and sum them as integers
-    NSInteger cellsCount = [[_defaultCells valueForKey:@"DF1CellAccXyz"] integerValue] + [[_defaultCells valueForKey:@"DF1CellAccTap"] integerValue] + [[_defaultCells valueForKey:@"DF1CellDataShare"] integerValue] + [[_defaultCells valueForKey:@"DF1CellBatt"] integerValue] + [[_defaultCells valueForKey:@"DF1CellMag"] integerValue] + [[_defaultCells valueForKey:@"DF1CellDistance"] integerValue];
+    NSInteger cellsCount = [[_defaultCells valueForKey:@"DF1CellAccXyz"] integerValue] + [[_defaultCells valueForKey:@"DF1CellAccTap"] integerValue] + [[_defaultCells valueForKey:@"DF1CellDataShare"] integerValue] + [[_defaultCells valueForKey:@"DF1CellBatt"] integerValue] + [[_defaultCells valueForKey:@"DF1CellMag"] integerValue] + [[_defaultCells valueForKey:@"DF1CellDistance"] integerValue] + [[_defaultCells valueForKey:@"DF1CellFreefall"] integerValue];
     NSLog(@"cells count is %ld", cellsCount);
     return cellsCount;
     // int count = 1; // by default we need the signal strength
@@ -299,6 +309,13 @@
             return self.distCell;
         }
     }
+    
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgFreefall"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.freeCell;
+        }
+    }
     // if (indexPath.row==0 && [self.d isEnabled:@"Accelerometer service active"]) {
     //     [self.babyCell setPosition:UACellBackgroundViewPositionTop];
     //     return self.babyCell;
@@ -347,6 +364,12 @@
         cellIndexer++;
         if(cellIndexer==indexPath.row+1) {
             return _distCell.height;
+        }
+    }
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgFreefall"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return _freeCell.height;
         }
     }
 
@@ -459,6 +482,7 @@
         [self.df modifyTapTmlt:gx];
         DF_DBG(@"modifying user CFG_TAP_THSZ to %f", gx);
     }
+    
 }
 
 
@@ -498,6 +522,7 @@
     [self.df subscribeBatt];
     [self.df subscribeXYZ8];
     [self.df subscribeTap];
+    [self.df subscribeFreefall];
     // Every DF1 device we ever connected gets userDefault saved.
     [self saveUserDefaultsForDevice];
     
@@ -507,6 +532,7 @@
         [self.df subscribeBatt];
         [self.df subscribeXYZ8];
         [self.df subscribeTap];
+        [self.df subscribeFreefall];
         // Every DF1 device we ever connected gets userDefault saved.
         [self saveUserDefaultsForDevice];
     }
@@ -530,6 +556,7 @@
             [self.df subscribeXYZ8];
             [self.df subscribeTap];
             [self.df subscribeBatt];
+            [self.df subscribeFreefall];
         } else {
             DF_DBG(@"cell dict: %@", cells);
             if([cells objectForKey:@"DF1CellAccXyz"]!=nil &&
@@ -546,6 +573,8 @@
                [[cells objectForKey:@"DF1CellAccTap"] boolValue]) {  [self.df subscribeTap]; }
             if([cells objectForKey:@"DF1CellBatt"]!=nil &&
                [[cells objectForKey:@"DF1CellBatt"] boolValue])   {  [self.df subscribeBatt]; }
+            if([cells objectForKey:@"DF1CellFreefall"]!=nil &&
+               [[cells objectForKey:@"DF1CellFreefall"] boolValue])   {  [self.df subscribeFreefall]; }
         }
     }
     _hud.labelText = @"subscribing to data";
@@ -581,11 +610,11 @@
     float z = [data[2] floatValue];
     // DF_DBG(@"8bit is coming too??");
     // self.accXyzCell.accBarX.progress = (x + 2) / 4.0;
-    self.accXyzCell.accValueX.text = [[NSString alloc] initWithFormat:@"X8 : %.3f", x];
+    self.accXyzCell.accValueX.text = [[NSString alloc] initWithFormat:@"X  %.3f", x];
     self.accXyzCell.accXStrip.value = x;
-    self.accXyzCell.accValueY.text = [[NSString alloc] initWithFormat:@"Y8 : %.3f", y];
+    self.accXyzCell.accValueY.text = [[NSString alloc] initWithFormat:@"Y  %.3f", y];
     self.accXyzCell.accYStrip.value = y;
-    self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z8 : %.3f", z];
+    self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z  %.3f", z];
     self.accXyzCell.accZStrip.value = z;
     
     float mag = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
@@ -598,7 +627,7 @@
     self.magCell.magText.text = [[NSString alloc] initWithFormat:@"%f", mag];
     self.magCell.avgMagText.text = [[NSString alloc] initWithFormat:@"%@", _avgAcceleration];
     self.magCell.maxMagText.text = [[NSString alloc] initWithFormat:@"%@", _maxAcceleration];
-    //Present notification if the magnitude exceeds 2G's allow users to change this value and make sure this runs in the background
+//    Present notification if the magnitude exceeds 2G's allow users to change this value and make sure this runs in the background
 //    if(mag > 2) {
 //        [[NSNotificationCenter defaultCenter] postNotificationName:@"Magnitude Threshold Exceeded!" object:nil];
 //    }
@@ -616,11 +645,11 @@
     float z = [data[2] floatValue];
     // DF_DBG(@"14bit coming in: %.2f %.2f %.2f", x, y, z);
     // self.accXyzCell.accBarX.progress = (x + 2) / 4.0;
-    self.accXyzCell.accValueX.text = [[NSString alloc] initWithFormat:@"X14: %.4f", x];
+    self.accXyzCell.accValueX.text = [[NSString alloc] initWithFormat:@"X  %.4f", x];
     self.accXyzCell.accXStrip.value = x;
-    self.accXyzCell.accValueY.text = [[NSString alloc] initWithFormat:@"Y14: %.4f", y];
+    self.accXyzCell.accValueY.text = [[NSString alloc] initWithFormat:@"Y  %.4f", y];
     self.accXyzCell.accYStrip.value = y;
-    self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z14: %.4f", z];
+    self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z  %.4f", z];
     self.accXyzCell.accZStrip.value = z;
     
     float mag = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
@@ -680,5 +709,35 @@
         [self.df askRSSI:_peripheral];
     
 }
+
+
+-(void) _resetFall
+{
+    self.freeCell.accValueTap.textColor = [UIColor blackColor];
+    self.freeCell.accValueTap.text = @"no event";
+}
+
+-(void) receivedFall:(NSMutableDictionary*) tbl
+{
+    NSInteger hasEvent = [[tbl valueForKey:@"FallHasEvent"] intValue];
+    NSLog(@"Freefall has event: %li", (long)hasEvent);
+    
+    if(hasEvent) {
+        self.freeCell.accValueTap.textColor = [UIColor redColor];
+        self.freeCell.accValueTap.text = [[NSString alloc] initWithFormat:@"Falling!"];
+        eventResetTimer = [NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(_resetFall)
+                                                         userInfo:nil repeats:FALSE];
+        
+        UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+        localNotif.alertBody = @"The DF1 has undergone freefall.";
+        localNotif.alertTitle = @"Freefall Detected!";
+        localNotif.soundName = UILocalNotificationDefaultSoundName;
+        [[UIApplication sharedApplication] presentLocalNotificationNow:localNotif];
+        
+    } /*else {
+        self.freeCell.accValueTap.text = @"no event";
+    }*/
+}
+
 
 @end

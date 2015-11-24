@@ -105,7 +105,7 @@
     [super viewDidLoad];
     DF_DBG(@"view loaded DF1CfgController");
 
-    self.navigationItem.title = @"DF1 Configuration";
+    self.navigationItem.title = @"Settings";
     // style related stuff
     self.tableView.backgroundColor = [UIColor whiteColor];
     

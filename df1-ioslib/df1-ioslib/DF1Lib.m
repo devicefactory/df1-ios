@@ -507,6 +507,28 @@
         }
         case ACC_FF_DATA_UUID:
         {
+            uint8_t bt;
+//            Bit 7	EA	one or more event flag has been asserted
+//            Bit 6	--
+//            Bit 5	ZHE	z motion/freefall has been detected
+//            Bit 4	ZHP	z event 0=positive g 1=negative g
+//            Bit 3	YHE	y motion/freefall has been detected
+//            Bit 2	YHP	y event 0=positive g 1=negative g
+//            Bit 1	XHE	x motion/freefall has been detected
+//            Bit 0	XHP	x event 0=positive g 1=negative g
+            NSDictionary  *data = @{
+                                    @"FallHasEvent"    : [NSNumber numberWithInt: (bt & 0x80)],
+                                    @"nil"             : [NSNumber numberWithInt: (bt & 0x40)],
+                                    @"FallZ"           : [NSNumber numberWithInt: (bt & 0x20)],
+                                    @"FallZSomething"  : [NSNumber numberWithInt: (bt & 0x10)],
+                                    @"FallY"           : [NSNumber numberWithInt: (bt & 0x08)],
+                                    @"FallYSomething"  : [NSNumber numberWithInt: (bt & 0x04)],
+                                    @"FallX"           : [NSNumber numberWithInt: (bt & 0x02)],
+                                    @"FallXSomething"  : [NSNumber numberWithInt: (bt & 0x01)],
+                                    };
+            if([self.delegate respondsToSelector:@selector(receivedFall:)]) {
+                [self.delegate receivedFall:data];
+            }
             break;
         }
         case ACC_MO_DATA_UUID:
@@ -770,6 +792,12 @@
 {
     [self _disableFeature:ACC_TAP_DATA_UUID];
     [self subscription:ACC_SERV_UUID withCUUID:ACC_TAP_DATA_UUID onOff:false];
+}
+
+-(void) unsubscribeFreefall
+{
+    [self _disableFeature:ACC_FF_DATA_UUID];
+    [self subscription:ACC_SERV_UUID withCUUID:ACC_FF_DATA_UUID onOff:false];
 }
 
 -(void) modifyRange:(UInt8) value

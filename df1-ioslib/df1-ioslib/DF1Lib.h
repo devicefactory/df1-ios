@@ -67,6 +67,7 @@
 -(void) unsubscribeXYZ8;
 -(void) unsubscribeXYZ14;
 -(void) unsubscribeTap;
+-(void) unsubscribeFreefall;
 
 -(void) modifyRange:(UInt8) value;
 
@@ -112,6 +113,7 @@
 -(void) receivedXYZ8:(NSArray*) data;
 -(void) receivedXYZ14:(NSArray*) data;
 -(void) receivedTap:(NSDictionary*) data;
+-(void) receivedFall:(NSDictionary*) data;
 // pass through
 -(void) receivedValue:(CBPeripheral*) peripheral forCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error;
 

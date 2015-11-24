@@ -700,6 +700,69 @@ withCfg:(NSMutableDictionary*) ucfg
 }
 @end
 
+@implementation DF1CfgFreefall
+-(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+            withCfg:(NSMutableDictionary*) ucfg
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier withCfg:ucfg];
+    if(self==nil) {
+        return self;
+    }
+    
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgFreefall"] isEqual:nil]){
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgFreefall"]];
+    }
+    
+    self.cfg = ucfg;
+    self.height = 40;
+    self.featureLabel = [[UILabel alloc] init];
+    self.featureLabel.textAlignment = NSTextAlignmentLeft;
+    self.featureLabel.font = [UIFont systemFontOfSize:16];
+    self.featureLabel.textColor = [UIColor grayColor];
+    self.featureLabel.backgroundColor = [UIColor clearColor];
+    self.featureLabel.text = @"Freefall";
+    self.featureToggle = [[UIButton alloc]initWithFrame:CGRectMake(5, 5,30,30)];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgFreefall"] boolValue]) {
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+    [self.featureToggle addTarget:self action:@selector(toggleFeature) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView addSubview:self.featureToggle];
+    [self.contentView addSubview:self.featureLabel];
+    return self;
+}
+
+-(void) toggleFeature {
+    if([self.featureToggle.imageView.image isEqual:[UIImage imageNamed:@"off.png"]]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgFreefall"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:[NSString stringWithFormat:@"DF1CfgFreefall"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+}
+
+-(void) layoutSubviews
+{
+    [super layoutSubviews];
+    CGRect contentRect = self.contentView.bounds;
+    CGFloat boundsX = contentRect.origin.x;
+    CGFloat width = self.contentView.bounds.size.width;
+    CGRect fr;
+    
+    fr = CGRectMake(boundsX + 70, 8, width-50, 25);
+    self.featureLabel.frame = fr;
+    fr = CGRectMake(boundsX + 5, -5, 50, 50);
+    self.featureToggle.frame = fr;
+}
+@end
+
 @implementation DF1CfgBatteryLevel
 -(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
             withCfg:(NSMutableDictionary*) ucfg
