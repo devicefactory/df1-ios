@@ -13,6 +13,7 @@
 @interface DF1CellFreefall : DF1Cell
 @property int height;
 @property (nonatomic,strong) DF1DevDetailController *parent;
+@property (nonatomic,retain) UILabel *titleText;
 @property (nonatomic,retain) UILabel *accLabel;
 @property (nonatomic,retain) UILabel *accValueTap;
 @property (nonatomic,retain) UILabel *accThsLabel;

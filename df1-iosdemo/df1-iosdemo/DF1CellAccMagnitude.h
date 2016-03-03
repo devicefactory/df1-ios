@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "DF1Cell.h"
 #import "DF1Lib.h"
+#import "UIColor+DF1Colors.h"
 
 @interface DF1CellAccMagnitude : DF1Cell
+@property (nonatomic,retain) UILabel *titleText;
 @property (nonatomic,retain) UILabel *magText;
 @property (nonatomic,retain) UILabel *maxMagText;
 @property (nonatomic,retain) UILabel *avgMagText;

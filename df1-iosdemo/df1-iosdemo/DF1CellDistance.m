@@ -20,34 +20,42 @@
     
     self.distanceText = [[UILabel alloc] init];
     self.distanceText.textAlignment = NSTextAlignmentRight;
-    self.distanceText.font = [UIFont systemFontOfSize:20];
+    self.distanceText.font = [UIFont systemFontOfSize:15];
     self.distanceText.textColor = [UIColor blackColor];
     self.distanceText.backgroundColor = [UIColor clearColor];
     
     self.RSSIText = [[UILabel alloc] init];
     self.RSSIText.textAlignment = NSTextAlignmentRight;
-    self.RSSIText.font = [UIFont systemFontOfSize:20];
+    self.RSSIText.font = [UIFont systemFontOfSize:15];
     self.RSSIText.textColor = [UIColor blackColor];
     self.RSSIText.backgroundColor = [UIColor clearColor];
     
     self.distanceTitle = [[UILabel alloc] init];
     self.distanceTitle.textAlignment = NSTextAlignmentLeft;
-    self.distanceTitle.font = [UIFont boldSystemFontOfSize:20];
+    self.distanceTitle.font = [UIFont boldSystemFontOfSize:15];
     self.distanceTitle.textColor = [UIColor blackColor];
     self.distanceTitle.backgroundColor = [UIColor clearColor];
     self.distanceTitle.text = @"distance";
     
     self.RSSITitle = [[UILabel alloc] init];
     self.RSSITitle.textAlignment = NSTextAlignmentLeft;
-    self.RSSITitle.font = [UIFont boldSystemFontOfSize:20];
+    self.RSSITitle.font = [UIFont boldSystemFontOfSize:15];
     self.RSSITitle.textColor = [UIColor blackColor];
     self.RSSITitle.backgroundColor = [UIColor clearColor];
     self.RSSITitle.text = @"RSSI";
-
+    
+    self.titleText = [[UILabel alloc] init];
+    self.titleText.textAlignment = NSTextAlignmentCenter;
+    self.titleText.font = [UIFont fontWithName:@"Avenir Next" size:15];
+    self.titleText.textColor = [UIColor DFBlack];
+    self.titleText.backgroundColor = [UIColor clearColor];
+    self.titleText.text = @"Approximate Distance";
+    
     [self.contentView addSubview:self.distanceText];
     [self.contentView addSubview:self.RSSIText];
     [self.contentView addSubview:self.distanceTitle];
     [self.contentView addSubview:self.RSSITitle];
+    [self.contentView addSubview:self.titleText];
     return self;
 }
 
@@ -57,11 +65,11 @@
     //CGFloat boundsX = self.contentView.bounds.origin.x;
     CGFloat width = self.contentView.bounds.size.width;
     
-    self.distanceTitle.frame = CGRectMake(30, 20, width, 20);
-    self.RSSITitle.frame = CGRectMake(30, 60, width, 20);
-    self.distanceText.frame = CGRectMake(-15, 20, width, 20);
-    self.RSSIText.frame = CGRectMake(-15, 60, width, 20);
-    
+    self.distanceTitle.frame = CGRectMake(30, 35, width, 20);
+    self.RSSITitle.frame = CGRectMake(30, 65, width, 20);
+    self.distanceText.frame = CGRectMake(-30, 35, width, 20);
+    self.RSSIText.frame = CGRectMake(-30, 65, width, 20);
+    self.titleText.frame = CGRectMake(0, 5, width, 30);
     
 }
 

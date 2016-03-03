@@ -26,7 +26,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if(!self) return self;
     self.parent = parent;
-    self.height = 45;
+    self.height = 65;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     accThsValuePrevious = [[defaults valueForKey:@"tapThs"] integerValue];
     accTmltValuePrevious = [[defaults valueForKey:@"tapTmlt"] integerValue];
@@ -38,6 +38,14 @@
 
     self.accValueTap = [[UILabel alloc] init];
     self.accValueTap.font = [UIFont systemFontOfSize:18];
+    
+    self.titleText = [[UILabel alloc] init];
+    self.titleText.textAlignment = NSTextAlignmentCenter;
+    self.titleText.font = [UIFont fontWithName:@"Avenir Next" size:15];
+    self.titleText.textColor = [UIColor DFBlack];
+    self.titleText.backgroundColor = [UIColor clearColor];
+    self.titleText.text = @"Tap Detection";
+
 /*
     self.accThsLabel = [[UILabel alloc] init];
     self.accThsLabel.font = [UIFont systemFontOfSize:13];
@@ -59,6 +67,7 @@
     [self.accTmltSlider addTarget:self action:@selector(accTmltChanged:)
                forControlEvents:UIControlEventValueChanged];
 */
+    [self.contentView addSubview:self.titleText];
     [self.contentView addSubview:self.accLabel];
     [self.contentView addSubview:self.accValueTap];
     //[self.contentView addSubview:self.accThsLabel];
@@ -76,11 +85,13 @@
     CGFloat width = self.contentView.bounds.size.width;
     CGRect fr;
 
-    fr = CGRectMake(boundsX + 5, 8, width-50, 25);
+    fr = CGRectMake(-30, 35, width, 25);
     self.accLabel.frame = fr;
 
-    fr = CGRectMake(boundsX + 30, 8, 100, 25);
+    fr = CGRectMake(boundsX + 30, 35, 100, 25);
     self.accValueTap.frame = fr;
+    
+    self.titleText.frame = CGRectMake(0, 5, width, 30);
 /*
     self.accThsLabel.frame  = CGRectMake(boundsX + 15, 35,  110,40);
     self.accThsSlider.frame = CGRectMake(boundsX + 120, 35, 180,40);

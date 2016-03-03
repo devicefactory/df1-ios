@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "DF1Lib.h"
 #import "DF1Cell.h"
+#import "UIColor+DF1Colors.h"
 
 @interface DF1CellBatt : DF1Cell
 @property int height;

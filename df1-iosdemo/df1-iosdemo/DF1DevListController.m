@@ -142,6 +142,7 @@ facts need to be considered:
   }
 }
 
+
 #pragma mark - UINavigationControllerDelegate
 
 - (void)navigationController:(UINavigationController *)navigationController
@@ -337,6 +338,22 @@ facts need to be considered:
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (nDevices.count == 0) {
+        
+        UIImage *backgroundLogoImage = [UIImage imageNamed:@"noDevices.png"];
+        UIImageView *backgroundLogoImageView = [[UIImageView alloc] initWithImage:backgroundLogoImage];
+        backgroundLogoImageView.frame = CGRectMake((self.view.frame.size.width / 2) - (backgroundLogoImage.size.width / 2), (self.view.frame.size.height / 2) - (backgroundLogoImage.size.height / 2)-40, backgroundLogoImage.size.width, backgroundLogoImage.size.height);
+        
+        [self.view addSubview:backgroundLogoImageView];
+    }
+    else {
+        for (UIView *v in self.view.subviews) {
+            if ([v isKindOfClass:[UIImageView class]]) {
+                [v removeFromSuperview];
+            }
+        }
+    }
+    
     return nDevices.count; // Return the number of rows in the section.
 }
 

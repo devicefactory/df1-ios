@@ -39,10 +39,11 @@
 
     // Initialization code
     self.mainLabel = [[UILabel alloc] init];
-    self.mainLabel.textAlignment = NSTextAlignmentRight;
-    self.mainLabel.font = [UIFont systemFontOfSize:16];
-    self.mainLabel.textColor = [UIColor grayColor];
+    self.mainLabel.textAlignment = NSTextAlignmentCenter;
+    self.mainLabel.font = [UIFont fontWithName:@"Avenir Next" size:15];
+    self.mainLabel.textColor = [UIColor DFBlack];
     self.mainLabel.backgroundColor = [UIColor clearColor];
+    self.mainLabel.text = @"Record Data";
     
     self.fileNameField = [[UITextField alloc] init];
     self.fileNameField.delegate = self;
@@ -75,7 +76,7 @@
     CGFloat boundsX = self.contentView.bounds.origin.x;
     CGFloat width = self.contentView.bounds.size.width;
 
-    self.mainLabel.frame     = CGRectMake(boundsX + 5,   5, width-50, 25);
+    self.mainLabel.frame     = CGRectMake(0, 5, width, 30);
     self.fileNameField.frame = CGRectMake(boundsX + 30,  35, 200, 25);
     self.recordButton.frame  = CGRectMake(boundsX + 180, 35, 40, 40);
     self.shareButton.frame   = CGRectMake(boundsX + 240, 35, 40, 40);

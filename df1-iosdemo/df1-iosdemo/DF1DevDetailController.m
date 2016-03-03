@@ -159,6 +159,10 @@
     _hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     _hud.labelText = @"initializing";
     self.navigationItem.rightBarButtonItem = BARBUTTON(@"Settings", @selector(showCfgController));
+    [self setTitle:@"DF1"];
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] init];
+    barButton.title = @"Devices";
+    self.navigationController.navigationBar.topItem.backBarButtonItem = barButton;
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -242,6 +246,28 @@
 
 
 #pragma mark - Table view data source
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
+    
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
+}
+
+-(void)viewDidLayoutSubviews
+{
+    if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [self.tableView setSeparatorInset:UIEdgeInsetsZero];
+    }
+    
+    if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [self.tableView setLayoutMargins:UIEdgeInsetsZero];
+    }
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -374,11 +400,6 @@
     }
 
     return 100;
-}
-
-
-- (void) tableView:(UITableView*) tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
 }
 
 
@@ -623,15 +644,23 @@
     }
     _avgAcceleration = [NSNumber numberWithFloat:((_avgAcceleration.floatValue * _avgAccCounter.floatValue)+mag)/(_avgAccCounter.floatValue+1) ];
     _avgAccCounter = [NSNumber numberWithInt:_avgAccCounter.intValue+1];
-    
-    self.magCell.magText.text = [[NSString alloc] initWithFormat:@"%f", mag];
-    self.magCell.avgMagText.text = [[NSString alloc] initWithFormat:@"%@", _avgAcceleration];
-    self.magCell.maxMagText.text = [[NSString alloc] initWithFormat:@"%@", _maxAcceleration];
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    [formatter setMaximumFractionDigits:3];
+    [formatter setMinimumFractionDigits:3];
+    NSString *avgTxt = [formatter stringFromNumber:_avgAcceleration];
+    NSString *maxTxt = [formatter stringFromNumber:_maxAcceleration];
+    self.magCell.magText.text = [[NSString alloc] initWithFormat:@"%.3f", mag];
+    self.magCell.avgMagText.text = [[NSString alloc] initWithFormat:@"%@", avgTxt];
+    self.magCell.maxMagText.text = [[NSString alloc] initWithFormat:@"%@", maxTxt];
 //    Present notification if the magnitude exceeds 2G's allow users to change this value and make sure this runs in the background
 //    if(mag > 2) {
 //        [[NSNotificationCenter defaultCenter] postNotificationName:@"Magnitude Threshold Exceeded!" object:nil];
 //    }
 
+    
+    //INCLUDE TOP 10 feature math here!!
+    
+    
     
     if(self.dataCell!=nil && [self.dataCell isFileReady]) {
         [self.dataCell recordX:x Y:y Z:z];

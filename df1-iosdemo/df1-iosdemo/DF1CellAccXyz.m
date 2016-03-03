@@ -38,9 +38,9 @@
 
     // Initialization code
     self.accLabel = [[UILabel alloc] init];
-    self.accLabel.textAlignment = NSTextAlignmentRight;
-    self.accLabel.font = [UIFont systemFontOfSize:16];
-    self.accLabel.textColor = [UIColor grayColor];
+    self.accLabel.textAlignment = NSTextAlignmentCenter;
+    self.accLabel.font = [UIFont fontWithName:@"Avenir Next" size:15];
+    self.accLabel.textColor = [UIColor DFBlack];
     self.accLabel.backgroundColor = [UIColor clearColor];
 
     self.accIcon = [[UIImageView alloc] init];
@@ -126,7 +126,7 @@
 
     fr = CGRectMake(boundsX + 5, 10, 50, 50);
     self.accIcon.frame = fr;
-    fr = CGRectMake(boundsX + 5, 5, width-50, 25);
+    fr = CGRectMake(boundsX + 5, 5, width, 25);
     self.accLabel.frame = fr;
 
     fr = CGRectMake(boundsX + 25, 35, 80, 25);

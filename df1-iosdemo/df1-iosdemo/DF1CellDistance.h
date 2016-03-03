@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "DF1Cell.h"
 #import "DF1Lib.h"
+#import "UIColor+DF1Colors.h"
 
 @interface DF1CellDistance : DF1Cell
 @property (nonatomic,retain) UILabel *distanceText;
@@ -16,6 +17,8 @@
 
 @property (nonatomic,retain) UILabel *distanceTitle;
 @property (nonatomic,retain) UILabel *RSSITitle;
+
+@property (nonatomic,retain) UILabel *titleText;
 
 -(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
   parentController:(DF1DevDetailController*) parent;
