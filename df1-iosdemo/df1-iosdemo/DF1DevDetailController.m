@@ -642,6 +642,7 @@
     if (mag>_maxAcceleration.doubleValue) {
         _maxAcceleration = [NSNumber numberWithFloat:mag];
     }
+    
     _avgAcceleration = [NSNumber numberWithFloat:((_avgAcceleration.floatValue * _avgAccCounter.floatValue)+mag)/(_avgAccCounter.floatValue+1) ];
     _avgAccCounter = [NSNumber numberWithInt:_avgAccCounter.intValue+1];
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
@@ -656,10 +657,8 @@
 //    if(mag > 2) {
 //        [[NSNotificationCenter defaultCenter] postNotificationName:@"Magnitude Threshold Exceeded!" object:nil];
 //    }
-
     
     //INCLUDE TOP 10 feature math here!!
-    
     
     
     if(self.dataCell!=nil && [self.dataCell isFileReady]) {

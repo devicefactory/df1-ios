@@ -115,8 +115,6 @@ facts need to be considered:
 
 -(void) viewDidAppear:(BOOL)animated
 {
-    // self.navigationController.navigationBar.tintColor = [UIColor blackColor];
-    // self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.0 alpha:0.7];
     self.navigationController.navigationBar.barTintColor = [UIColor DFBarColor];
     self.navigationController.navigationBar.tintColor = [UIColor DFRed];
     // kick off timer for reading RSSI for connected peripherals
@@ -509,5 +507,22 @@ facts need to be considered:
     }
 }
 
+#pragma mark - Open settings
+
+-(void) openSettingsPopover {
+    if (!UIAccessibilityIsReduceTransparencyEnabled()) {
+        self.view.backgroundColor = [UIColor clearColor];
+        
+        UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        blurEffectView.frame = self.view.bounds;
+        blurEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        
+        [self.view addSubview:blurEffectView];
+    }
+    else {
+        self.view.backgroundColor = [UIColor blackColor];
+    }
+}
 
 @end

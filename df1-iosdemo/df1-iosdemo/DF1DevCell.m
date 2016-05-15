@@ -61,31 +61,6 @@
     
 }
 
-//Unused - Pending deletion.
-/*
--(void) _genericButton
-{
-    self.ledButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    // self.ledButton.frame = CGRectMake(0.0f, 0.0f, 70.0f, 45.0f);
-    self.ledButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    self.ledButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    [self.ledButton setBackgroundColor:[UIColor colorWithRed:0.5f green:0.5f blue:0.5f alpha:0.2f]];
-    [self.ledButton setTitle:@"led" forState:UIControlStateNormal];
-    [self.ledButton setTitle:@"on!" forState:UIControlStateHighlighted];
-    self.ledButton.titleLabel.font = [UIFont boldSystemFontOfSize:18.0f];
-    [self.ledButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-    [self.ledButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    // [self.ledButton.titleLabel setFont:[UIFont fontWithName:@"Zapfino" size:20.0]];
-    // [self.ledButton.titleLabel setTextColor:[UIColor blueColor]];
-    // [self.ledButton layoutIfNeeded];
-    [self.ledButton sizeToFit];
-    // self.ledButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
-    
-    [self.ledButton addTarget:self action:@selector(ledButtonDn:) forControlEvents:UIControlEventTouchDown];
-    [self.ledButton addTarget:self action:@selector(ledButtonUp:) forControlEvents:UIControlEventTouchUpInside];
-}
-*/
-
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) return nil;
@@ -138,6 +113,8 @@
     [self.contentView addSubview:self.deviceIcon];
     [self.contentView addSubview:self.ledButton];
     [self.contentView addSubview:self.barHolder];
+    
+    //ADD BATTERY and EDIT BTNS HERE
 
     return self;
 }
@@ -206,5 +183,7 @@
     self.signalBar.progress = strength;
     self.signalBar.progressTintColor = [UIColor colorWithRed:(1.0f - strength) green:(strength) blue:0.05f alpha:1.0f];
 }
+
+
 
 @end
