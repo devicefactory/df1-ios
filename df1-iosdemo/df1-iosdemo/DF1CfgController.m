@@ -70,7 +70,10 @@
                 [_innerCells addObject:cell];
         }
     }
+    
+    
 }
+
 
 -(id) initWithDF:(DF1*) userdf
 {
@@ -123,7 +126,8 @@
 
 -(void) viewWillAppear:(BOOL)animated
 {
-    // if(self.df==nil) [self initializeMembers:nil];
+    [self.tableView setFrame:CGRectMake(0, 120, self.view.window.frame.size.width, self.view.window.frame.size.height-120)];
+    self.tableView.contentInset = UIEdgeInsetsMake(120, 0, 0, 0);
 }
 
 
@@ -174,7 +178,8 @@
 {
     //Is the settings cfg dictionary ever being set or updated?
     NSLog(@"the df old is %@, and the new cfg is %@", self.df.p, self.cfg);
-    NSDictionary *dict = [DF1LibUtil saveUserCfgDict:self.df.p withDict:self.cfg];
+    /*NSDictionary *dict =*/
+    [DF1LibUtil saveUserCfgDict:self.df.p withDict:self.cfg];
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     // Configure for text only and offset down
@@ -249,14 +254,21 @@
 
 -(UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSInteger section = indexPath.section;
-    NSInteger row     = indexPath.row;
     
-    if(_cells.count<=section) section = _cells.count - 1;
-    NSInteger innerCount = [[_cells objectAtIndex:section] count];
-    if(innerCount<=row) row = innerCount - 1;
+    if(tableView == self.tableView){
+        NSInteger section = indexPath.section;
+        NSInteger row     = indexPath.row;
     
-    return _cells[section][row];
+        if(_cells.count<=section) section = _cells.count - 1;
+            NSInteger innerCount = [[_cells objectAtIndex:section] count];
+        if(innerCount<=row) row = innerCount - 1;
+        
+            return _cells[section][row];
+    }
+    else {
+        //USE CASE CELLS GO HERE
+        return nil;
+    }
 }
 
 

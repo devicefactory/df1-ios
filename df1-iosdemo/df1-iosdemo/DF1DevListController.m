@@ -75,7 +75,7 @@ facts need to be considered:
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    NSLog(@"the defaults are %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
     //check to see if it is the first time launching the app
     //if it is, then present the introduction view
     NSUserDefaults *data = [NSUserDefaults standardUserDefaults];

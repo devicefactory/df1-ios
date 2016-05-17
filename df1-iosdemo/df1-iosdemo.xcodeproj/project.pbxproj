@@ -42,6 +42,7 @@
 		0134C6511B2E07C700AF926B /* DFLogoRed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0134C6501B2E07C700AF926B /* DFLogoRed@2x.png */; };
 		0134C6561B2E2B9B00AF926B /* BuyNowRed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0134C6541B2E2B9B00AF926B /* BuyNowRed@2x.png */; };
 		0134C6571B2E2B9B00AF926B /* DF1Red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0134C6551B2E2B9B00AF926B /* DF1Red@2x.png */; };
+		015627D11CEBAAE60096BB42 /* DF1FeaturePickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 015627D01CEBAAE60096BB42 /* DF1FeaturePickerCell.m */; };
 		0159C0591AD34AC7003EF1A5 /* UIColor+DF1Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = 0159C0581AD34AC7003EF1A5 /* UIColor+DF1Colors.m */; };
 		01955BD91B1BF4FB00CA7DD7 /* IFTTTAlphaAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 01955BBB1B1BF4FB00CA7DD7 /* IFTTTAlphaAnimation.m */; };
 		01955BDA1B1BF4FB00CA7DD7 /* IFTTTAngleAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 01955BBD1B1BF4FB00CA7DD7 /* IFTTTAngleAnimation.m */; };
@@ -185,6 +186,8 @@
 		0134C6501B2E07C700AF926B /* DFLogoRed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DFLogoRed@2x.png"; sourceTree = "<group>"; };
 		0134C6541B2E2B9B00AF926B /* BuyNowRed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "BuyNowRed@2x.png"; sourceTree = "<group>"; };
 		0134C6551B2E2B9B00AF926B /* DF1Red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DF1Red@2x.png"; sourceTree = "<group>"; };
+		015627CF1CEBAAE60096BB42 /* DF1FeaturePickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1FeaturePickerCell.h; sourceTree = "<group>"; };
+		015627D01CEBAAE60096BB42 /* DF1FeaturePickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1FeaturePickerCell.m; sourceTree = "<group>"; };
 		0159C0571AD34AC7003EF1A5 /* UIColor+DF1Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+DF1Colors.h"; sourceTree = "<group>"; };
 		0159C0581AD34AC7003EF1A5 /* UIColor+DF1Colors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+DF1Colors.m"; sourceTree = "<group>"; };
 		01955BBA1B1BF4FB00CA7DD7 /* IFTTTAlphaAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTAlphaAnimation.h; sourceTree = "<group>"; };
@@ -474,6 +477,8 @@
 				C56C089B1901C1B0001FF641 /* DF1DevCell.m */,
 				01A2E2F91C0295B6002B0EB7 /* DF1CellFreefall.h */,
 				01A2E2F81C0295B6002B0EB7 /* DF1CellFreefall.m */,
+				015627CF1CEBAAE60096BB42 /* DF1FeaturePickerCell.h */,
+				015627D01CEBAAE60096BB42 /* DF1FeaturePickerCell.m */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -867,6 +872,7 @@
 				C5AACD411A98289500A57F1C /* BLETIOADProfile.m in Sources */,
 				C56C089E1901C1B0001FF641 /* DF1DevCell.m in Sources */,
 				C5CA41E9191AC9C000C29D76 /* F3PlotStrip.m in Sources */,
+				015627D11CEBAAE60096BB42 /* DF1FeaturePickerCell.m in Sources */,
 				01955BDE1B1BF4FB00CA7DD7 /* IFTTTAnimationKeyFrame.m in Sources */,
 				C5A71BF3194D51ED0074B087 /* DF1CellAccTap.m in Sources */,
 				01955BDD1B1BF4FB00CA7DD7 /* IFTTTAnimationFrame.m in Sources */,

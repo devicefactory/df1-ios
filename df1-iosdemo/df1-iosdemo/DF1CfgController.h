@@ -17,9 +17,9 @@ DF1CfgController: Configuration Management Controller
 
 @property (strong,nonatomic) DF1 *df;
 @property (strong,nonatomic) NSMutableDictionary *cfg;
+@property (strong,nonatomic) UITableView *useCaseTableView;
 
 -(id) initWithDF:(DF1*) df;
 -(void) saveCfg;
-// DF1CfgCellOADTriggerDelegate func
 -(void) triggerOAD;
 @end

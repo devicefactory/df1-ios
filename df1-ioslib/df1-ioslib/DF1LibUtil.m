@@ -390,6 +390,7 @@
     NSString *uuid = [p.identifier UUIDString];
     NSDictionary* mdict = [DF1LibUtil mergeUserCfgDict:p withDict:dict];
     // do some validation to make sure your required keys are filled in
+    NSLog(@"WE WILL SAVE %@", dict);
     [[NSUserDefaults standardUserDefaults] setValue:mdict forKey:uuid];
     [[NSUserDefaults standardUserDefaults] synchronize];
     return dict;

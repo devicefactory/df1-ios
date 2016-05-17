@@ -59,12 +59,14 @@
 -(void) saveUserDefaultsForDevice
 {
     // NSDictionary *cellList = _defaultCells;
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+    /*NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
                           self.df.p.name, CFG_NAME,
                           _defaultCells,  CFG_CELLS,
                           nil];
+    
+    NSLog(@"save user defaults in dev detail will be saving %@", dict);
 
-    dict = [DF1LibUtil saveUserCfgDict:self.df.p withDict:dict];
+    dict = [DF1LibUtil saveUserCfgDict:self.df.p withDict:dict];*/
 }
 
 -(void)initializeCells
@@ -458,8 +460,11 @@
 
 
 // takes user config and modifies the parameters on DF1 accordingly.
+
+//I think what you wrote reads what the df1 has and just puts it back on the DF1...
 -(void) _modifyDF1Parameters
 {
+
     NSDictionary *dict = [DF1LibUtil getUserCfgDict:self.df.p];
     if(dict==nil)
     {

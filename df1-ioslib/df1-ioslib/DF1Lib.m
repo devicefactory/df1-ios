@@ -822,6 +822,10 @@
     [DF1LibUtil readCharacteristic:self.p sUUID:ACC_SERV_UUID cUUID:ACC_GEN_CFG_UUID];
 }
 
+/*-(void) modifyName:(string) vlaue {
+    
+}*/
+
 -(void) modifyTapThsz:(float) g
 {
     g = fabsf(g); // just to make sure

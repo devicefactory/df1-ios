@@ -32,6 +32,7 @@
     [self.window makeKeyAndVisible];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     return YES;
+
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application

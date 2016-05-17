@@ -3,14 +3,14 @@
 #import "DF1Lib.h"
 #import "UIColor+DF1Colors.h"
 
-@interface DF1CfgCell : UITableViewCell
-// will be provided from external source
+@interface DF1CfgCell : UITableViewCell <DF1Delegate>
+
 @property (strong,nonatomic) NSMutableDictionary *cfg;
-// to be overloaded later
+@property (strong,nonatomic) DF1 *df;
 @property int height;
 -(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
       withCfg:(NSMutableDictionary*) ucfg;
--(void) modifyChange:(NSMutableDictionary*) c;
+
 @end
 
 //
@@ -29,14 +29,14 @@
 //
 @interface DF1CfgCellRange : DF1CfgCell
 @property (nonatomic,retain) UILabel *accRangeLabel;
-@property (nonatomic,retain) UISlider *accRangeSlider;
+@property (nonatomic,retain) UISegmentedControl *control;
 -(void) modifyChange:(NSMutableDictionary*) c;
 -(IBAction) accSliderChanged:(UISlider*)sender;
 @end
 
 @interface DF1CfgCellRes : DF1CfgCell
 @property (nonatomic,retain) UILabel *accResLabel;
-@property (nonatomic,retain) UISwitch *accResSwitch;
+@property (nonatomic,retain) UISegmentedControl *control;
 -(void) modifyChange:(NSMutableDictionary*) c;
 @end
 
