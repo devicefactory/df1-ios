@@ -79,11 +79,16 @@ facts need to be considered:
     //check to see if it is the first time launching the app
     //if it is, then present the introduction view
     NSUserDefaults *data = [NSUserDefaults standardUserDefaults];
-    if(![[data valueForKey:@"launchedBefore"] isEqual:[NSNumber numberWithBool:YES]]) {
-        [data setValue:[NSNumber numberWithBool:YES] forKey:@"launchedBefore"];
+    if(![[data valueForKey:@"launchedBeforeTutorial"] isEqual:[NSNumber numberWithBool:YES]]) {
+        [data setValue:[NSNumber numberWithBool:YES] forKey:@"launchedBeforeTutorial"];
         
         //Turn on all features to get the user started
-        [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgFreefall"];
+        [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgBatteryLevel"];
+        [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgCSVDataRecorder"];
+        [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgDistance"];
+        [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgMagnitudeValues"];
+        [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgTapDetector"];
+        [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgXYZPlotter"];
         
         [data synchronize];
         [self presentTutorial];

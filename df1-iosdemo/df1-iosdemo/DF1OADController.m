@@ -116,7 +116,7 @@
     
     fr = CGRectMake(boundsX + 5, 5, width-50, 25);
     self.oadLabel.frame   = CGRectMake(boundsX/2,  60,  width, 45);
-    self.oadButton.frame  = CGRectMake(boundsX/2,  120, width, 45);
+    self.oadButton.frame  = CGRectMake(0,  0, width-20, 45);
     self.connButton.frame = CGRectMake(boundsX/2,  200, width, 45);
     
     if(_alreadyConnected)

@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DF1FeaturePickerCell : UITableViewCell
+
+@interface DF1FeaturePickerCell : UITableViewCell <UIPickerViewDelegate, UIPickerViewDataSource>
 @property (nonatomic, retain) UIPickerView *picker;
+@property NSMutableArray *dataArray;
+@property NSNumber *height;
 @end

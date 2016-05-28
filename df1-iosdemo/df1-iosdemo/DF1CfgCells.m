@@ -982,7 +982,7 @@ withCfg:(NSMutableDictionary*) ucfg
 }
 
 -(void)sendOADBootCmd {
-    
+
 }
 
 -(void)modifyChange:(NSMutableDictionary *)c {

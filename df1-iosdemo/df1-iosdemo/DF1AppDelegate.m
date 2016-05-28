@@ -31,6 +31,29 @@
     [[nav delegate] navigationController:nav willShowViewController:devlist animated:YES];
     [self.window makeKeyAndVisible];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if(![defaults valueForKey:@"launchedBefore"]) {
+        NSMutableArray *useCaseArray = [[NSMutableArray alloc] initWithArray: @[
+                                  @{@"name" : @"defaults",
+                                    @"DF1CfgBatteryLevel" : @1,
+                                    @"DF1CfgCSVDataRecorder" : @1,
+                                    @"DF1CfgDistance" : @1,
+                                    @"DF1CfgFreefall" : @1,
+                                    @"DF1CfgMagnitudeValues" : @1,
+                                    @"DF1CfgTapDetector" : @1,
+                                    @"DF1CfgXYZPlotter" : @1,
+                                    }
+                                  ]];
+        [defaults setObject:useCaseArray forKey:@"use_cases"];
+        [defaults setObject:@"defaults" forKey:@"active_use_case"];
+        [defaults setValue:@YES forKey:@"launchedBefore"];
+        [defaults synchronize];
+    }
+    
+    
+    
+    
     return YES;
 
 }

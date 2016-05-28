@@ -58,6 +58,8 @@
 // here, we create a dictionary we want to save under NSUserDefault library
 -(void) saveUserDefaultsForDevice
 {
+    
+    //THIS WAS COMMENTED OUT BECAUSE IT WAS CAUSING THE NEWLY UPDATED SETTINGS TO BE OVERWRITTEN...
     // NSDictionary *cellList = _defaultCells;
     /*NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
                           self.df.p.name, CFG_NAME,
@@ -407,9 +409,9 @@
 
 -(NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (section == 0) {
+    /*if (section == 0) {
         return [DF1LibUtil getUserCfgName:self.df.p];
-    }
+    }*/
     return @"";
 }
 

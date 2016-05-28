@@ -20,7 +20,7 @@
 
 @implementation DF1CfgController
 
-@synthesize cfg;
+@synthesize cfg, useCaseTableView;
 
 // http://stackoverflow.com/questions/8259896/instantiate-class-programmatically-in-ios
 -(void) initializeCells
@@ -66,7 +66,7 @@
                     oadcell.delegate = self;
                 }
                 // MyClass *myClass = [[cl alloc] init];
-                [self.tableView registerClass:cl forCellReuseIdentifier:className];
+                [self.featuresTableView registerClass:cl forCellReuseIdentifier:className];
                 [_innerCells addObject:cell];
         }
     }
@@ -110,13 +110,160 @@
 
     self.navigationItem.title = @"Settings";
     // style related stuff
-    self.tableView.backgroundColor = [UIColor whiteColor];
+    self.featuresTableView.backgroundColor = [UIColor whiteColor];
     
     // [self.tableView setBackgroundView: [[UIImageView alloc]
     //                                    initWithImage: [UIImage imageNamed:@"DFLOGO07_launch_invert.png"]]];
 
     //self.navigationItem.rightBarButtonItem = BARBUTTON(@"save", @selector(saveCfg));
+    
+    //set up reuse identifiers for classes
+    _useCaseToggle = NO;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(useCasePickerTogg) name:@"toggleUseCasePicker" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUseCase) name:@"useCaseSelected" object:nil];
+    NSLog(@"the defaults dictionary which will store feature sets is: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
+
+    
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    CGFloat width = self.view.frame.size.width;
+    CGFloat height = self.view.frame.size.height;
+    CGFloat offset = self.navigationController.navigationBar.frame.size.height;
+    CGRect table1Frame = CGRectMake(0, 0, width, 50);
+    CGRect table2Frame = CGRectMake(0, 0, width, height);
+    self.useCaseTableView = [[UITableView alloc]initWithFrame:table1Frame style:UITableViewStylePlain];
+    
+    [self.useCaseTableView registerClass:[DF1FeatureTitleCell class] forCellReuseIdentifier:@"DF1FeatureTitleCell"];
+    [self.useCaseTableView registerClass:[DF1FeaturePickerCell class] forCellReuseIdentifier:@"DF1FeaturePickerCell"];
+    [self.useCaseTableView registerClass:[DF1NewFeatureCell class] forCellReuseIdentifier:@"DF1NewFeatureCell"];
+    
+    self.useCaseTableView.showsVerticalScrollIndicator = NO;
+    self.useCaseTableView.userInteractionEnabled = YES;
+    self.useCaseTableView.scrollEnabled = NO;
+    self.useCaseTableView.bounces = NO;
+    self.useCaseTableView.tag = 1;
+    self.useCaseTableView.delegate = self;
+    self.useCaseTableView.dataSource = self;
+    self.useCaseTableView.backgroundColor = [UIColor clearColor];
+    self.useCaseTableView.opaque = NO;
+    self.useCaseTableView.layer.zPosition = 1;
+    //makes shadow
+    self.useCaseTableView.layer.masksToBounds = NO;
+    self.useCaseTableView.layer.shadowOffset = CGSizeMake(0, 3);
+    self.useCaseTableView.layer.shadowRadius = 1;
+    self.useCaseTableView.layer.shadowOpacity = 0.5;
+    
+    self.featuresTableView = [[UITableView alloc] initWithFrame:table2Frame style:UITableViewStylePlain];
+    self.featuresTableView.delegate = self;
+    self.featuresTableView.dataSource = self;
+    self.featuresTableView.tag = 2;
+    self.featuresTableView.showsVerticalScrollIndicator = YES;
+    self.featuresTableView.userInteractionEnabled = YES;
+    self.featuresTableView.scrollEnabled = YES;
+    self.featuresTableView.bounces = YES;
+    self.featuresTableView.layer.zPosition = 0;
+    self.featuresTableView.contentInset = UIEdgeInsetsMake(50, 0, 0, 0);
+    
+    
+    [self.view addSubview:self.featuresTableView];
+    [self.view insertSubview:useCaseTableView aboveSubview:self.featuresTableView];
+
 }
+
+-(void) useCasePickerTogg {
+    NSLog(@"notif works");
+    
+    [useCaseTableView beginUpdates];
+    
+    CGFloat width = self.view.frame.size.width;
+    _useCaseToggle = !_useCaseToggle;
+    if(_useCaseToggle) {
+        //CHANGE BTN PRESSED
+        CGRect table1Frame = CGRectMake(0, 0, width, 250);
+        [useCaseTableView setFrame:table1Frame];
+        NSIndexPath *rowToReload1 = [NSIndexPath indexPathForRow:1 inSection:0];
+        NSIndexPath *rowToReload2 = [NSIndexPath indexPathForRow:2 inSection:0];
+        NSArray *paths = [NSArray arrayWithObjects:rowToReload1,rowToReload2, nil];
+        [useCaseTableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
+        
+        
+        
+        UIVisualEffect *blurEffect;
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        
+        UIVisualEffectView *visualEffectView;
+        visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        visualEffectView.tag = 4;
+        visualEffectView.alpha = 0.8;
+        
+        visualEffectView.frame = _featuresTableView.bounds;
+        [_featuresTableView addSubview:visualEffectView];
+        
+    }
+    else {
+        //maybe delay the below frame change for the animation to complete
+        
+        //DONE BTN PRESSED
+        
+        //Update the view
+        
+        CGRect table1Frame = CGRectMake(0, 0, width, 50);
+        [useCaseTableView setFrame:table1Frame];
+        NSIndexPath *rowToReload1 = [NSIndexPath indexPathForRow:1 inSection:0];
+        NSIndexPath *rowToReload2 = [NSIndexPath indexPathForRow:2 inSection:0];
+        NSArray *paths = [NSArray arrayWithObjects:rowToReload1,rowToReload2, nil];
+        [useCaseTableView deleteRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
+        
+        UIView *viewToRemove = [self.featuresTableView viewWithTag:4];
+        [viewToRemove removeFromSuperview];
+        
+        //Get the selected use case, save it as active in user defaults and change the title text to say it.
+        
+        
+        //Update the features to reflect the use case
+        
+    }
+    [useCaseTableView endUpdates];
+    
+}
+
+-(void) updateUseCase {
+    
+        //NSDictionary *userInfo = notification.userInfo;
+        NSLog(@"the defaults dictionary which will store feature sets is: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
+    
+    
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"use_cases.plist"];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    if (![fileManager fileExistsAtPath: path]) {
+        
+        path = [documentsDirectory stringByAppendingPathComponent: [NSString stringWithFormat:@"use_cases.plist"] ];
+    }
+    
+    NSMutableDictionary *data;
+    
+    if ([fileManager fileExistsAtPath: path]) {
+        
+        data = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
+    }
+    else {
+        // If the file doesn’t exist, create an empty dictionary
+        data = [[NSMutableDictionary alloc] init];
+    }
+    
+    //To insert the data into the plist
+    [data setObject:@"iPhone 6 Plus" forKey:@"value"];
+    [data writeToFile:path atomically:YES];
+    
+    //To reterive the data from the plist
+    NSMutableDictionary *savedValue = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
+    NSString *value = [savedValue objectForKey:@"value"];
+    NSLog(@"%@",value);
+}
+
 
 -(void) viewDidAppear:(BOOL)animated
 {
@@ -126,8 +273,8 @@
 
 -(void) viewWillAppear:(BOOL)animated
 {
-    [self.tableView setFrame:CGRectMake(0, 120, self.view.window.frame.size.width, self.view.window.frame.size.height-120)];
-    self.tableView.contentInset = UIEdgeInsetsMake(120, 0, 0, 0);
+    //[self.featuresTableView setFrame:CGRectMake(0, 50, self.view.window.frame.size.width, self.view.window.frame.size.height-120)];
+    //self.featuresTableView.contentInset = UIEdgeInsetsMake(50, 0, 0, 0);
 }
 
 
@@ -244,18 +391,33 @@
 
 -(NSInteger) numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return _cells.count;
+    if(tableView.tag == 1) {
+        return 1;
+    }
+    else {
+        return _cells.count;
+    }
 }
 
 -(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[_cells objectAtIndex:section] count];
+    if (tableView.tag == 2) {
+        return [[_cells objectAtIndex:section] count];
+    }
+    if (tableView.tag == 1) {
+       return _useCaseToggle ? 3 : 1;
+    }
+    else {
+        return 1;
+    }
 }
+
+#pragma mark Cell For Row
 
 -(UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    if(tableView == self.tableView){
+    if(tableView.tag == 2) {
         NSInteger section = indexPath.section;
         NSInteger row     = indexPath.row;
     
@@ -265,25 +427,67 @@
         
             return _cells[section][row];
     }
-    else {
-        //USE CASE CELLS GO HERE
-        return nil;
+    if(tableView.tag == 1) {
+        if (indexPath.row == 0 ) {
+            NSString *CellIdentifier = @"DF1FeatureTitleCell";
+            DF1FeatureTitleCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+            if (!cell) {
+                cell = [[DF1FeatureTitleCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+            }
+            return cell;
+        }
+        if(indexPath.row == 1) {
+            NSString *CellIdentifier = @"DF1FeaturePickerCell";
+            DF1FeaturePickerCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+            if (!cell) {
+                cell = [[DF1FeaturePickerCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+            }
+            return cell;
+        }
+        if (indexPath.row == 2) {
+            NSString *CellIdentifier = @"DF1NewFeatureCell";
+            DF1NewFeatureCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+            if (!cell) {
+                cell = [[DF1NewFeatureCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+            }
+            return cell;
+        }
+
     }
+    return nil;
 }
 
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 37.0f;
+    if (tableView.tag == 2) {
+        //return 37.0f;
+        return 0;
+    }
+    else {
+        return 0;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSInteger section = indexPath.section;
-    NSInteger row     = indexPath.row;
-
-    DF1CfgCell *cell = [[_cells objectAtIndex:section] objectAtIndex:row];
-    return cell.height;
+    if(tableView.tag == 2) {
+        NSInteger section = indexPath.section;
+        NSInteger row     = indexPath.row;
+        
+        DF1CfgCell *cell = [[_cells objectAtIndex:section] objectAtIndex:row];
+       return cell.height;
+    }
+    if(tableView.tag == 1) {
+        if(indexPath.row == 1) {
+            return 150;
+        }
+        else {
+            return 50;
+        }
+        
+    }
+    return 50;
 }
 
 -(NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -293,18 +497,23 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if (tableView.tag == 2) {
+        UILabel *myLabel = [[UILabel alloc] init];
+        myLabel.frame = CGRectMake(20, 8, 320, 20);
+        myLabel.font = [UIFont boldSystemFontOfSize:18];
+        myLabel.textColor = [UIColor whiteColor];
+        myLabel.text = [self tableView:tableView titleForHeaderInSection:section];
     
-    UILabel *myLabel = [[UILabel alloc] init];
-    myLabel.frame = CGRectMake(20, 8, 320, 20);
-    myLabel.font = [UIFont boldSystemFontOfSize:18];
-    myLabel.textColor = [UIColor whiteColor];
-    myLabel.text = [self tableView:tableView titleForHeaderInSection:section];
-    
-    UIView *headerView = [[UIView alloc] init];
-    headerView.backgroundColor = [UIColor darkGrayColor];
-    if(_sectionNames.count<=section) section = _sectionNames.count - 1;
-    [headerView addSubview:myLabel];
-    return headerView;
+        UIView *headerView = [[UIView alloc] init];
+        headerView.backgroundColor = [UIColor darkGrayColor];
+        if(_sectionNames.count<=section) section = _sectionNames.count - 1;
+        [headerView addSubview:myLabel];
+        return headerView;
+    }
+    else {
+        UIView *headerView = [[UIView alloc] init];
+        return headerView;
+    }
 }
 
 -(CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
