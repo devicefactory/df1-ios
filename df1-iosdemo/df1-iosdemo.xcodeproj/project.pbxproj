@@ -45,6 +45,7 @@
 		015627D11CEBAAE60096BB42 /* DF1FeaturePickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 015627D01CEBAAE60096BB42 /* DF1FeaturePickerCell.m */; };
 		015627D41CEBAFAF0096BB42 /* DF1FeatureTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 015627D31CEBAFAF0096BB42 /* DF1FeatureTitleCell.m */; };
 		0159C0591AD34AC7003EF1A5 /* UIColor+DF1Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = 0159C0581AD34AC7003EF1A5 /* UIColor+DF1Colors.m */; };
+		018159191CFC13FA000355DE /* deleteCaseBtn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 018159181CFC13FA000355DE /* deleteCaseBtn@2x.png */; };
 		01955BD91B1BF4FB00CA7DD7 /* IFTTTAlphaAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 01955BBB1B1BF4FB00CA7DD7 /* IFTTTAlphaAnimation.m */; };
 		01955BDA1B1BF4FB00CA7DD7 /* IFTTTAngleAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 01955BBD1B1BF4FB00CA7DD7 /* IFTTTAngleAnimation.m */; };
 		01955BDB1B1BF4FB00CA7DD7 /* IFTTTAnimatedScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01955BBF1B1BF4FB00CA7DD7 /* IFTTTAnimatedScrollViewController.m */; };
@@ -196,6 +197,7 @@
 		015627D31CEBAFAF0096BB42 /* DF1FeatureTitleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1FeatureTitleCell.m; sourceTree = "<group>"; };
 		0159C0571AD34AC7003EF1A5 /* UIColor+DF1Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+DF1Colors.h"; sourceTree = "<group>"; };
 		0159C0581AD34AC7003EF1A5 /* UIColor+DF1Colors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+DF1Colors.m"; sourceTree = "<group>"; };
+		018159181CFC13FA000355DE /* deleteCaseBtn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "deleteCaseBtn@2x.png"; sourceTree = "<group>"; };
 		01955BBA1B1BF4FB00CA7DD7 /* IFTTTAlphaAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTAlphaAnimation.h; sourceTree = "<group>"; };
 		01955BBB1B1BF4FB00CA7DD7 /* IFTTTAlphaAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTAlphaAnimation.m; sourceTree = "<group>"; };
 		01955BBC1B1BF4FB00CA7DD7 /* IFTTTAngleAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTAngleAnimation.h; sourceTree = "<group>"; };
@@ -369,6 +371,7 @@
 		011AEED21AD45008001127AF /* buttons */ = {
 			isa = PBXGroup;
 			children = (
+				018159181CFC13FA000355DE /* deleteCaseBtn@2x.png */,
 				01EC0F001CF21B1A006BC3A5 /* new_use_case_btn@2x.png */,
 				0131D4171AD5EBFA00D479F9 /* on.png */,
 				0131D4181AD5EBFA00D479F9 /* off.png */,
@@ -808,6 +811,7 @@
 				C5AACD531A985E5F00A57F1C /* DFMove_ImgB.bin in Resources */,
 				01EA75BA1AD05F0B0099FF52 /* Default@2x~iphone_640x960.png in Resources */,
 				C5AACD521A985E5F00A57F1C /* DF1_rangefix.bin in Resources */,
+				018159191CFC13FA000355DE /* deleteCaseBtn@2x.png in Resources */,
 				C5AACD641A9A815A00A57F1C /* share.png in Resources */,
 				012131FE1ABF9C6300B3BDF3 /* Default~iphone.png in Resources */,
 				012131FC1ABF9C6300B3BDF3 /* Default@2x~iphone_640x960.png in Resources */,

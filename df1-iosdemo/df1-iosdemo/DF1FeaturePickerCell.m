@@ -30,14 +30,22 @@
     _picker.tag = 3;
     [self addSubview:_picker];
     
-    
-    return self;
-}
-
--(void)viewDidLoad {
     NSUInteger index = [_dataArray indexOfObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"active_use_case"] ];
     [_picker reloadAllComponents];
     [_picker selectRow:index inComponent:0 animated:YES];
+    
+    _deleteCaseBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width-40, 150/2-10, 20, 20)];
+    
+    [self.deleteCaseBtn addTarget:self action:@selector(deleteBtnPressed) forControlEvents:UIControlEventTouchDown];
+    UIImage *btnImage = [UIImage imageNamed:@"deleteCaseBtn.png"];
+    [_deleteCaseBtn setImage:btnImage forState:UIControlStateNormal];
+    _deleteCaseBtn.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    [self insertSubview:_deleteCaseBtn aboveSubview:_picker];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(useCaseAdded) name:@"showDoneBtn" object:nil];
+    
+
+    return self;
 }
 
 
@@ -51,26 +59,76 @@
     return 1;
 }
 
-// Total rows in our component.
+
 -(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
     return [_dataArray count];
 }
 
-// Display each row's data.
--(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
-    return [_dataArray objectAtIndex: row];
-}
-
-// Do something with the selected row.
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     NSLog(@"You selected this: %@", [_dataArray objectAtIndex: row]);
     
     NSDictionary *userInfoDict = @{@"useCase": [_dataArray objectAtIndex: row]};
     [[NSNotificationCenter defaultCenter] postNotificationName:@"useCaseSelected" object:nil userInfo:userInfoDict];
     
-    //if(![[NSUserDefaults standardUserDefaults] objectForKey:[_dataArray objectAtIndex: row]]) {
-    //[[NSUserDefaults standardUserDefaults] setObject:[_dataArray objectAtIndex: row] forKey:<#(nonnull NSString *)#>]
-    //}
+    NSUserDefaults *data = [NSUserDefaults standardUserDefaults];
+    [data setObject:[_dataArray objectAtIndex: row] forKey:@"active_use_case"];
+    [data synchronize];
+    
+}
+
+- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
+{
+    UIView *pickerSubview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 37)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 300, 37)];
+    [pickerSubview addSubview:label];
+    label.text = [_dataArray objectAtIndex: row];
+    label.textAlignment = NSTextAlignmentLeft;
+    label.backgroundColor = [UIColor clearColor];
+    return pickerSubview;
+}
+
+-(void) deleteBtnPressed {
+    
+    if(_dataArray.count>1) {
+    NSUInteger index = [_dataArray indexOfObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"active_use_case"]];
+    NSUserDefaults *data = [NSUserDefaults standardUserDefaults];
+    [data setObject:[_dataArray objectAtIndex: index-1] forKey:@"active_use_case"];
+    
+    //iterate through use cases to find active one and delete it, resave use cases to defualts
+    
+    NSString *active_case_name = [data objectForKey:@"active_use_case"];
+    NSMutableArray *use_cases = [[NSMutableArray alloc]initWithArray:[data objectForKey:@"use_cases"]];
+    
+    for (int i=0; i<use_cases.count; i++) {
+        NSDictionary *dict = [use_cases objectAtIndex:i];
+        if([[dict valueForKey:@"name"] isEqualToString:active_case_name]) {
+            [use_cases removeObjectAtIndex:i];
+            }
+    }
+    
+    [data setObject:use_cases forKey:@"use_cases"];
+    [data synchronize];
+    
+    
+    NSDictionary *userInfoDict = @{@"useCase": [_dataArray objectAtIndex: index-1]};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"useCaseSelected" object:nil userInfo:userInfoDict];
+    [_dataArray removeObjectAtIndex:index];
+    [_picker reloadAllComponents];
+    }
+    
+}
+
+-(void)useCaseAdded {
+    NSString *newCaseName = [[NSUserDefaults standardUserDefaults] objectForKey:@"active_use_case"];
+    [_dataArray addObject:newCaseName];
+    
+    NSUInteger index = [_dataArray indexOfObject:newCaseName];
+    [_picker reloadAllComponents];
+    [_picker selectRow:index inComponent:0 animated:YES];
+    
+    NSDictionary *userInfoDict = @{@"useCase": newCaseName};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"useCaseSelected" object:nil userInfo:userInfoDict];
+    [_picker reloadAllComponents];
     
 }
 

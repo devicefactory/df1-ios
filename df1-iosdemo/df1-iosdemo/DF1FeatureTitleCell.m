@@ -15,6 +15,8 @@
     if(!self) return self;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUseCase:) name:@"useCaseSelected" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showTheDoneBtn) name:@"showDoneBtn" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideTheDoneBtn) name:@"hideDoneBtn" object:nil];
     
     
     self.featureTitle = [[UILabel alloc] init];
@@ -73,7 +75,14 @@
         NSDictionary *userInfo = notification.userInfo;
         _featureTitle.text = [userInfo objectForKey:@"useCase"];
     }
-    NSLog(@"itTwerked!!!");
+}
+
+-(void) hideTheDoneBtn {
+    self.changeFeatureSetBtn.hidden = YES;
+}
+
+-(void) showTheDoneBtn {
+    self.changeFeatureSetBtn.hidden = NO;
 }
 
 @end

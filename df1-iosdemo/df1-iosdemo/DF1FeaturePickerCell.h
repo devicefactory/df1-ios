@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#define SECTION2 @"DF1CfgXYZPlotter",@"DF1CfgTapDetector",@"DF1CfgCSVDataRecorder",@"DF1CfgBatteryLevel", @"DF1CfgMagnitudeValues",@"DF1CfgDistance",@"DF1CfgFreefall", nil
 
 @interface DF1FeaturePickerCell : UITableViewCell <UIPickerViewDelegate, UIPickerViewDataSource>
 @property (nonatomic, retain) UIPickerView *picker;
 @property NSMutableArray *dataArray;
 @property NSNumber *height;
+@property UIButton *deleteCaseBtn;
 @end

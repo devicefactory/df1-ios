@@ -167,6 +167,7 @@
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc] init];
     barButton.title = @"Devices";
     self.navigationController.navigationBar.topItem.backBarButtonItem = barButton;
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
 }
 
 -(void)viewWillAppear:(BOOL)animated

@@ -47,11 +47,12 @@
     {
         _sectionNames = [NSMutableArray arrayWithObjects:SECTION_NAMES];
     }
-    // kinda like factory mechanism?
+    
     for(int i=0; i<classNames.count; i++)
     {
         NSArray *inner = [classNames objectAtIndex:i];
         NSMutableArray *_innerCells = [_cells objectAtIndex:i];
+        [_innerCells removeAllObjects];
         for(int j=0; j<inner.count; j++)
         {
             NSString *className = [inner objectAtIndex:j];
@@ -129,7 +130,7 @@
     CGFloat height = self.view.frame.size.height;
     CGFloat offset = self.navigationController.navigationBar.frame.size.height;
     CGRect table1Frame = CGRectMake(0, 0, width, 50);
-    CGRect table2Frame = CGRectMake(0, 0, width, height);
+    CGRect table2Frame = CGRectMake(0, 0, width, height-60);
     self.useCaseTableView = [[UITableView alloc]initWithFrame:table1Frame style:UITableViewStylePlain];
     
     [self.useCaseTableView registerClass:[DF1FeatureTitleCell class] forCellReuseIdentifier:@"DF1FeatureTitleCell"];
@@ -163,7 +164,6 @@
     self.featuresTableView.layer.zPosition = 0;
     self.featuresTableView.contentInset = UIEdgeInsetsMake(50, 0, 0, 0);
     
-    
     [self.view addSubview:self.featuresTableView];
     [self.view insertSubview:useCaseTableView aboveSubview:self.featuresTableView];
 
@@ -178,6 +178,32 @@
     _useCaseToggle = !_useCaseToggle;
     if(_useCaseToggle) {
         //CHANGE BTN PRESSED
+        
+        //save process
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSMutableDictionary *active_case_dict = [[NSMutableDictionary alloc] init];
+        NSString *active_case_name = [defaults objectForKey:@"active_use_case"];
+        NSMutableArray *use_cases = [[NSMutableArray alloc]initWithArray:[defaults objectForKey:@"use_cases"]];
+        
+        for (int i=0; i<use_cases.count; i++) {
+            NSDictionary *dict = [use_cases objectAtIndex:i];
+            if([[dict valueForKey:@"name"] isEqualToString:active_case_name]) {
+                active_case_dict = [dict mutableCopy];
+                for (NSString *feature in [NSArray arrayWithObjects:SECTION2]) {
+                    NSNumber *feat_bool = [defaults valueForKey:feature];
+                    [active_case_dict setObject:feat_bool forKey:feature];
+                }
+                [use_cases replaceObjectAtIndex:i withObject:active_case_dict];
+                
+            }
+        }
+        
+        [defaults setObject:use_cases forKey:@"use_cases"];
+        [defaults synchronize];
+        //end save process
+
+        
+        
         CGRect table1Frame = CGRectMake(0, 0, width, 250);
         [useCaseTableView setFrame:table1Frame];
         NSIndexPath *rowToReload1 = [NSIndexPath indexPathForRow:1 inSection:0];
@@ -220,48 +246,44 @@
         
         
         //Update the features to reflect the use case
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSMutableArray *use_cases = [[NSMutableArray alloc]initWithArray:[defaults objectForKey:@"use_cases"]];
+        NSDictionary *active_case_dict = [[NSDictionary alloc] init];
+        NSString *active_case_name = [defaults objectForKey:@"active_use_case"];
+        
+        for (NSDictionary *dict in use_cases) {
+            if([[dict valueForKey:@"name"] isEqualToString:active_case_name]) {
+                active_case_dict = dict;
+            }
+        }
+        
+        //write the active use case to the main bools used for the view.
+        for (NSString *feature in [NSArray arrayWithObjects:SECTION2]) {
+            NSNumber *feat_bool = [active_case_dict valueForKey:feature];
+            [defaults setObject:feat_bool forKey:feature];
+            
+        }
+        
+        [defaults synchronize];
+        NSLog(@"reloaded the table of features");
         
     }
+    
+    NSLog(@"the defaults before the table reload are %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
     [useCaseTableView endUpdates];
     
+    [self initializeCells];
+    [_featuresTableView reloadData];
+
+    
 }
+
 
 -(void) updateUseCase {
     
         //NSDictionary *userInfo = notification.userInfo;
-        NSLog(@"the defaults dictionary which will store feature sets is: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
-    
-    
-    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"use_cases.plist"];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    
-    if (![fileManager fileExistsAtPath: path]) {
-        
-        path = [documentsDirectory stringByAppendingPathComponent: [NSString stringWithFormat:@"use_cases.plist"] ];
-    }
-    
-    NSMutableDictionary *data;
-    
-    if ([fileManager fileExistsAtPath: path]) {
-        
-        data = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
-    }
-    else {
-        // If the file doesn’t exist, create an empty dictionary
-        data = [[NSMutableDictionary alloc] init];
-    }
-    
-    //To insert the data into the plist
-    [data setObject:@"iPhone 6 Plus" forKey:@"value"];
-    [data writeToFile:path atomically:YES];
-    
-    //To reterive the data from the plist
-    NSMutableDictionary *savedValue = [[NSMutableDictionary alloc] initWithContentsOfFile: path];
-    NSString *value = [savedValue objectForKey:@"value"];
-    NSLog(@"%@",value);
+        //NSLog(@"the defaults dictionary which will store feature sets is: %@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
+
 }
 
 
@@ -336,7 +358,30 @@
     hud.yOffset = 50.f;
     hud.removeFromSuperViewOnHide = YES;
     [hud hide:YES afterDelay:2];
-    //[self.navigationController popViewControllerAnimated:true];
+
+    //save process
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *active_case_dict = [[NSMutableDictionary alloc] init];
+    NSString *active_case_name = [defaults objectForKey:@"active_use_case"];
+    NSMutableArray *use_cases = [[NSMutableArray alloc]initWithArray:[defaults objectForKey:@"use_cases"]];
+   
+    for (int i=0; i<use_cases.count; i++) {
+        NSDictionary *dict = [use_cases objectAtIndex:i];
+            if([[dict valueForKey:@"name"] isEqualToString:active_case_name]) {
+            active_case_dict = [dict mutableCopy];
+            for (NSString *feature in [NSArray arrayWithObjects:SECTION2]) {
+                NSNumber *feat_bool = [defaults valueForKey:feature];
+                [active_case_dict setObject:feat_bool forKey:feature];
+            }
+            [use_cases replaceObjectAtIndex:i withObject:active_case_dict];
+
+        }
+    }
+    
+    [defaults setObject:use_cases forKey:@"use_cases"];
+    [defaults synchronize];
+    //end save process
+    
 }
 
 

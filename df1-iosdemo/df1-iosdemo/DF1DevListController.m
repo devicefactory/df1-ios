@@ -89,6 +89,7 @@ facts need to be considered:
         [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgMagnitudeValues"];
         [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgTapDetector"];
         [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgXYZPlotter"];
+        [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgFreefall"];
         
         [data synchronize];
         [self presentTutorial];

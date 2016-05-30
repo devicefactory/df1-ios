@@ -36,6 +36,7 @@
     _useCaseTextField.hidden = YES;
     
     
+    
     [self.contentView addSubview:self.addUseCaseBtn];
     [self.contentView addSubview:self.doneBtn];
     [self.contentView addSubview:self.useCaseTextField];
@@ -83,6 +84,8 @@
     }
     
     _useCaseTextField.text = @"";
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center postNotificationName:@"showDoneBtn" object:nil];
     
     
 }
@@ -93,36 +96,11 @@
     _addUseCaseBtn.hidden = YES;
     _doneBtn.hidden = NO;
     //ADD NOTIFICATION TO HIDE MAIN DONE BTN in title cell
-    
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center postNotificationName:@"hideDoneBtn" object:nil];
     
     [_useCaseTextField becomeFirstResponder];
-    /*
-    DF1CfgBatteryLevel = 1;
-    DF1CfgCSVDataRecorder = 1;
-    DF1CfgDistance = 1;
-    DF1CfgFreefall = 1;
-    DF1CfgMagnitudeValues = 1;
-    DF1CfgTapDetector = 1;
-    DF1CfgXYZPlotter = 1;
-     
-    //add roll over detection
-    //add top 10
-    //add angle calculation
-     
-    "3ADCC38D-4530-B1E5-789C-2F74E9E27A22" =     {
-        defaultName = Testy;
-        "xyz14_on" = 1;
-        "xyz8_range" = 1;
-        "xyz_freq" = 8;
-     }
-    */
-    
-    //change to
-    
-    /*
-     
-     
-     */
+
 }
 
 
