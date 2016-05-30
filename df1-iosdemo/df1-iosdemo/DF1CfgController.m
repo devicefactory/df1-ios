@@ -224,6 +224,8 @@
         visualEffectView.frame = _featuresTableView.bounds;
         [_featuresTableView addSubview:visualEffectView];
         
+        _featuresTableView.scrollEnabled = NO;
+        
     }
     else {
         //maybe delay the below frame change for the animation to complete
@@ -231,7 +233,7 @@
         //DONE BTN PRESSED
         
         //Update the view
-        
+        _featuresTableView.scrollEnabled = YES;
         CGRect table1Frame = CGRectMake(0, 0, width, 50);
         [useCaseTableView setFrame:table1Frame];
         NSIndexPath *rowToReload1 = [NSIndexPath indexPathForRow:1 inSection:0];

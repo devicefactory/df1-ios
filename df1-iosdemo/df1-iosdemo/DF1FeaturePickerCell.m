@@ -90,30 +90,39 @@
 -(void) deleteBtnPressed {
     
     if(_dataArray.count>1) {
-    NSUInteger index = [_dataArray indexOfObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"active_use_case"]];
-    NSUserDefaults *data = [NSUserDefaults standardUserDefaults];
-    [data setObject:[_dataArray objectAtIndex: index-1] forKey:@"active_use_case"];
-    
-    //iterate through use cases to find active one and delete it, resave use cases to defualts
-    
-    NSString *active_case_name = [data objectForKey:@"active_use_case"];
-    NSMutableArray *use_cases = [[NSMutableArray alloc]initWithArray:[data objectForKey:@"use_cases"]];
-    
-    for (int i=0; i<use_cases.count; i++) {
-        NSDictionary *dict = [use_cases objectAtIndex:i];
-        if([[dict valueForKey:@"name"] isEqualToString:active_case_name]) {
-            [use_cases removeObjectAtIndex:i];
+        //NSUInteger index = [_dataArray indexOfObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"active_use_case"]];
+        long index = [_picker selectedRowInComponent:0];
+        NSUserDefaults *data = [NSUserDefaults standardUserDefaults];
+        NSString *active_case_name = [_dataArray objectAtIndex:index];
+        NSDictionary *userInfoDict;
+            if(index != 0) {
+                [data setObject:[_dataArray objectAtIndex:index-1] forKey:@"active_use_case"];
+                 userInfoDict = @{@"useCase": [_dataArray objectAtIndex: index-1]};
             }
-    }
+            else {
+                [data setObject:[_dataArray objectAtIndex:index+1] forKey:@"active_use_case"];
+                 userInfoDict = @{@"useCase": [_dataArray objectAtIndex: index+1]};
+            }
+        
+        //iterate through use cases to find active one and delete it, resave use cases to defualts
+        NSMutableArray *use_cases = [[NSMutableArray alloc]initWithArray:[data objectForKey:@"use_cases"]];
     
-    [data setObject:use_cases forKey:@"use_cases"];
-    [data synchronize];
+        for (int i=0; i<use_cases.count; i++) {
+            NSDictionary *dict = [use_cases objectAtIndex:i];
+            if([[dict valueForKey:@"name"] isEqualToString:active_case_name]) {
+                [use_cases removeObjectAtIndex:i];
+                break;
+            }
+        }
+    
+        [data setObject:use_cases forKey:@"use_cases"];
+        [data synchronize];
     
     
-    NSDictionary *userInfoDict = @{@"useCase": [_dataArray objectAtIndex: index-1]};
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"useCaseSelected" object:nil userInfo:userInfoDict];
-    [_dataArray removeObjectAtIndex:index];
-    [_picker reloadAllComponents];
+       
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"useCaseSelected" object:nil userInfo:userInfoDict];
+        [_dataArray removeObjectAtIndex:index];
+        [_picker reloadAllComponents];
     }
     
 }

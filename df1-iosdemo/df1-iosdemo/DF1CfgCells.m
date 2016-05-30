@@ -947,7 +947,7 @@ withCfg:(NSMutableDictionary*) ucfg
 {
     [super layoutSubviews];
     self.oadLabel.frame  = CGRectMake(PAD_LEFT,     PAD_TOP, 300, 45);
-    self.oadButton.frame = CGRectMake(PAD_LEFT+100, PAD_TOP, 200, 45);
+    self.oadButton.frame = CGRectMake(PAD_LEFT+50, PAD_TOP, 200, 45);
 }
 
 -(void) doPopUp:(id) sender
