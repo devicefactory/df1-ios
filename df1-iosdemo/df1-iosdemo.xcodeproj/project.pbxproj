@@ -747,7 +747,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = DF1;
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "JB Kim";
 				TargetAttributes = {
 					C56A3EF318DF77B700DB2A5C = {
@@ -1005,6 +1005,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1080,6 +1081,7 @@
 					"/Users/jbkim/Development/df/df1-ios/df1-ioslib/build/Debug-iphoneos",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/df1-ios-workgroup-aqwizxqvuasohrgftdlcdfpbpzvj/Build/Products/Debug-iphoneos",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.devicefactory.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = df1;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1108,6 +1110,7 @@
 					"/Users/jbkim/Development/df/df1-ios/df1-ioslib/build/Debug-iphoneos",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/df1-ios-workgroup-aqwizxqvuasohrgftdlcdfpbpzvj/Build/Products/Debug-iphoneos",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.devicefactory.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = df1;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1131,6 +1134,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "df1-iosdemoTests/df1-iosdemoTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "df.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -1149,6 +1153,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "df1-iosdemo/df1-iosdemo-Prefix.pch";
 				INFOPLIST_FILE = "df1-iosdemoTests/df1-iosdemoTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "df.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
