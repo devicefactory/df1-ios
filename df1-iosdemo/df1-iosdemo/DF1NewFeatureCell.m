@@ -74,7 +74,8 @@
                              @"DF1CfgDistance" : @1,
                              @"DF1CfgFreefall" : @1,
                              @"DF1CfgMagnitudeValues" : @1,
-                             @"DF1CfgTapDetector" : @1,
+                             @"DF1CfgTap" : @1,
+                             @"DF1CfgFlip" : @1,
                              @"DF1CfgXYZPlotter" : @1,
                               }];
         [defaults setObject:useCases forKey:@"use_cases"];

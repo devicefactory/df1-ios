@@ -397,14 +397,14 @@
 
 @end
 
-@interface DF1CfgTapDetector ()
+@interface DF1CfgTap ()
 {
     NSUInteger accThsValuePrevious;
     NSUInteger accTmltValuePrevious;
 }
 @end
 
-@implementation DF1CfgTapDetector
+@implementation DF1CfgTap
 -(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 withCfg:(NSMutableDictionary*) ucfg
 {
@@ -413,8 +413,8 @@ withCfg:(NSMutableDictionary*) ucfg
         return self;
     }
     
-    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTapDetector"] isEqual:nil]){
-        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgTapDetector"]];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTap"] isEqual:nil]){
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgTap"]];
     }
     
     self.cfg = ucfg;
@@ -426,7 +426,7 @@ withCfg:(NSMutableDictionary*) ucfg
     self.featureLabel.backgroundColor = [UIColor clearColor];
     self.featureLabel.text = @"Tap Detector";
     self.featureToggle = [[UIButton alloc]initWithFrame:CGRectMake(5, 5,30,30)];
-    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTapDetector"] boolValue]) {
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTap"] boolValue]) {
         [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
     }
     else {
@@ -498,12 +498,12 @@ withCfg:(NSMutableDictionary*) ucfg
 
 -(void) toggleFeature {
     if([self.featureToggle.imageView.image isEqual:[UIImage imageNamed:@"off.png"]]) {
-        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgTapDetector"]];
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgTap"]];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
     }
     else {
-        [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:[NSString stringWithFormat:@"DF1CfgTapDetector"]];
+        [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:[NSString stringWithFormat:@"DF1CfgTap"]];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
     }

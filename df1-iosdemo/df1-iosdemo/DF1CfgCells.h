@@ -58,7 +58,7 @@
 @property (nonatomic,retain) UIButton *featureToggle;
 @end
 
-@interface DF1CfgTapDetector : DF1CfgCell
+@interface DF1CfgTap : DF1CfgCell
 @property (nonatomic,retain) UILabel *featureLabel;
 @property (nonatomic,retain) UIButton *featureToggle;
 

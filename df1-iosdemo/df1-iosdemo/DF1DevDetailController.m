@@ -42,7 +42,8 @@
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         _defaultCells = [NSDictionary dictionaryWithObjectsAndKeys:
                          [defaults valueForKey:@"DF1CfgXYZPlotter"],   @"DF1CellAccXyz",  // class names
-                         [defaults valueForKey:@"DF1CfgTapDetector"],   @"DF1CellAccTap",  // and boolean
+                         [defaults valueForKey:@"DF1CfgTap"],   @"DF1CellAccTap",  // and boolean
+                         [defaults valueForKey:@"DF1CfgFlip"],    @"DF1CellFlip",
                          [defaults valueForKey:@"DF1CfgCSVDataRecorder"],   @"DF1CellDataShare",
                          [defaults valueForKey:@"DF1CfgBatteryLevel"],   @"DF1CellBatt",
                          [defaults valueForKey:@"DF1CfgMagnitudeValues"],   @"DF1CellMag",
@@ -192,7 +193,8 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     _defaultCells = [NSDictionary dictionaryWithObjectsAndKeys:
                      [defaults valueForKey:@"DF1CfgXYZPlotter"],   @"DF1CellAccXyz",  // class names
-                     [defaults valueForKey:@"DF1CfgTapDetector"],   @"DF1CellAccTap",  // and boolean
+                     [defaults valueForKey:@"DF1CfgTap"],   @"DF1CellAccTap",  // and boolean
+                     [defaults valueForKey:@"DF1CfgFlip"],  @"DF1CellFlip",
                      [defaults valueForKey:@"DF1CfgCSVDataRecorder"],   @"DF1CellDataShare",
                      [defaults valueForKey:@"DF1CfgBatteryLevel"],   @"DF1CellBatt",
                      [defaults valueForKey:@"DF1CfgMagnitudeValues"],   @"DF1CellMag",
@@ -309,10 +311,16 @@
             return self.accXyzCell;
         }
     }
-    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTapDetector"] boolValue]) {
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTap"] boolValue]) {
         cellIndexer++;
         if(cellIndexer==indexPath.row+1) {
             return self.accTapCell;
+        }
+    }
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgFlip"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.flipCell;
         }
     }
     if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgCSVDataRecorder"] boolValue]) {
@@ -367,7 +375,13 @@
             return self.accXyzCell.height;
         }
     }
-    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTapDetector"] boolValue]) {
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTap"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.accTapCell.height;
+        }
+    }
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgFlip"] boolValue]) {
         cellIndexer++;
         if(cellIndexer==indexPath.row+1) {
             return self.accTapCell.height;
@@ -688,12 +702,14 @@
     self.accXyzCell.accValueZ.text = [[NSString alloc] initWithFormat:@"Z  %.4f", z];
     self.accXyzCell.accZStrip.value = z;
     
+    //calculate the max and average accelerations
     float mag = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
     if (mag>_maxAcceleration.doubleValue) {
         _maxAcceleration = [NSNumber numberWithFloat:mag];
     }
     _avgAcceleration = [NSNumber numberWithFloat:((_avgAcceleration.floatValue * _avgAccCounter.floatValue)+mag)/(_avgAccCounter.floatValue+1) ];
     _avgAccCounter = [NSNumber numberWithInt:_avgAccCounter.intValue+1];
+
     
     NSLog(@"Setting mag of: %f", mag);
     self.magCell.magText.text = [[NSString alloc] initWithFormat:@"%f", mag];
