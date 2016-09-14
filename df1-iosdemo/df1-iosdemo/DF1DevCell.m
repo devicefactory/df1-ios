@@ -22,15 +22,15 @@
 
 // INSERTS expands out the button image
 #define CAPWIDTH    10.0f
-#define INSETS      (UIEdgeInsets){10.0f, CAPWIDTH, 10.0f, CAPWIDTH}
-#define BASEGREEN   [[UIImage imageNamed:@"green-out.png"] resizableImageWithCapInsets:INSETS]
-#define PUSHGREEN   [[UIImage imageNamed:@"green-in.png"] resizableImageWithCapInsets:INSETS]
-#define BASERED     [[UIImage imageNamed:@"red-out-dark.png"] resizableImageWithCapInsets:INSETS]
-#define PUSHRED     [[UIImage imageNamed:@"red-in.png"] resizableImageWithCapInsets:INSETS]
-#define BASEGREEN2  [UIImage imageNamed:@"green-out.png"]
-#define PUSHGREEN2  [UIImage imageNamed:@"green-in.png"]
-#define BASERED2    [UIImage imageNamed:@"red-out-dark.png"]
-#define PUSHRED2    [UIImage imageNamed:@"red-in.png"]
+#define INSETS        (UIEdgeInsets){10.0f, CAPWIDTH, 10.0f, CAPWIDTH}
+#define BASEGREEN     [[UIImage imageNamed:@"green-out.png"] resizableImageWithCapInsets:INSETS]
+#define PUSHGREEN     [[UIImage imageNamed:@"green-in.png"] resizableImageWithCapInsets:INSETS]
+#define BASERED       [[UIImage imageNamed:@"red-out-dark.png"] resizableImageWithCapInsets:INSETS]
+#define PUSHRED       [[UIImage imageNamed:@"red-in.png"] resizableImageWithCapInsets:INSETS]
+#define BASEGREEN2    [UIImage imageNamed:@"green-out.png"]
+#define PUSHGREEN2    [UIImage imageNamed:@"green-in.png"]
+#define BASERED2      [UIImage imageNamed:@"red-out-dark.png"]
+#define PUSHRED2      [UIImage imageNamed:@"red-in.png"]
 #define BASEBLACK     [[UIImage imageNamed:@"blackButton@2x.png"] resizableImageWithCapInsets:INSETS]
 #define PUSHBLACK     [[UIImage imageNamed:@"blackButtonHighlight@2x.png"] resizableImageWithCapInsets:INSETS]
 #define BASEWHITE     [[UIImage imageNamed:@"whiteButton@2x.png"] resizableImageWithCapInsets:INSETS]
