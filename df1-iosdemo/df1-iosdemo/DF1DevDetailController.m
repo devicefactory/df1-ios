@@ -110,6 +110,14 @@
         self.accTapCell.accLabel.text = @"Tap Event";
         self.accTapCell.accValueTap.text = @"no event";
     }
+    if([[cells objectForKey:@"DF1CellFlip"] boolValue] &&
+       !self.flipCell)
+    {
+        self.flipCell = [[DF1CellFlip alloc] initWithStyle:UITableViewCellStyleDefault
+                                               reuseIdentifier:@"FlipCell" parentController:self];
+        self.flipCell.accLabel.text = @"Flip Event";
+        self.flipCell.accValueTap.text = @"no event";
+    }
     if([[cells objectForKey:@"DF1CellDataShare"] boolValue] &&
        !self.dataCell)
     {
@@ -663,6 +671,13 @@
     float mag = sqrt(pow(x,2)+pow(y,2)+pow(z,2));
     if (mag>_maxAcceleration.doubleValue) {
         _maxAcceleration = [NSNumber numberWithFloat:mag];
+    }
+    
+    if(z<0) {
+        self.flipCell.accValueTap.text =@"LED Down";
+    }
+    else {
+        self.flipCell.accValueTap.text =@"LED Up";
     }
     
     _avgAcceleration = [NSNumber numberWithFloat:((_avgAcceleration.floatValue * _avgAccCounter.floatValue)+mag)/(_avgAccCounter.floatValue+1) ];

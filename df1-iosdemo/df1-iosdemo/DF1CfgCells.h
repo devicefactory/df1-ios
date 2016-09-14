@@ -72,6 +72,11 @@
 -(IBAction) accTmltChanged:(UISlider*)sender;
 @end
 
+@interface DF1CfgFlip : DF1CfgCell
+@property (nonatomic,retain) UILabel *featureLabel;
+@property (nonatomic,retain) UIButton *featureToggle;
+@end
+
 @interface DF1CfgCSVDataRecorder : DF1CfgCell
 @property (nonatomic,retain) UILabel *featureLabel;
 @property (nonatomic,retain) UIButton *featureToggle;

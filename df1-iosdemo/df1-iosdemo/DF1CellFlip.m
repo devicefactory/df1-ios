@@ -13,8 +13,7 @@
 
 @interface DF1CellFlip ()
 {
-    NSUInteger accThsValuePrevious;
-    NSUInteger accTmltValuePrevious;
+
 }
 @end
 
@@ -28,8 +27,6 @@
     self.parent = parent;
     self.height = 65;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    accThsValuePrevious = [[defaults valueForKey:@"tapThs"] integerValue];
-    accTmltValuePrevious = [[defaults valueForKey:@"tapTmlt"] integerValue];
     self.accLabel = [[UILabel alloc] init];
     self.accLabel.textAlignment = NSTextAlignmentRight;
     self.accLabel.font = [UIFont systemFontOfSize:16];
