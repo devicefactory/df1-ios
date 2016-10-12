@@ -46,6 +46,7 @@
 		015627D41CEBAFAF0096BB42 /* DF1FeatureTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 015627D31CEBAFAF0096BB42 /* DF1FeatureTitleCell.m */; };
 		0159C0591AD34AC7003EF1A5 /* UIColor+DF1Colors.m in Sources */ = {isa = PBXBuildFile; fileRef = 0159C0581AD34AC7003EF1A5 /* UIColor+DF1Colors.m */; };
 		018159191CFC13FA000355DE /* deleteCaseBtn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 018159181CFC13FA000355DE /* deleteCaseBtn@2x.png */; };
+		0194EFC41D88DC2400A87CBB /* DF1CellFlip.m in Sources */ = {isa = PBXBuildFile; fileRef = 0194EFC31D88DC2400A87CBB /* DF1CellFlip.m */; };
 		01955BD91B1BF4FB00CA7DD7 /* IFTTTAlphaAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 01955BBB1B1BF4FB00CA7DD7 /* IFTTTAlphaAnimation.m */; };
 		01955BDA1B1BF4FB00CA7DD7 /* IFTTTAngleAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 01955BBD1B1BF4FB00CA7DD7 /* IFTTTAngleAnimation.m */; };
 		01955BDB1B1BF4FB00CA7DD7 /* IFTTTAnimatedScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 01955BBF1B1BF4FB00CA7DD7 /* IFTTTAnimatedScrollViewController.m */; };
@@ -198,6 +199,8 @@
 		0159C0571AD34AC7003EF1A5 /* UIColor+DF1Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+DF1Colors.h"; sourceTree = "<group>"; };
 		0159C0581AD34AC7003EF1A5 /* UIColor+DF1Colors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+DF1Colors.m"; sourceTree = "<group>"; };
 		018159181CFC13FA000355DE /* deleteCaseBtn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "deleteCaseBtn@2x.png"; sourceTree = "<group>"; };
+		0194EFC21D88DC2400A87CBB /* DF1CellFlip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1CellFlip.h; sourceTree = "<group>"; };
+		0194EFC31D88DC2400A87CBB /* DF1CellFlip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1CellFlip.m; sourceTree = "<group>"; };
 		01955BBA1B1BF4FB00CA7DD7 /* IFTTTAlphaAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTAlphaAnimation.h; sourceTree = "<group>"; };
 		01955BBB1B1BF4FB00CA7DD7 /* IFTTTAlphaAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IFTTTAlphaAnimation.m; sourceTree = "<group>"; };
 		01955BBC1B1BF4FB00CA7DD7 /* IFTTTAngleAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFTTTAngleAnimation.h; sourceTree = "<group>"; };
@@ -486,6 +489,8 @@
 				C5AACD571A99857100A57F1C /* DF1CellDataShare.m */,
 				C5A71BEC194D51ED0074B087 /* DF1CellAccTap.h */,
 				C5A71BED194D51ED0074B087 /* DF1CellAccTap.m */,
+				0194EFC21D88DC2400A87CBB /* DF1CellFlip.h */,
+				0194EFC31D88DC2400A87CBB /* DF1CellFlip.m */,
 				C5A71BEE194D51ED0074B087 /* DF1CellAccXyz.h */,
 				C5A71BEF194D51ED0074B087 /* DF1CellAccXyz.m */,
 				C5A71BF0194D51ED0074B087 /* DF1CellBatt.h */,
@@ -909,6 +914,7 @@
 				C5AACD401A98289500A57F1C /* BLEDevice.m in Sources */,
 				01FBBE1F1B1BA73F0023DCA0 /* DF1TutorialController.m in Sources */,
 				01955BE51B1BF4FB00CA7DD7 /* IFTTTHideAnimation.m in Sources */,
+				0194EFC41D88DC2400A87CBB /* DF1CellFlip.m in Sources */,
 				01955BDF1B1BF4FB00CA7DD7 /* IFTTTAnimator.m in Sources */,
 				01F826AF1AB4D35B003F8C97 /* DF1CellAccMagnitude.m in Sources */,
 				C5AACD431A98289500A57F1C /* BLETIOADProgressViewController.m in Sources */,

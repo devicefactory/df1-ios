@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UIColor+DF1Colors.h"
-
+//TODO: the thing todo
 @interface DF1NewFeatureCell : UITableViewCell <UITextFieldDelegate>
 
 @property (nonatomic, retain) UIButton *doneBtn;

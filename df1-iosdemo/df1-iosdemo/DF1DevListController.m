@@ -87,7 +87,8 @@ facts need to be considered:
         [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgCSVDataRecorder"];
         [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgDistance"];
         [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgMagnitudeValues"];
-        [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgTapDetector"];
+        [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgTap"];
+        [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgFlip"];
         [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgXYZPlotter"];
         [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgFreefall"];
         

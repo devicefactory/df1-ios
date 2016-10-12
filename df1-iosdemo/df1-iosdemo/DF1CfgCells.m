@@ -397,14 +397,14 @@
 
 @end
 
-@interface DF1CfgTapDetector ()
+@interface DF1CfgTap ()
 {
     NSUInteger accThsValuePrevious;
     NSUInteger accTmltValuePrevious;
 }
 @end
 
-@implementation DF1CfgTapDetector
+@implementation DF1CfgTap
 -(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 withCfg:(NSMutableDictionary*) ucfg
 {
@@ -413,8 +413,8 @@ withCfg:(NSMutableDictionary*) ucfg
         return self;
     }
     
-    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTapDetector"] isEqual:nil]){
-        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgTapDetector"]];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTap"] isEqual:nil]){
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgTap"]];
     }
     
     self.cfg = ucfg;
@@ -426,7 +426,7 @@ withCfg:(NSMutableDictionary*) ucfg
     self.featureLabel.backgroundColor = [UIColor clearColor];
     self.featureLabel.text = @"Tap Detector";
     self.featureToggle = [[UIButton alloc]initWithFrame:CGRectMake(5, 5,30,30)];
-    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTapDetector"] boolValue]) {
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTap"] boolValue]) {
         [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
     }
     else {
@@ -498,12 +498,12 @@ withCfg:(NSMutableDictionary*) ucfg
 
 -(void) toggleFeature {
     if([self.featureToggle.imageView.image isEqual:[UIImage imageNamed:@"off.png"]]) {
-        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgTapDetector"]];
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgTap"]];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
     }
     else {
-        [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:[NSString stringWithFormat:@"DF1CfgTapDetector"]];
+        [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:[NSString stringWithFormat:@"DF1CfgTap"]];
         [[NSUserDefaults standardUserDefaults] synchronize];
         [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
     }
@@ -570,6 +570,80 @@ withCfg:(NSMutableDictionary*) ucfg
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 @end
+
+#pragma mark Flip
+
+@interface DF1CfgFlip ()
+{
+
+}
+@end
+
+@implementation DF1CfgFlip
+-(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+            withCfg:(NSMutableDictionary*) ucfg
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier withCfg:ucfg];
+    if(self==nil) {
+        return self;
+    }
+    
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgFlip"] isEqual:nil]){
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgFlip"]];
+    }
+    
+    self.cfg = ucfg;
+    self.height = 40;
+    self.featureLabel = [[UILabel alloc] init];
+    self.featureLabel.textAlignment = NSTextAlignmentLeft;
+    self.featureLabel.font = [UIFont systemFontOfSize:16];
+    self.featureLabel.textColor = [UIColor grayColor];
+    self.featureLabel.backgroundColor = [UIColor clearColor];
+    self.featureLabel.text = @"Flip Detector";
+    self.featureToggle = [[UIButton alloc]initWithFrame:CGRectMake(5, 5,30,30)];
+    if ([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgFlip"] boolValue]) {
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+    [self.featureToggle addTarget:self action:@selector(toggleFeature) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.contentView addSubview:self.featureToggle];
+    [self.contentView addSubview:self.featureLabel];
+    return self;
+}
+
+-(void) toggleFeature {
+    if([self.featureToggle.imageView.image isEqual:[UIImage imageNamed:@"off.png"]]) {
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:[NSString stringWithFormat:@"DF1CfgTap"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"on.png"] forState:UIControlStateNormal];
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] setObject:@0 forKey:[NSString stringWithFormat:@"DF1CfgTap"]];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self.featureToggle setImage:[UIImage imageNamed:@"off.png"] forState:UIControlStateNormal];
+    }
+}
+
+-(void) layoutSubviews
+{
+    [super layoutSubviews];
+    CGRect contentRect = self.contentView.bounds;
+    CGFloat boundsX = contentRect.origin.x;
+    CGFloat width = self.contentView.bounds.size.width;
+    CGRect fr;
+
+    fr = CGRectMake(boundsX + 70, 8, width-50, 25);
+    self.featureLabel.frame = fr;
+    fr = CGRectMake(boundsX + 5, -5, 50, 50);
+    self.featureToggle.frame = fr;
+}
+
+@end
+
+#pragma mark Distance
 
 @implementation DF1CfgDistance
 -(id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier

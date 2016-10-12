@@ -58,7 +58,7 @@
 @property (nonatomic,retain) UIButton *featureToggle;
 @end
 
-@interface DF1CfgTapDetector : DF1CfgCell
+@interface DF1CfgTap : DF1CfgCell
 @property (nonatomic,retain) UILabel *featureLabel;
 @property (nonatomic,retain) UIButton *featureToggle;
 
@@ -70,6 +70,11 @@
 @property (nonatomic,retain) UISlider *accTmltSlider;
 -(IBAction) accThsChanged:(UISlider*)sender;
 -(IBAction) accTmltChanged:(UISlider*)sender;
+@end
+
+@interface DF1CfgFlip : DF1CfgCell
+@property (nonatomic,retain) UILabel *featureLabel;
+@property (nonatomic,retain) UIButton *featureToggle;
 @end
 
 @interface DF1CfgCSVDataRecorder : DF1CfgCell
