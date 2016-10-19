@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 JB Kim. All rights reserved.
 //
 #define DF_LEVEL 0
+#define DF_EVENT_SEPARATION_TIME 1
 
 #import "DF1DevDetailController.h"
 #import "DF1CfgController.h"
@@ -806,5 +807,21 @@
     }*/
 }
 
+//This function takes in a set of 9 points and tests the middle one for a peak
+-(NSNumber *) testArrayForPeak:(NSArray *)accValues {
+    NSNumber *testPoint = [accValues objectAtIndex:5];
+    for (NSNumber *value in accValues) {
+        if(value>testPoint) {
+            return nil;
+        }
+    }
+    return testPoint;
+}
+
+-(void) addTopTenPoint:(NSNumber *) newPeak{
+    //scan the array to see if the newPeak is greater than any old ones.
+        //if yes, add it at that index and cut off the last value if greater than 10 peaks have been found. sort descending
+        //else drop the value and do nothing.
+}
 
 @end
