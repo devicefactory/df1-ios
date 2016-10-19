@@ -91,6 +91,7 @@ facts need to be considered:
         [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgFlip"];
         [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgXYZPlotter"];
         [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgFreefall"];
+        [data setValue:[NSNumber numberWithBool:YES] forKey:@"DF1CfgTop10"];
         
         [data synchronize];
         [self presentTutorial];

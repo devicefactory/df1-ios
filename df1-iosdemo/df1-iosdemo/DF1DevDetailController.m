@@ -48,6 +48,7 @@
                          [defaults valueForKey:@"DF1CfgCSVDataRecorder"],   @"DF1CellDataShare",
                          [defaults valueForKey:@"DF1CfgBatteryLevel"],   @"DF1CellBatt",
                          [defaults valueForKey:@"DF1CfgMagnitudeValues"],   @"DF1CellMag",
+                         [defaults valueForKey:@"DF1CfgTop10"], @"DF1CellTop10",
                          [defaults valueForKey:@"DF1CfgDistance"],   @"DF1CellDistance",
                          [defaults valueForKey:@"DF1CfgFreefall"],   @"DF1CellFreefall",
                          nil];
@@ -207,6 +208,7 @@
                      [defaults valueForKey:@"DF1CfgCSVDataRecorder"],   @"DF1CellDataShare",
                      [defaults valueForKey:@"DF1CfgBatteryLevel"],   @"DF1CellBatt",
                      [defaults valueForKey:@"DF1CfgMagnitudeValues"],   @"DF1CellMag",
+                     [defaults valueForKey:@"DF1CfgTop10"], @"DF1CellTop10",
                      [defaults valueForKey:@"DF1CfgDistance"],   @"DF1CellDistance",
                      [defaults valueForKey:@"DF1CfgFreefall"],   @"DF1CellFreefall",
                      nil];
@@ -294,7 +296,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     //check the bools for cell initialization and sum them as integers
-    NSInteger cellsCount = [[_defaultCells valueForKey:@"DF1CellAccXyz"] integerValue] + [[_defaultCells valueForKey:@"DF1CellAccTap"] integerValue] + [[_defaultCells valueForKey:@"DF1CellDataShare"] integerValue] + [[_defaultCells valueForKey:@"DF1CellBatt"] integerValue] + [[_defaultCells valueForKey:@"DF1CellMag"] integerValue] + [[_defaultCells valueForKey:@"DF1CellDistance"] integerValue] + [[_defaultCells valueForKey:@"DF1CellFreefall"] integerValue];
+    NSInteger cellsCount = [[_defaultCells valueForKey:@"DF1CellAccXyz"] integerValue] + [[_defaultCells valueForKey:@"DF1CellAccTap"] integerValue] + [[_defaultCells valueForKey:@"DF1CellDataShare"] integerValue] + [[_defaultCells valueForKey:@"DF1CellBatt"] integerValue] + [[_defaultCells valueForKey:@"DF1CellMag"] integerValue] + [[_defaultCells valueForKey:@"DF1CellDistance"] integerValue] + [[_defaultCells valueForKey:@"DF1CellFreefall"] integerValue] + [[_defaultCells valueForKey:@"DF1CellTop10"] integerValue];
     NSLog(@"cells count is %ld", cellsCount);
     return cellsCount;
     // int count = 1; // by default we need the signal strength
@@ -350,7 +352,12 @@
             return self.magCell;
         }
     }
-
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTop10"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return self.tenCell;
+        }
+    }
     if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgDistance"] boolValue]) {
         cellIndexer++;
         if(cellIndexer==indexPath.row+1) {
@@ -412,6 +419,12 @@
         cellIndexer++;
         if(cellIndexer==indexPath.row+1) {
             return _magCell.height;
+        }
+    }
+    if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgTop10"] boolValue]) {
+        cellIndexer++;
+        if(cellIndexer==indexPath.row+1) {
+            return tenCell.height;
         }
     }
     if([[[NSUserDefaults standardUserDefaults] valueForKey:@"DF1CfgDistance"] boolValue]) {
@@ -737,6 +750,24 @@
     if (mag>_maxAcceleration.doubleValue) {
         _maxAcceleration = [NSNumber numberWithFloat:mag];
     }
+    
+    if(_magnitudeArray.count > 9) {
+        [_magnitudeArray removeObjectAtIndex:0];
+    }
+    [_magnitudeArray addObject:[NSNumber numberWithFloat:mag]];
+    NSNumber *peak = [self testArrayForPeak:_magnitudeArray];
+    if(peak) {
+        [self testAndAddTopTenPoint:peak];
+    }
+    
+    
+    if(z<0) {
+        self.flipCell.accValueTap.text =@"LED Down";
+    }
+    else {
+        self.flipCell.accValueTap.text =@"LED Up";
+    }
+    
     _avgAcceleration = [NSNumber numberWithFloat:((_avgAcceleration.floatValue * _avgAccCounter.floatValue)+mag)/(_avgAccCounter.floatValue+1) ];
     _avgAccCounter = [NSNumber numberWithInt:_avgAccCounter.intValue+1];
 

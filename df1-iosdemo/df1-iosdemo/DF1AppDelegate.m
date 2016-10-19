@@ -43,6 +43,7 @@
                                     @"DF1CfgMagnitudeValues" : @1,
                                     @"DF1CfgTap" : @1,
                                     @"DF1CfgXYZPlotter" : @1,
+                                    @"DF1CfgTop10": @1,
                                     }
                                   ]];
         [defaults setObject:useCaseArray forKey:@"use_cases"];

@@ -88,6 +88,7 @@
 		01FFDCFC1B2E9968000E660B /* VisitGithubBtn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01FFDCF81B2E9968000E660B /* VisitGithubBtn@2x.png */; };
 		01FFDCFD1B2E9968000E660B /* doneBtn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01FFDCF91B2E9968000E660B /* doneBtn@2x.png */; };
 		01FFDCFE1B2E9968000E660B /* graphRed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 01FFDCFA1B2E9968000E660B /* graphRed@2x.png */; };
+		86BD97851DB816F0008F54C9 /* DF1CellTop10.m in Sources */ = {isa = PBXBuildFile; fileRef = 86BD97841DB816F0008F54C9 /* DF1CellTop10.m */; };
 		C56A3EF818DF77B700DB2A5C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56A3EF718DF77B700DB2A5C /* Foundation.framework */; };
 		C56A3EFA18DF77B700DB2A5C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56A3EF918DF77B700DB2A5C /* CoreGraphics.framework */; };
 		C56A3EFC18DF77B700DB2A5C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56A3EFB18DF77B700DB2A5C /* UIKit.framework */; };
@@ -262,6 +263,8 @@
 		01FFDCF81B2E9968000E660B /* VisitGithubBtn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "VisitGithubBtn@2x.png"; sourceTree = "<group>"; };
 		01FFDCF91B2E9968000E660B /* doneBtn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "doneBtn@2x.png"; sourceTree = "<group>"; };
 		01FFDCFA1B2E9968000E660B /* graphRed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "graphRed@2x.png"; sourceTree = "<group>"; };
+		86BD97831DB816F0008F54C9 /* DF1CellTop10.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DF1CellTop10.h; sourceTree = "<group>"; };
+		86BD97841DB816F0008F54C9 /* DF1CellTop10.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DF1CellTop10.m; sourceTree = "<group>"; };
 		C56A3EF418DF77B700DB2A5C /* df1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = df1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C56A3EF718DF77B700DB2A5C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C56A3EF918DF77B700DB2A5C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -485,6 +488,8 @@
 				013063051B11460400DDCCFC /* DF1CellDistance.m */,
 				01F826AD1AB4D35B003F8C97 /* DF1CellAccMagnitude.h */,
 				01F826AE1AB4D35B003F8C97 /* DF1CellAccMagnitude.m */,
+				86BD97831DB816F0008F54C9 /* DF1CellTop10.h */,
+				86BD97841DB816F0008F54C9 /* DF1CellTop10.m */,
 				C5AACD561A99857100A57F1C /* DF1CellDataShare.h */,
 				C5AACD571A99857100A57F1C /* DF1CellDataShare.m */,
 				C5A71BEC194D51ED0074B087 /* DF1CellAccTap.h */,
@@ -909,6 +914,7 @@
 				0159C0591AD34AC7003EF1A5 /* UIColor+DF1Colors.m in Sources */,
 				C5A71BE9194D48360074B087 /* MBProgressHUD.m in Sources */,
 				01955BE11B1BF4FB00CA7DD7 /* IFTTTConstraintsAnimation.m in Sources */,
+				86BD97851DB816F0008F54C9 /* DF1CellTop10.m in Sources */,
 				01EC0EFC1CEFA391006BC3A5 /* DF1DevDetailController.m in Sources */,
 				01955BDA1B1BF4FB00CA7DD7 /* IFTTTAngleAnimation.m in Sources */,
 				C5AACD401A98289500A57F1C /* BLEDevice.m in Sources */,
