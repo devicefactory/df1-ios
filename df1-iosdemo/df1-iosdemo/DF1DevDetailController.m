@@ -655,6 +655,9 @@
         (battlev <= 0.50)                  ? [UIColor DFRed] : [UIColor DFRed];
 }
 
+
+//TODO: A NEW DATA PROCESSING CLASS SHOULD BE MADE TO SEPARATE ALL THIS LOGIC FROM THE DETAIL VIEW
+
 -(void) receivedXYZ8:(NSArray*) data
 {
     float x = [data[0] floatValue];
@@ -673,6 +676,17 @@
     if (mag>_maxAcceleration.doubleValue) {
         _maxAcceleration = [NSNumber numberWithFloat:mag];
     }
+    
+    
+    if(_magnitudeArray.count > 9) {
+        [_magnitudeArray removeObjectAtIndex:0];
+    }
+    [_magnitudeArray addObject:[NSNumber numberWithFloat:mag]];
+    NSNumber *peak = [self testArrayForPeak:_magnitudeArray];
+    if(peak) {
+        [self testAndAddTopTenPoint:peak];
+    }
+
     
     if(z<0) {
         self.flipCell.accValueTap.text =@"LED Down";
@@ -808,7 +822,7 @@
 }
 
 //This function takes in a set of 9 points and tests the middle one for a peak
--(NSNumber *) testArrayForPeak:(NSArray *)accValues {
+-(NSNumber *) testArrayForPeak:(NSMutableArray *)accValues {
     NSNumber *testPoint = [accValues objectAtIndex:5];
     for (NSNumber *value in accValues) {
         if(value>testPoint) {
@@ -818,10 +832,27 @@
     return testPoint;
 }
 
--(void) addTopTenPoint:(NSNumber *) newPeak{
+-(void) testAndAddTopTenPoint:(NSNumber *) newPeak{
+    if(_peaksArray.count >= 9) {
+        for (int i = 0; i<8; i++) {
+            if(newPeak > [_peaksArray objectAtIndex:i]) {
+                //new peak found, add it.
+                [_peaksArray insertObject:newPeak atIndex:i];
+                [_peaksArray removeObject:[_peaksArray lastObject]];
+                break;
+            }
+        }
+    
+    }
+    else {
+        [_peaksArray addObject:newPeak];
+    }
     //scan the array to see if the newPeak is greater than any old ones.
         //if yes, add it at that index and cut off the last value if greater than 10 peaks have been found. sort descending
         //else drop the value and do nothing.
+    
+    NSSortDescriptor *highestToLowest = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:NO];
+    [_peaksArray sortUsingDescriptors:[NSArray arrayWithObject:highestToLowest]];
 }
 
 @end

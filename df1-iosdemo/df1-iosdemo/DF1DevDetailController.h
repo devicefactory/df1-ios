@@ -44,11 +44,14 @@
 @property NSNumber *maxAcceleration;
 @property NSNumber *avgAcceleration;
 @property NSNumber *avgAccCounter;
-// @property (strong,nonatomic) DF1CellBatt   *rssiCell;
+@property NSMutableArray *magnitudeArray;
+@property NSMutableArray *peaksArray;
+
 @property (nonatomic) DF1Data *df1data;
 
 @property NSTimer *rssiTimer;
 @property bool _isScanning;
+
 
 -(id)initWithDF:(DF1*) df;
 
